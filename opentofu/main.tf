@@ -220,15 +220,7 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "https://swap.euler.finance/"
       }
 
-      # Labels repo (custom Poppie labels, not upstream euler-xyz)
-      env {
-        name  = "NUXT_PUBLIC_CONFIG_LABELS_REPO"
-        value = "gettty/poppie-euler-labels"
-      }
-      env {
-        name  = "NUXT_PUBLIC_CONFIG_LABELS_REPO_BRANCH"
-        value = "main"
-      }
+      # Oracle checks (still fetched from upstream — no custom overrides)
       env {
         name  = "NUXT_PUBLIC_CONFIG_ORACLE_CHECKS_REPO"
         value = "euler-xyz/oracle-checks"
