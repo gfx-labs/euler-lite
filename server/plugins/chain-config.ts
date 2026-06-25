@@ -39,7 +39,17 @@ export default defineNitroPlugin((nitroApp) => {
   const enabledSet = new Set(enabledChainIds)
   const deprecatedChainIds = parseDeprecatedChains(process.env.DEPRECATED_CHAINS, enabledSet)
 
-  const scriptTag = `<script>window.__CHAIN_CONFIG__=${JSON.stringify({ enabledChainIds, deprecatedChainIds, unsupportedChainIds: unknownChainIds, chainEnvIssues })}</script>`
+  // Build subgraph URI map from SUBGRAPH_URL_<chainId> or legacy
+  // NUXT_PUBLIC_SUBGRAPH_URI_<chainId> env vars. The client needs this
+  // to know which chains have subgraph support.
+  const subgraphUris: Record<string, string> = {}
+  for (const chainId of enabledChainIds) {
+    const url = process.env[`SUBGRAPH_URL_${chainId}`]
+      || process.env[`NUXT_PUBLIC_SUBGRAPH_URI_${chainId}`]
+    if (url) subgraphUris[String(chainId)] = url
+  }
+
+  const scriptTag = `<script>window.__CHAIN_CONFIG__=${JSON.stringify({ enabledChainIds, deprecatedChainIds, subgraphUris, unsupportedChainIds: unknownChainIds, chainEnvIssues })}</script>`
 
   nitroApp.hooks.hook('render:html', (html) => {
     html.head.push(scriptTag)

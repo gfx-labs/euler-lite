@@ -251,6 +251,11 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         name  = "NUXT_PUBLIC_APP_URL"
         value = var.app_url
       }
+      # Additional CORS origins (Cloud Run direct URL for testing)
+      env {
+        name  = "CORS_ALLOWED_ORIGINS"
+        value = "${var.app_url},https://euler-lite-3uesx2brwq-uc.a.run.app"
+      }
 
       # Chain data
       env {
