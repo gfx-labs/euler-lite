@@ -4,6 +4,7 @@ import { createTtlCache } from '~/server/utils/cache'
 import { fetchWithTimeout } from '~/server/utils/fetchWithTimeout'
 import { createInFlightDedup } from '~/server/utils/in-flight'
 import { resolveLabelsFileUrl } from '~/server/utils/labels-base-url'
+import { filterLabels } from '~/server/utils/labels-filter'
 import { reportStatus } from '~/server/utils/log'
 
 const CACHE_TTL_MS = 300_000
@@ -173,8 +174,11 @@ export function refreshLabelFile(scope: LabelScope, file: LabelFile): Promise<un
         return fallback(false)
       }
 
-      const data: unknown = await resp.json()
+      let data: unknown = await resp.json()
       validateNode(data, file)
+      if (typeof scope === 'number') {
+        data = filterLabels(scope, file, data)
+      }
       cache.set(key, data)
       reportStatus('labels', statusKey, 'ok')
       return data
