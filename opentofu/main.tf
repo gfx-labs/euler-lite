@@ -208,6 +208,18 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "true"
       }
 
+      # Logo
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_LOGO_URL"
+        value = "/logo.svg"
+      }
+
+      # Swap API
+      env {
+        name  = "NUXT_PUBLIC_SWAP_API_URL"
+        value = "https://swap.euler.finance/"
+      }
+
       # Labels repo (custom Poppie labels, not upstream euler-xyz)
       env {
         name  = "NUXT_PUBLIC_CONFIG_LABELS_REPO"
