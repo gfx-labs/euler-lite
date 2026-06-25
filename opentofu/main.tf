@@ -177,19 +177,70 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         name  = "NODE_ENV"
         value = "production"
       }
-
       env {
         name  = "HOST"
         value = "0.0.0.0"
       }
+
+      # App branding
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_TITLE"
         value = "Poppie"
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_DESCRIPTION"
-        value = "Poppie Finance — Lending markets for Ondo tokenized assets"
+        value = "Poppie Finance is a Euler curator that focuses on RWAs."
       }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_APP_TITLE"
+        value = "true"
+      }
+
+      # Labels repo (custom Poppie labels, not upstream euler-xyz)
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_LABELS_REPO"
+        value = "gettty/poppie-euler-labels"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_LABELS_REPO_BRANCH"
+        value = "main"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ORACLE_CHECKS_REPO"
+        value = "euler-xyz/oracle-checks"
+      }
+
+      # Feature flags — match current poppie.io config
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_ENTITY_BRANDING"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_VAULT_TYPE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_EARN_PAGE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_EXPLORE_PAGE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_MERKL"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_INCENTRA"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_FUUL"
+        value = "false"
+      }
+
+      # Chain data
       env {
         name  = "SUBGRAPH_URL_56"
         value = "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-simple-bsc/latest/gn"
