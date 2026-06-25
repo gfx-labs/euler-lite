@@ -1,4 +1,0 @@
-FROM gcr.io/distroless/nodejs24-debian12:nonroot
-WORKDIR /app
-COPY .output .output
-CMD [".output/server/index.mjs"]

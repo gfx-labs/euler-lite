@@ -35,7 +35,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -59,13 +59,17 @@ jobs:
         id: meta
         run: echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
 
+      - name: Install crane
+        uses: imjasonh/setup-crane@v0.4
+
       - name: Build and push image
         run: |
-          docker build -f Dockerfile.cloudrun \
-            -t ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }} \
-            -t ${{ env.IMAGE }}:latest .
-          docker push ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
-          docker push ${{ env.IMAGE }}:latest
+          tar -cf /tmp/app-layer.tar --transform='s,^,.output/,' -C .output .
+          crane append \
+            --base gcr.io/distroless/nodejs24-debian12:nonroot \
+            --new_layer /tmp/app-layer.tar \
+            --new_tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
+          crane tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }} latest
 
   deploy:
     name: Deploy to Cloud Run
