@@ -14,7 +14,6 @@ env:
   REGION: us-central1
   SERVICE: euler-lite
   IMAGE: us-central1-docker.pkg.dev/ondo-poppie-prod/euler-lite/euler-lite
-  BASE_IMAGE: gcr.io/distroless/nodejs24-debian12:nonroot
   WIF_PROVIDER: projects/672110407756/locations/global/workloadIdentityPools/github-pool/providers/github-provider
   WIF_SERVICE_ACCOUNT: github-deploy@ondo-poppie-prod.iam.gserviceaccount.com
 
@@ -60,18 +59,13 @@ jobs:
         id: meta
         run: echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
 
-      - name: Install crane
-        uses: imjasonh/setup-crane@v0.4
-
       - name: Build and push image
         run: |
-          # Package .output into a tar layer and append onto distroless base
-          tar -cf /tmp/app-layer.tar --transform='s,^,.output/,' -C .output .
-          crane append \
-            --base ${{ env.BASE_IMAGE }} \
-            --new_layer /tmp/app-layer.tar \
-            --new_tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
-          crane tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }} latest
+          docker build -f Dockerfile.cloudrun \
+            -t ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }} \
+            -t ${{ env.IMAGE }}:latest .
+          docker push ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
+          docker push ${{ env.IMAGE }}:latest
 
   deploy:
     name: Deploy to Cloud Run
