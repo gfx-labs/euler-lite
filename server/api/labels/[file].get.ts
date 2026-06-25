@@ -4,6 +4,7 @@ import { createTtlCache } from '~/server/utils/cache'
 import { fetchWithTimeout } from '~/server/utils/fetchWithTimeout'
 import { createInFlightDedup } from '~/server/utils/in-flight'
 import { resolveLabelsFileUrl } from '~/server/utils/labels-base-url'
+import { getEmbeddedLabel } from '~/server/utils/embedded-labels'
 import { filterLabels } from '~/server/utils/labels-filter'
 import { reportStatus } from '~/server/utils/log'
 
@@ -144,6 +145,13 @@ function getUpstreamUrl(scope: LabelScope, file: string): string {
  */
 export function refreshLabelFile(scope: LabelScope, file: LabelFile): Promise<unknown> {
   const key = `${scope}:${file}`
+
+  // Serve embedded labels without any network fetch
+  const embeddedData = getEmbeddedLabel(scope, file)
+  if (embeddedData !== undefined) {
+    cache.set(key, embeddedData)
+    return Promise.resolve(embeddedData)
+  }
 
   const fallback = (persist: boolean): unknown => {
     const stale = cache.getStale(key)
