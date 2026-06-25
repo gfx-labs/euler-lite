@@ -240,6 +240,12 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "false"
       }
 
+      # App URL (CORS + og:url)
+      env {
+        name  = "NUXT_PUBLIC_APP_URL"
+        value = var.app_url
+      }
+
       # Chain data
       env {
         name  = "SUBGRAPH_URL_56"

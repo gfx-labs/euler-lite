@@ -28,6 +28,12 @@ variable "github_reviewer_ids" {
   default     = [2260857] # elee1766
 }
 
+variable "app_url" {
+  description = "Production URL for CORS and og:url"
+  type        = string
+  default     = "https://poppie.io"
+}
+
 variable "cloud_run_min_instances" {
   description = "Minimum Cloud Run instances (1 keeps warm cache alive)"
   type        = number
