@@ -8,6 +8,7 @@ resource "google_project_service" "apis" {
     "iamcredentials.googleapis.com",
     "secretmanager.googleapis.com",
     "sts.googleapis.com",
+    "compute.googleapis.com",
   ])
 
   project            = var.project_id
@@ -293,6 +294,101 @@ resource "google_cloud_run_v2_service_iam_member" "public" {
   member   = "allUsers"
 }
 
+# ── Load Balancer ────────────────────────────────────────────────────
+
+# Static IP
+resource "google_compute_global_address" "lb_ip" {
+  name    = "euler-lite-lb-ip"
+  project = var.project_id
+
+  depends_on = [google_project_service.apis]
+}
+
+# Serverless NEG pointing to Cloud Run
+resource "google_compute_region_network_endpoint_group" "cloudrun_neg" {
+  name                  = "euler-lite-neg"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.region
+  project               = var.project_id
+
+  cloud_run {
+    service = google_cloud_run_v2_service.euler_lite.name
+  }
+}
+
+# Backend service
+resource "google_compute_backend_service" "default" {
+  name                  = "euler-lite-backend"
+  project               = var.project_id
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  protocol              = "HTTPS"
+
+  backend {
+    group = google_compute_region_network_endpoint_group.cloudrun_neg.id
+  }
+}
+
+# URL map
+resource "google_compute_url_map" "default" {
+  name            = "euler-lite-url-map"
+  project         = var.project_id
+  default_service = google_compute_backend_service.default.id
+}
+
+# Google-managed SSL certificate
+resource "google_compute_managed_ssl_certificate" "default" {
+  name    = "euler-lite-cert"
+  project = var.project_id
+
+  managed {
+    domains = var.lb_domains
+  }
+}
+
+# HTTPS proxy
+resource "google_compute_target_https_proxy" "default" {
+  name             = "euler-lite-https-proxy"
+  project          = var.project_id
+  url_map          = google_compute_url_map.default.id
+  ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
+}
+
+# HTTPS forwarding rule
+resource "google_compute_global_forwarding_rule" "https" {
+  name                  = "euler-lite-https"
+  project               = var.project_id
+  target                = google_compute_target_https_proxy.default.id
+  ip_address            = google_compute_global_address.lb_ip.id
+  port_range            = "443"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+}
+
+# HTTP → HTTPS redirect
+resource "google_compute_url_map" "http_redirect" {
+  name    = "euler-lite-http-redirect"
+  project = var.project_id
+
+  default_url_redirect {
+    https_redirect = true
+    strip_query    = false
+  }
+}
+
+resource "google_compute_target_http_proxy" "redirect" {
+  name    = "euler-lite-http-proxy"
+  project = var.project_id
+  url_map = google_compute_url_map.http_redirect.id
+}
+
+resource "google_compute_global_forwarding_rule" "http" {
+  name                  = "euler-lite-http"
+  project               = var.project_id
+  target                = google_compute_target_http_proxy.redirect.id
+  ip_address            = google_compute_global_address.lb_ip.id
+  port_range            = "80"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+}
+
 # ── GitHub Environment ───────────────────────────────────────────────
 
 resource "github_repository_environment" "production" {
@@ -344,4 +440,9 @@ output "image_registry" {
 output "cloud_run_url" {
   description = "Cloud Run service URL"
   value       = google_cloud_run_v2_service.euler_lite.uri
+}
+
+output "lb_ip" {
+  description = "Load balancer IP — point DNS A records here"
+  value       = google_compute_global_address.lb_ip.address
 }

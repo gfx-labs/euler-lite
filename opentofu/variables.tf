@@ -34,6 +34,12 @@ variable "app_url" {
   default     = "https://poppie.io"
 }
 
+variable "lb_domains" {
+  description = "Domains for the Google-managed SSL certificate"
+  type        = list(string)
+  default     = ["poppie.io", "www.poppie.io"]
+}
+
 variable "cloud_run_min_instances" {
   description = "Minimum Cloud Run instances (1 keeps warm cache alive)"
   type        = number
