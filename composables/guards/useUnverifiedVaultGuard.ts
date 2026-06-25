@@ -13,14 +13,15 @@ export const useUnverifiedVaultGuard = (vaultAddresses: ComputedRef<string[]>) =
 
   const sessionAccepted = ref(false)
 
-  const hasUnverifiedVault = computed(() =>
-    vaultAddresses.value.some((addr) => {
+  const hasUnverifiedVault = computed(() => {
+    if (useRuntimeConfig().public.configDisableGovernorVerification) return false
+    return vaultAddresses.value.some((addr) => {
       const normalized = normalizeAddress(addr)
       return !verifiedVaultAddresses.value.includes(normalized)
         && !earnVaults.value.includes(normalized)
         && !isKnownEscrowAddress(normalized)
-    }),
-  )
+    })
+  })
 
   const isAcknowledgmentRequired = computed(() =>
     hasUnverifiedVault.value && !sessionAccepted.value,
