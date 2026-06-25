@@ -158,7 +158,8 @@ resource "google_cloud_run_v2_service" "euler_lite" {
       # Placeholder image — GHA will deploy the real one.
       # Using a valid public image so the initial create succeeds.
       image   = "us-docker.pkg.dev/cloudrun/container/hello"
-      command = ["/nodejs/bin/node", ".output/server/index.mjs"]
+      command     = ["/nodejs/bin/node", ".output/server/index.mjs"]
+      working_dir = "/app"
 
       resources {
         limits = {

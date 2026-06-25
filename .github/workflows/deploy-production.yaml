@@ -67,7 +67,10 @@ jobs:
 
       - name: Build and push image
         run: |
-          tar -cf /tmp/app-layer.tar --transform='s,^,.output/,' -C .output .
+          # Tar must contain app/.output/... so it lands at /app/.output/ in the image
+          mkdir -p /tmp/layer/app
+          cp -a .output /tmp/layer/app/.output
+          tar -cf /tmp/app-layer.tar -C /tmp/layer app
           crane append \
             --base gcr.io/distroless/nodejs24-debian12:nonroot \
             --new_layer /tmp/app-layer.tar \
