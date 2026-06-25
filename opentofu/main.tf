@@ -166,7 +166,7 @@ resource "google_cloud_run_v2_service" "euler_lite" {
           cpu    = var.cloud_run_cpu
           memory = var.cloud_run_memory
         }
-        cpu_idle          = true  # CPU only during requests (cheaper)
+        cpu_idle          = false  # CPU always allocated — needed for warm cache background tasks
         startup_cpu_boost = true
       }
 
@@ -182,6 +182,11 @@ resource "google_cloud_run_v2_service" "euler_lite" {
       env {
         name  = "HOST"
         value = "0.0.0.0"
+      }
+      # Skip governor verification (single-curator deployment)
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_DISABLE_GOVERNOR_VERIFICATION"
+        value = "true"
       }
       # Geo-blocking handled at Cloudflare edge — disable app-level gate
       env {
@@ -256,6 +261,18 @@ resource "google_cloud_run_v2_service" "euler_lite" {
       env {
         name  = "CORS_ALLOWED_ORIGINS"
         value = "${var.app_url},https://euler-lite-3uesx2brwq-uc.a.run.app"
+      }
+
+      # Euler V3 API (faster vault data including collaterals)
+      env {
+        name  = "V3_API_URL"
+        value = "https://v3.euler.finance"
+      }
+
+      # Pyth oracle price feeds (proxied through /api/pyth/)
+      env {
+        name  = "NUXT_PUBLIC_PYTH_HERMES_URL"
+        value = "https://hermes.pyth.network"
       }
 
       # Chain data

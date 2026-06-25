@@ -1116,8 +1116,11 @@ export const useVaults = () => {
     }
   }
 
-  // Check if vault's on-chain governorAdmin matches any of the product's declared entities
+  // Check if vault's on-chain governorAdmin matches any of the product's declared entities.
+  // DISABLE_GOVERNOR_VERIFICATION skips this check for deployments where the
+  // operator controls both the vaults and the labels (e.g. single-curator forks).
   const isVaultGovernorVerified = (vault: EVault): boolean => {
+    if (useRuntimeConfig().public.configDisableGovernorVerification) return true
     const { getVaultCategory, isVerifiedVault } = useVaultRegistry()
     const vaultCategory = getVaultCategory(vault.address)
     return verifyVaultGovernor(

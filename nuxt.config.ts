@@ -156,6 +156,8 @@ export default defineNuxtConfig({
       configEnableExplorePage: '',
       configEnablePoweredByEuler: '',
       configEnableAppTitle: '',
+      // Skip on-chain governor verification for single-curator deployments.
+      configDisableGovernorVerification: '',
       // Incentives provider flags: enabled by default. Set to 'false' to disable.
       configEnableMerkl: '',
       configEnableIncentra: '',
