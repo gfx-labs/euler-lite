@@ -4,6 +4,7 @@ export interface MenuItem {
   sublabel?: string
   icon: string
   activeIcon: string
+  path?: string // Override the default /<name> path
 }
 
 const allMenuItems: MenuItem[] = [
@@ -30,6 +31,8 @@ const allMenuItems: MenuItem[] = [
     label: 'Lend',
     icon: 'lend-outline',
     activeIcon: 'lend-filled',
+    // Direct link to USDT vault (single lending vault) — V2 deployment
+    path: '/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F',
   },
   {
     name: 'borrow',
@@ -40,13 +43,22 @@ const allMenuItems: MenuItem[] = [
   },
 ]
 
-export const getMenuItems = (enableEarnPage: boolean, enableLendPage: boolean, enableExplorePage: boolean) => {
-  return allMenuItems.filter((item) => {
-    if (item.name === 'explore' && !enableExplorePage) return false
-    if (item.name === 'lend' && !enableLendPage) return false
-    if (item.name === 'earn' && !enableEarnPage) return false
-    return true
-  })
+export const getMenuItems = (enableEarnPage: boolean, enableLendPage: boolean, enableExplorePage: boolean, enableMultiply = true) => {
+  return allMenuItems
+    .filter((item) => {
+      if (item.name === 'explore' && !enableExplorePage) return false
+      if (item.name === 'lend' && !enableLendPage) return false
+      if (item.name === 'earn' && !enableEarnPage) return false
+      return true
+    })
+    .map((item) => {
+      // Hide the "Multiply" sublabel on the Borrow item when multiply is disabled
+      if (item.name === 'borrow' && !enableMultiply) {
+        const { sublabel: _sublabel, ...rest } = item
+        return rest
+      }
+      return item
+    })
 }
 
 const preferredDefaultOrder = ['explore', 'earn', 'lend', 'borrow', 'portfolio'] as const

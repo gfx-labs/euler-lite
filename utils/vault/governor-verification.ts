@@ -61,13 +61,10 @@ export const isVaultGovernorVerified = (
   // trust anchor (EscrowedCollateralPerspective), no entity matching applies.
   if ('vaultCategory' in vault && vault.vaultCategory === 'escrow') return true
 
-  if (!vault.verified) return false
-
+  // Treat vaults in a declared product as verified even if not registered
+  // in an on-chain Euler perspective (single-curator deployments).
   const declaredKeys = labels.getDeclaredEntityKeys(vault.address)
-  // No product, or a product with no declared entity, both fail verification.
-  // A product without a declared entity has no on-chain authority to claim
-  // the vault — treat it the same as a vault outside any product.
-  if (!declaredKeys || declaredKeys.length === 0) return false
+  if (!vault.verified && (!declaredKeys || declaredKeys.length === 0)) return false
 
   const governor = vault.governorAdmin ?? vault.governor
   if (!governor) return false
@@ -122,9 +119,11 @@ export const resolveGoverningEntityKeys = (
   labels: VerificationLabels,
 ): string[] => {
   if ('vaultCategory' in vault && vault.vaultCategory === 'escrow') return []
-  if (!vault.verified) return []
+  // Allow entity resolution for vaults in a declared product
   const declaredKeys = labels.getDeclaredEntityKeys(vault.address)
-  if (!declaredKeys || declaredKeys.length === 0) return []
+  if (!declaredKeys || declaredKeys.length === 0) {
+    if (!vault.verified) return []
+  }
   const governor = vault.governorAdmin ?? vault.governor
   return governor ? findAllDeclaredEntitiesFor(getAddress(governor), declaredKeys, labels) : []
 }

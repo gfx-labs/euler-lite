@@ -35,13 +35,16 @@ const {
   enableEarnPage,
   enableLendPage,
   enableExplorePage,
+  enableMultiply,
   enablePoweredByEuler,
   enableAppTitle,
+  migrationLegacyAppUrl,
 } = useDeployConfig()
 const menuItems = getMenuItems(
   enableEarnPage,
   enableLendPage,
   enableExplorePage,
+  enableMultiply,
 )
 const canSwitchChains = computed(() => allowedChainIds.value.length > 1)
 
@@ -92,7 +95,10 @@ const onChainButtonClick = () => {
 const onSettingsClick = () => {
   modal.open(SettingsModal)
 }
-const onLogoClick = () => {
+// Intentionally unused for now: socials-tooltip toggle is WIP and not yet wired to
+// the logo (the logo currently navigates home). Prefixed with _ to satisfy lint
+// without guessing the intended UX.
+const _onLogoClick = () => {
   isSocialsTooltipVisible.value = !isSocialsTooltipVisible.value
 }
 const getIsMenuItemActive = (link: MenuItem) => {
@@ -113,10 +119,9 @@ onClickOutside(wrapperRef, () => {
       ref="wrapperRef"
       class="relative flex-shrink-0"
     >
-      <button
-        ref="reference"
-        class="flex items-center gap-8 cursor-pointer outline-none"
-        @click="onLogoClick"
+      <a
+        href="/"
+        class="flex items-center gap-8 no-underline"
       >
         <LogoBrand class="text-accent-600" />
         <div
@@ -132,12 +137,7 @@ onClickOutside(wrapperRef, () => {
             class="text-[10px] text-content-tertiary leading-tight"
           >Powered by Euler</span>
         </div>
-        <SvgIcon
-          class="!w-18 !h-18 transition-transform duration-fast text-content-tertiary"
-          :class="[isSocialsTooltipVisible ? 'rotate-180' : '']"
-          name="arrow-down"
-        />
-      </button>
+      </a>
       <Transition
         name="tooltip"
         @enter="update"
@@ -151,9 +151,18 @@ onClickOutside(wrapperRef, () => {
           @click.stop
         >
           <div class="flex flex-col gap-4 w-full">
+            <a
+              v-if="migrationLegacyAppUrl"
+              :href="migrationLegacyAppUrl"
+              class="block pb-12 border-b border-line-default text-content-primary hover:text-accent-600 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="text-h6">Go to the legacy app</span>
+            </a>
             <div
               v-if="links.length"
-              class="mb-12"
+              class="mb-12 pt-5"
             >
               <p class="mb-8 text-content-tertiary text-h6 text-left">
                 Resources
@@ -199,7 +208,7 @@ onClickOutside(wrapperRef, () => {
         <NuxtLink
           v-for="item in menuItems"
           :key="item.name"
-          :to="'/' + item.name"
+          :to="item.path || ('/' + item.name)"
           class="flex gap-8 text-[13px] font-medium no-underline py-6 px-12 tablet:px-16 rounded-8 text-content-secondary items-center justify-center hover:text-content-primary hover:bg-surface-secondary transition-all"
           :class="[
             getIsMenuItemActive(item)

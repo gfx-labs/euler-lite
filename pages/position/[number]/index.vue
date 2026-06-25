@@ -28,6 +28,7 @@ const { isConnected, address } = useWagmi()
 const { isSpyMode } = useSpyMode()
 const { isPositionsLoaded, isPositionsLoading, getPositionBySubAccountIndex } = useEulerAccount()
 const { viewer, visibleBreakdown } = useApyVisibility()
+const { enableMultiply } = useDeployConfig()
 const { settings } = useUserSettings()
 const enableIntrinsicApy = computed(() => settings.value.enableIntrinsicApy)
 const { getSupplyRewardApy, getBorrowRewardApy, hasSupplyRewards, hasBorrowRewards, getSupplyRewardCampaigns, getBorrowRewardCampaigns } = useRewardsApy()
@@ -1242,6 +1243,7 @@ watch([isConnected, isSpyMode, address], () => {
               @click.stop
             >
               <UiButton
+                v-if="enableMultiply"
                 data-id="position-action-multiply"
                 size="medium"
                 variant="primary"

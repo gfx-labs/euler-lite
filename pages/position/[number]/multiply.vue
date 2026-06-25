@@ -29,6 +29,12 @@ const route = useRoute()
 const router = useRouter()
 const modal = useModal()
 const { error } = useToast()
+const { enableMultiply } = useDeployConfig()
+
+// Multiply can be disabled via feature flag; redirect direct navigation away.
+if (!enableMultiply) {
+  await navigateTo(`/position/${route.params.number}`)
+}
 const { address, isConnected } = useWagmi()
 const { isSpyMode } = useSpyMode()
 const { isPositionsLoading, isPositionsLoaded, refreshAllPositions, getPositionBySubAccountIndex } = useEulerAccount()

@@ -130,9 +130,6 @@ const activeBorrowList = computed(() =>
     if (!showAllLabelEntries.value && isVaultNotExplorableBorrow(pair.borrow.address)) return false
     if (!showAllLabelEntries.value && isVaultNotExplorableBorrow(pair.collateral.address)) return false
     if (isOpDisabled(pair.borrow, OP_BORROW)) return false
-    // Securitize collateral has no EVault hook flags — only check EVault collateral.
-    // Fresh-deposit needs OP_DEPOSIT, savings-sourced needs OP_TRANSFER.
-    // Hide only when BOTH paths are blocked; the form guards the active path.
     if (!isSecuritizeBorrowPair(pair) && isOpDisabled(pair.collateral, OP_DEPOSIT) && isOpDisabled(pair.collateral, OP_TRANSFER)) return false
     return true
   }),
@@ -160,7 +157,7 @@ const selectedMarkets = ref<string[]>([])
 const selectedRiskManagers = ref<string[]>([])
 const sortBy = ref<string>('Active')
 const sortDir = ref<'desc' | 'asc'>('desc')
-const MIN_BORROW_LIQUIDITY_USD = 1000
+const MIN_BORROW_LIQUIDITY_USD = 0
 const defaultBorrowLiquidityFilter = {
   id: 'borrow-min-liquidity-usd',
   metric: 'liquidity',

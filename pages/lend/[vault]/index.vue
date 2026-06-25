@@ -143,11 +143,11 @@ const {
   providersCount: _swapProvidersCount,
   isLoading: isSwapQuoteLoading,
   quoteError: swapQuoteError,
-  statusLabel: swapQuotesStatusLabel,
+  statusLabel: _swapQuotesStatusLabel,
   getQuoteDiffPct: getSwapQuoteDiffPct,
   reset: resetSwapQuoteState,
   requestQuotes: requestSwapQuotes,
-  selectProvider: selectSwapQuote,
+  selectProvider: _selectSwapQuote,
 } = useSwapQuotesParallel({
   amountField: 'amountOut',
   compare: 'max',
@@ -653,35 +653,35 @@ const swapEstimatedOutput = computed(() => {
   return formatUnits(amountOut, Number(asset.value.decimals))
 })
 
-const swapInputDisplay = computed(() => {
+const _swapInputDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !selectedAsset.value) return ''
   const amountIn = BigInt(swapEffectiveQuote.value.amountIn || 0)
   if (amountIn <= 0n) return ''
   return `${formatSmartAmount(formatUnits(amountIn, Number(selectedAsset.value.decimals)))} ${selectedAsset.value.symbol}`
 })
 
-const swapInputExactDisplay = computed(() => {
+const _swapInputExactDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !selectedAsset.value) return ''
   const amountIn = BigInt(swapEffectiveQuote.value.amountIn || 0)
   if (amountIn <= 0n) return ''
   return `${formatUnits(amountIn, Number(selectedAsset.value.decimals))} ${selectedAsset.value.symbol}`
 })
 
-const swapOutputDisplay = computed(() => {
+const _swapOutputDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !asset.value) return ''
   const amountOut = BigInt(swapEffectiveQuote.value.amountOut || 0)
   if (amountOut <= 0n) return ''
   return `${formatSmartAmount(formatUnits(amountOut, Number(asset.value.decimals)))} ${asset.value.symbol}`
 })
 
-const swapOutputExactDisplay = computed(() => {
+const _swapOutputExactDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !asset.value) return ''
   const amountOut = BigInt(swapEffectiveQuote.value.amountOut || 0)
   if (amountOut <= 0n) return ''
   return `${formatUnits(amountOut, Number(asset.value.decimals))} ${asset.value.symbol}`
 })
 
-const swapRoutedVia = computed(() => {
+const _swapRoutedVia = computed(() => {
   if (!swapSelectedProvider.value) return 'Not selected'
   if (!swapEffectiveQuote.value?.route?.length) return null
   return swapEffectiveQuote.value.route.map((r: { providerName: string }) => r.providerName).join(', ')
@@ -702,7 +702,7 @@ const { guardWithPriceImpact } = usePriceImpactGate({
   shouldGateUnknown: shouldGateUnknownPriceImpact,
 })
 
-const swapRouteItems = computed(() => {
+const _swapRouteItems = computed(() => {
   if (!asset.value) return []
   return buildSwapRouteItems({
     quoteCards: swapQuoteCardsSorted.value,
@@ -756,7 +756,7 @@ const onSelectSwapAsset = (newAsset: VaultAsset, meta?: { isUnknownToken?: boole
   resetSwapQuoteState()
 }
 
-const openSwapTokenSelector = () => {
+const _openSwapTokenSelector = () => {
   modal.open(SwapTokenSelector, {
     props: {
       currentAssetAddress: selectedAsset.value?.address || asset.value?.address,
@@ -766,11 +766,11 @@ const openSwapTokenSelector = () => {
   })
 }
 
-const openSlippageSettings = () => {
+const _openSlippageSettings = () => {
   modal.open(SlippageSettingsModal)
 }
 
-const onRefreshSwapQuotes = () => {
+const _onRefreshSwapQuotes = () => {
   resetSwapQuoteState()
   requestSwapQuote()
 }
@@ -972,7 +972,7 @@ watch(amount, async () => {
               maxable
             />
 
-            <!-- Pay with token selector -->
+            <!-- Pay with token selector / swap-and-supply hidden: single-asset vaults
             <div class="flex items-center gap-8">
               <span class="text-p3 text-content-tertiary">Pay with</span>
               <button
@@ -991,16 +991,17 @@ watch(amount, async () => {
                 />
               </button>
             </div>
+            -->
 
-            <!-- Swap info block -->
+            <!-- Swap info block hidden
             <template v-if="needsSwap && asset">
               <SwapRouteSelector
                 :items="swapRouteItems"
                 :selected-provider="swapSelectedProvider"
-                :status-label="swapQuotesStatusLabel"
+                :status-label="_swapQuotesStatusLabel"
                 :is-loading="isSwapQuoteLoading"
                 empty-message="Enter amount to fetch quotes"
-                @select="selectSwapQuote"
+                @select="_selectSwapQuote"
                 @refresh="onRefreshSwapQuotes"
               />
 
@@ -1029,6 +1030,7 @@ watch(amount, async () => {
                 size="compact"
               />
             </template>
+            -->
 
             <UiAlert
               v-if="isGeoBlocked"

@@ -154,6 +154,7 @@ export default defineNuxtConfig({
       configEnableEarnPage: '',
       configEnableLendPage: '',
       configEnableExplorePage: '',
+      configEnableMultiply: '',
       configEnablePoweredByEuler: '',
       configEnableAppTitle: '',
       // Skip on-chain governor verification for single-curator deployments.

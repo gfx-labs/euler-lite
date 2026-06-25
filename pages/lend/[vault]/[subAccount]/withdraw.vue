@@ -121,11 +121,11 @@ const {
   effectiveQuoteFetchedAt: swapEffectiveQuoteFetchedAt,
   isLoading: isSwapQuoteLoading,
   quoteError: swapQuoteError,
-  statusLabel: swapQuotesStatusLabel,
+  statusLabel: _swapQuotesStatusLabel,
   getQuoteDiffPct: getSwapQuoteDiffPct,
   reset: resetSwapQuoteState,
   requestQuotes: requestSwapQuotes,
-  selectProvider: selectSwapQuote,
+  selectProvider: _selectSwapQuote,
 } = useSwapQuotesParallel({
   amountField: 'amountOut',
   compare: 'max',
@@ -223,28 +223,28 @@ const swapEstimatedOutput = computed(() => {
   return formatUnits(amountOut, Number(selectedOutputAsset.value.decimals))
 })
 
-const swapInputDisplay = computed(() => {
+const _swapInputDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !asset.value) return ''
   const amountIn = BigInt(swapEffectiveQuote.value.amountIn || 0)
   if (amountIn <= 0n) return ''
   return `${formatSmartAmount(formatUnits(amountIn, Number(asset.value.decimals)))} ${asset.value.symbol}`
 })
 
-const swapInputExactDisplay = computed(() => {
+const _swapInputExactDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !asset.value) return ''
   const amountIn = BigInt(swapEffectiveQuote.value.amountIn || 0)
   if (amountIn <= 0n) return ''
   return `${formatUnits(amountIn, Number(asset.value.decimals))} ${asset.value.symbol}`
 })
 
-const swapOutputDisplay = computed(() => {
+const _swapOutputDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !selectedOutputAsset.value) return ''
   const amountOut = BigInt(swapEffectiveQuote.value.amountOut || 0)
   if (amountOut <= 0n) return ''
   return `${formatSmartAmount(formatUnits(amountOut, Number(selectedOutputAsset.value.decimals)))} ${selectedOutputAsset.value.symbol}`
 })
 
-const swapOutputExactDisplay = computed(() => {
+const _swapOutputExactDisplay = computed(() => {
   if (!swapEffectiveQuote.value || !selectedOutputAsset.value) return ''
   const amountOut = BigInt(swapEffectiveQuote.value.amountOut || 0)
   if (amountOut <= 0n) return ''
@@ -274,7 +274,7 @@ async function buildSwapWithdrawPlanFromQuote(quote: SwapQuote, account = cached
   })
 }
 
-const swapRoutedVia = computed(() => {
+const _swapRoutedVia = computed(() => {
   if (!swapSelectedProvider.value) return 'Not selected'
   if (!swapEffectiveQuote.value?.route?.length) return null
   return swapEffectiveQuote.value.route.map((r: { providerName: string }) => r.providerName).join(', ')
@@ -293,7 +293,7 @@ const { guardWithPriceImpact } = usePriceImpactGate({
   shouldGateUnknown: shouldGateUnknownPriceImpact,
 })
 
-const swapRouteItems = computed(() => {
+const _swapRouteItems = computed(() => {
   if (!selectedOutputAsset.value) return []
   return buildSwapRouteItems({
     quoteCards: swapQuoteCardsSorted.value,
@@ -347,7 +347,7 @@ const onSelectOutputAsset = (newAsset: VaultAsset, meta?: { isUnknownToken?: boo
   resetSwapQuoteState()
 }
 
-const openSwapTokenSelector = () => {
+const _openSwapTokenSelector = () => {
   modal.open(SwapTokenSelector, {
     props: {
       currentAssetAddress: selectedOutputAsset.value?.address || asset.value?.address,
@@ -358,11 +358,11 @@ const openSwapTokenSelector = () => {
   })
 }
 
-const openSlippageSettings = () => {
+const _openSlippageSettings = () => {
   modal.open(SlippageSettingsModal)
 }
 
-const onRefreshSwapQuotes = () => {
+const _onRefreshSwapQuotes = () => {
   resetSwapQuoteState()
   requestSwapQuote()
 }
@@ -684,78 +684,20 @@ watch(swapSelectedQuote, () => {
               maxable
             />
 
-            <!-- Receive as token selector -->
+            <!-- Receive as / swap-and-withdraw hidden: single-asset vaults -->
+            <!--
             <div class="flex items-center gap-8">
               <span class="text-p3 text-content-tertiary">Receive as</span>
-              <button
-                type="button"
-                class="flex items-center gap-6 bg-card text-p3 font-semibold px-12 h-36 rounded-[40px] whitespace-nowrap"
-                @click="openSwapTokenSelector"
-              >
-                <AssetAvatar
-                  :asset="{ address: selectedOutputAsset?.address || asset.address, symbol: selectedOutputAsset?.symbol || asset.symbol }"
-                  size="20"
-                />
+              <button type="button" class="flex items-center gap-6 bg-card text-p3 font-semibold px-12 h-36 rounded-[40px] whitespace-nowrap" @click="openSwapTokenSelector">
+                <AssetAvatar :asset="{ address: selectedOutputAsset?.address || asset.address, symbol: selectedOutputAsset?.symbol || asset.symbol }" size="20" />
                 {{ selectedOutputAsset?.symbol || asset.symbol }}
-                <SvgIcon
-                  class="text-content-tertiary !w-16 !h-16"
-                  name="arrow-down"
-                />
+                <SvgIcon class="text-content-tertiary !w-16 !h-16" name="arrow-down" />
               </button>
             </div>
-
-            <!-- Swap info block -->
             <template v-if="needsSwap && selectedOutputAsset">
-              <SwapRouteSelector
-                :items="swapRouteItems"
-                :selected-provider="swapSelectedProvider"
-                :status-label="swapQuotesStatusLabel"
-                :is-loading="isSwapQuoteLoading"
-                empty-message="Enter amount to fetch quotes"
-                @select="selectSwapQuote"
-                @refresh="onRefreshSwapQuotes"
-              />
-
-              <VaultFormInfoBlock
-                v-if="swapEstimatedOutput || swapQuoteError"
-                :loading="isSwapQuoteLoading"
-                variant="card"
-              >
-                <SwapDetailsSummary
-                  :input-display="swapInputDisplay"
-                  :input-exact-display="swapInputExactDisplay"
-                  :output-display="swapOutputDisplay"
-                  :output-exact-display="swapOutputExactDisplay"
-                  :price-impact="swapPriceImpact"
-                  :slippage="swapSlippage"
-                  :routed-via="swapRoutedVia"
-                  @open-slippage-settings="openSlippageSettings"
-                />
-              </VaultFormInfoBlock>
-
-              <UiAlert
-                v-if="swapQuoteError"
-                title="Swap quote"
-                variant="warning"
-                :description="swapQuoteError"
-                size="compact"
-              />
+              ...swap UI...
             </template>
-
-            <UiAlert
-              v-if="isUnknownSwapToken && needsSwap"
-              title="Unknown token"
-              description="This token is not on any recognized token list. It could be fraudulent or malicious. Verify the contract address before proceeding."
-              variant="warning"
-              size="compact"
-            />
-            <UiAlert
-              v-if="isOutputAssetBlocked || isOutputAssetRestricted"
-              title="Asset restricted"
-              description="Receiving this asset is not available in your region. Pick a different token."
-              variant="warning"
-              size="compact"
-            />
+            -->
 
             <UiAlert
               v-show="estimatesError"

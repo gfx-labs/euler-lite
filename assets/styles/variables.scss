@@ -18,14 +18,14 @@
   //
   // ════════════════════════════════════════════════════════════════
 
-  // — Brand Accent (buttons, links, focus rings, highlights) ——————
-  --accent-100: #e6faf5;
-  --accent-300: #0e4e3f;
-  --accent-400: #167a62;
-  --accent-500: #1c997c;
-  --accent-600: #23c09b;
-  --accent-700: #2ae5b9;
-  --accent-rgb: 28, 153, 124;          // ← RGB of --accent-500
+  // — Brand Accent (Poppie slate blue — light mode optimized) —————
+  --accent-100: #E2E8FD;
+  --accent-300: #3d4063;
+  --accent-400: #4B4E6F;
+  --accent-500: #4B4E6F;
+  --accent-600: #5c6090;
+  --accent-700: #7E96C6;
+  --accent-rgb: 75, 78, 111;            // ← RGB of --accent-500 (dark slate for contrast)
 
   // — Status Colors ———————————————————————————————————————————————
   --success-rgb: 98, 173, 79;
@@ -39,20 +39,19 @@
 
   --error-rgb: 192, 39, 35;
   --error-100: rgba(var(--error-rgb), 0.2);
-  --error-300: #e2564f;
   --error-500: #c02723;
 
-  // — Primary Palette (Navy) —————————————————————————————————————
-  --primary-50: #f0f4f8;
-  --primary-100: #d9e2ec;
-  --primary-200: #bcccdc;
-  --primary-300: #9fb3c8;
-  --primary-400: #829ab1;
-  --primary-500: #627d98;
-  --primary-600: #486581;
-  --primary-700: #334e68;
-  --primary-800: #243b53;
-  --primary-900: #102a43;
+  // — Primary Palette (Poppie Slate) ——————————————————————————————
+  --primary-50: #f0f2f8;
+  --primary-100: #dce0ef;
+  --primary-200: #c0c5dc;
+  --primary-300: #9da3c4;
+  --primary-400: #7E96C6;
+  --primary-500: #5c6090;
+  --primary-600: #4B4E6F;
+  --primary-700: #3d4063;
+  --primary-800: #2a2d4a;
+  --primary-900: #1a1c35;
 
   // — Neutral Palette —————————————————————————————————————————————
   --neutral-50: #fafafa;
@@ -117,10 +116,10 @@
   // CHART COLORS (for Chart.js canvas rendering)
   // Read these via getComputedStyle in JavaScript.
   // ============================================
-  --chart-line-a: #62ad4f;
-  --chart-fill-a: rgba(98, 173, 79, 0.15);
-  --chart-line-b: #1c997c;
-  --chart-fill-b: rgba(28, 153, 124, 0.15);
+  --chart-line-a: #4B4E6F;
+  --chart-fill-a: rgba(75, 78, 111, 0.15);
+  --chart-line-b: #FDAC2A;
+  --chart-fill-b: rgba(253, 172, 42, 0.15);
   --chart-text: #737373;
   --chart-text-muted: #525252;
   --chart-grid: #f5f5f5;
@@ -165,7 +164,7 @@
   --text-tertiary: var(--neutral-500);
   --text-muted: var(--neutral-400);
   --text-inverse: #ffffff;
-  --text-accent: var(--accent-600);
+  --text-accent: var(--accent-500);
 
   // Borders
   --border-default: var(--neutral-200);
@@ -196,49 +195,49 @@
 // DARK THEME
 // ============================================
 [data-theme="dark"] {
-  // — Brand Accent (brighter for dark backgrounds) ————————————————
-  --accent-100: #0a3d30;
-  --accent-300: #a1f4e0;
-  --accent-400: #66eccd;
-  --accent-500: #2ae5b9;
-  --accent-600: #23c09b;
-  --accent-700: #1c997c;
-  --accent-rgb: 42, 229, 185;          // ← RGB of dark --accent-500
+  // — Brand Accent (brighter for dark backgrounds — Poppie blue) ——
+  --accent-100: #1a2040;
+  --accent-300: #B3CAFB;
+  --accent-400: #9DB0DA;
+  --accent-500: #9DB0DA;
+  --accent-600: #7E96C6;
+  --accent-700: #4B4E6F;
+  --accent-rgb: 157, 176, 218;          // ← RGB of dark --accent-500
 
-  // Override neutral palette — brand-aligned
-  --neutral-50: #08131f;
-  --neutral-100: #0c1d2f;
-  --neutral-200: #10263e;
-  --neutral-300: #14304e;
-  --neutral-400: #435971;
-  --neutral-500: #728395;
-  --neutral-600: #a1acb8;
-  --neutral-700: #ddfbf4;
+  // Override neutral palette — Poppie brand-aligned
+  --neutral-50: #0d0f1a;
+  --neutral-100: #131625;
+  --neutral-200: #1a1e30;
+  --neutral-300: #22273d;
+  --neutral-400: #4a4f6a;
+  --neutral-500: #727898;
+  --neutral-600: #a1a7bf;
+  --neutral-700: #E2E8FD;
   --neutral-800: #f7f7f8;
   --neutral-900: #f7f7f8;
 
-  // Semantic backgrounds — matches brand palette
-  --bg-body: #08131f;
-  --bg-surface: #08131f;
-  --bg-surface-secondary: #0c1d2f;
-  --bg-surface-elevated: #10263e;
-  --bg-card: #0c1d2f;
-  --bg-card-hover: #10263e;
-  --bg-header: rgba(8, 19, 31, 0.85);
+  // Semantic backgrounds — Poppie dark slate
+  --bg-body: #0d0f1a;
+  --bg-surface: #0d0f1a;
+  --bg-surface-secondary: #131625;
+  --bg-surface-elevated: #1a1e30;
+  --bg-card: #131625;
+  --bg-card-hover: #1a1e30;
+  --bg-header: rgba(13, 15, 26, 0.85);
 
   // Text — brand hierarchy
   --c-text: #f7f7f8;
   --text-primary: #f7f7f8;
-  --text-secondary: #ddfbf4;
-  --text-tertiary: #a1acb8;
+  --text-secondary: #E2E8FD;
+  --text-tertiary: #a1a7bf;
   --text-muted: #728395;
   --text-inverse: #08131f;
   --text-accent: var(--accent-500);
 
   // Borders
-  --border-default: #14304e;
+  --border-default: #22273d;
   --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-emphasis: #435971;
+  --border-emphasis: #4a4f6a;
 
   // Shadows - deeper for dark mode
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -262,17 +261,17 @@
   --skeleton-background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0) 50%);
   --skeleton-background-gray: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0) 50%);
 
-  // Chart colors (dark theme)
-  --chart-line-a: #62ad4f;
-  --chart-fill-a: rgba(98, 173, 79, 0.15);
-  --chart-line-b: #2ae5b9;
-  --chart-fill-b: rgba(42, 229, 185, 0.15);
-  --chart-text: #a1acb8;
-  --chart-text-muted: #728395;
+  // Chart colors (dark theme — Poppie blue + amber)
+  --chart-line-a: #9DB0DA;
+  --chart-fill-a: rgba(157, 176, 218, 0.15);
+  --chart-line-b: #FDAC2A;
+  --chart-fill-b: rgba(253, 172, 42, 0.15);
+  --chart-text: #a1a7bf;
+  --chart-text-muted: #727898;
   --chart-grid: rgba(255, 255, 255, 0.04);
   --chart-axis: rgba(255, 255, 255, 0.08);
-  --chart-tooltip-bg: rgba(12, 29, 47, 0.95);
-  --chart-tooltip-border: #14304e;
+  --chart-tooltip-bg: rgba(19, 22, 37, 0.95);
+  --chart-tooltip-border: #22273d;
   --chart-tooltip-text: #f7f7f8;
   --chart-tooltip-text-muted: #a1acb8;
   --chart-annotation-line: #a1acb8;

@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import { getDefaultPageRoute } from '~/entities/menu'
-
-const { enableEarnPage, enableLendPage, enableExplorePage } = useDeployConfig()
-const defaultPageRoute = getDefaultPageRoute(enableEarnPage, enableLendPage, enableExplorePage)
-
+// Root "/" is served by server/middleware/landing.ts (landing page).
+// If the SPA client-side router reaches here (e.g., via navigateTo('/')),
+// redirect to /lend instead of showing a blank page.
 const route = useRoute()
-const isOnboardingCompleted = useLocalStorage('is-onboarding-completed', false)
-// Non-blocking to avoid Suspense + pageTransition crash on direct navigation
 navigateTo(
-  {
-    name: isOnboardingCompleted.value ? defaultPageRoute : 'onboarding',
-    query: route.query,
-    hash: route.hash,
-  },
+  { name: 'lend', query: route.query, hash: route.hash },
   { replace: true },
 )
 </script>

@@ -85,6 +85,6 @@ defineEmits(['close'])
       </div>
     </div>
     <Permit2Settings />
-    <SlippageSettings />
+    <!-- SlippageSettings hidden: swap features are disabled in this deployment -->
   </BaseModalWrapper>
 </template>

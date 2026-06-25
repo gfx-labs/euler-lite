@@ -44,6 +44,7 @@ export const useDeployConfig = () => {
     enableEarnPage: isEnabled(rc.configEnableEarnPage),
     enableLendPage: isEnabled(rc.configEnableLendPage),
     enableExplorePage: isEnabled(rc.configEnableExplorePage),
+    enableMultiply: isEnabled(rc.configEnableMultiply),
     enablePoweredByEuler: isEnabled(rc.configEnablePoweredByEuler),
     enableAppTitle: isEnabled(rc.configEnableAppTitle),
     enableMerkl: isEnabled(rc.configEnableMerkl),

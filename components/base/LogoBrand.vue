@@ -12,7 +12,7 @@ const onImageError = () => {
 <template>
   <img
     v-if="hasCustomLogo && !customLogoFailed"
-    class="w-24 h-24"
+    class="w-24 h-24 logo-brand-img"
     :src="logoUrl"
     alt="Logo"
     @error="onImageError"
@@ -40,3 +40,11 @@ const onImageError = () => {
     />
   </svg>
 </template>
+
+<style>
+/* White logo: invert in light mode so it's dark/visible.
+   In dark mode, keep it white (no filter needed). */
+:root:not([data-theme="dark"]) .logo-brand-img {
+  filter: invert(1);
+}
+</style>

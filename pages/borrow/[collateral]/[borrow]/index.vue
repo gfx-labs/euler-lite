@@ -56,6 +56,8 @@ const collateralAddress = route.params.collateral as string
 const borrowAddress = route.params.borrow as string
 useOperationGuard([collateralAddress, borrowAddress])
 
+const { enableMultiply } = useDeployConfig()
+
 const formTabFromQuery = (value: unknown): 'borrow' | 'multiply' | undefined => {
   const tabValue = Array.isArray(value) ? value[0] : value
   return tabValue === 'borrow' || tabValue === 'multiply' ? tabValue : undefined
@@ -347,7 +349,7 @@ const addMultiplyToBatch = async () => {
 // --- Tabs ---
 const formTabs = computed(() => [
   { label: 'Borrow', value: 'borrow' },
-  { label: 'Multiply', value: 'multiply' },
+  ...(enableMultiply ? [{ label: 'Multiply', value: 'multiply' }] : []),
 ])
 
 const tabs = computed(() => {
@@ -646,6 +648,7 @@ watch(
           >
             <template v-if="pair">
               <UiTabs
+                v-if="formTabs.length > 1"
                 v-model="formTab"
                 class="mb-12"
                 rounded

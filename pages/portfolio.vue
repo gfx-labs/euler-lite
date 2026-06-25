@@ -134,20 +134,8 @@ watch(showAllLabelEntries, (showAll) => {
       <h2 class="text-h2 text-content-primary">
         Your Portfolio
       </h2>
-      <div class="flex items-center gap-8">
-        <span class="text-h6 text-content-secondary">Show all</span>
-        <UiFootnote
-          title="Show all"
-          text="When enabled, shows positions and deposits in unverified vaults. Interacting with unverified vaults may pose security risks, as such vaults could potentially be used for phishing attempts. Ensure you trust the source before continuing."
-          tooltip-placement="top-end"
-        />
-        <UiSwitch
-          v-model="isShowAllPositions"
-        />
-      </div>
+      <!-- Show all toggle hidden: single-curator app, all vaults are verified -->
     </div>
-
-    <PortfolioShowAllHint />
 
     <PortfolioRampingBanner />
 
