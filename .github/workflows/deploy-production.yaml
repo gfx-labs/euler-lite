@@ -1,7 +1,7 @@
 name: Deploy Production
 
 # Triggered by version tags on the poppie branch.
-# Flow: tag v1.0.0 → build image → wait for admin approval → deploy to Cloud Run
+# Flow: tag v1.0.0 → npm build → crane image → wait for approval → deploy
 on:
   push:
     tags:
@@ -14,6 +14,7 @@ env:
   REGION: us-central1
   SERVICE: euler-lite
   IMAGE: us-central1-docker.pkg.dev/ondo-poppie-prod/euler-lite/euler-lite
+  BASE_IMAGE: gcr.io/distroless/nodejs24-debian12:nonroot
   WIF_PROVIDER: projects/672110407756/locations/global/workloadIdentityPools/github-pool/providers/github-provider
   WIF_SERVICE_ACCOUNT: github-deploy@ondo-poppie-prod.iam.gserviceaccount.com
 
@@ -32,14 +33,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Nuxt app
+        run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ env.WIF_PROVIDER }}
           service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
@@ -48,18 +60,18 @@ jobs:
         id: meta
         run: echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
-            ${{ env.IMAGE }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
+      - name: Install crane
+        uses: imjasonh/setup-crane@v0.4
+
+      - name: Build and push image
+        run: |
+          # Package .output into a tar layer and append onto distroless base
+          tar -cf /tmp/app-layer.tar --transform='s,^,.output/,' -C .output .
+          crane append \
+            --base ${{ env.BASE_IMAGE }} \
+            --new_layer /tmp/app-layer.tar \
+            --new_tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
+          crane tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }} latest
 
   deploy:
     name: Deploy to Cloud Run
