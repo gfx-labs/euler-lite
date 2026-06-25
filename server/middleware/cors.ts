@@ -64,8 +64,8 @@ export default defineEventHandler((event) => {
   if (country) {
     setResponseHeader(event, 'x-country-code', country)
   }
-  else if (process.env.DOPPLER_ENVIRONMENT === 'dev') {
-    // No DEV_GEO_COUNTRY set — send a placeholder so the client doesn't fail-closed.
+  else if (process.env.DOPPLER_ENVIRONMENT === 'dev' || process.env.DISABLE_GEO_GATE === 'true') {
+    // No country detected — send a placeholder so the client doesn't fail-closed.
     // '--' is not a real country code so no geo-blocks will trigger.
     setResponseHeader(event, 'x-country-code', '--')
   }

@@ -4,6 +4,12 @@ import { isInternalRequest } from '~/server/utils/internal-headers'
 import { logger } from '~/server/utils/logger'
 
 export default defineEventHandler((event) => {
+  // Allow disabling the app-level geo-gate entirely when geo-blocking
+  // is handled at the CDN/edge layer (e.g. Cloudflare WAF rules).
+  if (process.env.DISABLE_GEO_GATE === 'true') {
+    return
+  }
+
   // Only gate API routes
   const url = getRequestURL(event)
   if (!url.pathname.startsWith('/api/')) {

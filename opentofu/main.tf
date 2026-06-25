@@ -181,6 +181,11 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         name  = "HOST"
         value = "0.0.0.0"
       }
+      # Geo-blocking handled at Cloudflare edge — disable app-level gate
+      env {
+        name  = "DISABLE_GEO_GATE"
+        value = "true"
+      }
 
       # App branding
       env {
