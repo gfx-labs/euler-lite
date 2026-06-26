@@ -2,6 +2,7 @@ import { createError, getQuery } from 'h3'
 import { createRateLimiter } from '~/server/utils/rate-limit'
 import { createTtlCache } from '~/server/utils/cache'
 import { fetchWithTimeout } from '~/server/utils/fetchWithTimeout'
+import { getEmbeddedOracleAdapters } from '~/server/utils/embedded-oracle-checks'
 import { logger } from '~/server/utils/logger'
 
 const CACHE_TTL_MS = 300_000
@@ -41,9 +42,12 @@ export default defineEventHandler(async (event) => {
 
   const key = `${chainId}:${address.toLowerCase()}`
 
-  // No Cache-Control on this lazy (non-warm-cached) endpoint: origin data
-  // age can already reach the full TTL between client probes, so any CDN
-  // window would extend staleness past the per-cache invariant.
+  // Check embedded data first
+  const allEmbedded = getEmbeddedOracleAdapters(chainId)
+  if (Array.isArray(allEmbedded)) {
+    const match = allEmbedded.find((a: any) => a.address?.toLowerCase() === address.toLowerCase())
+    if (match !== undefined) return match
+  }
 
   const cached = cache.get(key)
   if (cached !== undefined) return cached

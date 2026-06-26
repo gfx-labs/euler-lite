@@ -2,6 +2,7 @@ import { createError, getQuery } from 'h3'
 import { createRateLimiter } from '~/server/utils/rate-limit'
 import { createTtlCache } from '~/server/utils/cache'
 import { fetchWithTimeout } from '~/server/utils/fetchWithTimeout'
+import { getEmbeddedOracleAdapters } from '~/server/utils/embedded-oracle-checks'
 import { logger } from '~/server/utils/logger'
 
 const CACHE_TTL_MS = 300_000
@@ -34,6 +35,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const key = `${chainId}`
+
+  // Serve embedded oracle checks if available
+  const embedded = getEmbeddedOracleAdapters(chainId)
+  if (embedded !== undefined) return embedded
 
   const cached = cache.get(key)
   if (cached !== undefined) return cached
