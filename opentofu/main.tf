@@ -188,6 +188,11 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         name  = "NUXT_PUBLIC_CONFIG_DISABLE_GOVERNOR_VERIFICATION"
         value = "true"
       }
+      # OFAC sanctions screening
+      env {
+        name  = "OFAC_LIST_URL"
+        value = "https://cdn.oku.trade/ofac.json"
+      }
       # Geo-blocking handled at Cloudflare edge — disable app-level gate
       env {
         name  = "DISABLE_GEO_GATE"

@@ -3,6 +3,7 @@ import { createRateLimiter } from '~/server/utils/rate-limit'
 import { UPSTREAM_FETCH_TIMEOUT_MS } from '~/server/utils/fetchWithTimeout'
 import { logger } from '~/server/utils/logger'
 import { isAbortError } from '~/utils/errorHandling'
+import { isOfacSanctioned } from '~/server/utils/ofac'
 
 const rateLimiter = createRateLimiter({
   max: 10,
@@ -37,48 +38,57 @@ export default defineEventHandler(async (event) => {
     || isTruthyHeader(event.node.req.headers['x-is-proxy-or-vpn']),
   )
 
+  // Mode 1: External TRM-style screening service
   const screeningUri = process.env.WALLET_SCREENING_URI
+  if (screeningUri) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), UPSTREAM_FETCH_TIMEOUT_MS)
 
-  if (!screeningUri) {
-    logger.warn({ ctx: 'screen-address' }, 'WALLET_SCREENING_URI is not set — failing closed')
-    return { addressIsSuspicious: true }
-  }
+    try {
+      const resp = await fetch(screeningUri, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address, chain: 'all', vpnIsUsed }),
+        signal: controller.signal,
+      })
 
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), UPSTREAM_FETCH_TIMEOUT_MS)
+      if (!resp.ok) {
+        logger.warn({ ctx: 'screen-address', status: resp.status }, 'TRM API non-ok response — failing closed')
+        return { addressIsSuspicious: true }
+      }
 
-  try {
-    const resp = await fetch(screeningUri, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address, chain: 'all', vpnIsUsed }),
-      signal: controller.signal,
-    })
+      const data = await resp.json()
+      const isSuspicious = data?.addressIsSuspicious !== false
 
-    if (!resp.ok) {
-      logger.warn({ ctx: 'screen-address', status: resp.status }, 'TRM API non-ok response — failing closed')
+      if (isSuspicious) {
+        logger.warn({ ctx: 'screen-address', address }, 'flagged, malformed, or ambiguous TRM response — failing closed')
+      }
+
+      return { addressIsSuspicious: isSuspicious }
+    }
+    catch (error) {
+      if (isAbortError(error)) {
+        logger.warn({ ctx: 'screen-address' }, 'TRM API timeout — failing closed')
+      }
+      else {
+        logger.warn({ ctx: 'screen-address', err: error }, 'TRM API error — failing closed')
+      }
       return { addressIsSuspicious: true }
     }
-
-    const data = await resp.json()
-    const isSuspicious = data?.addressIsSuspicious !== false
-
-    if (isSuspicious) {
-      logger.warn({ ctx: 'screen-address', address }, 'flagged, malformed, or ambiguous TRM response — failing closed')
+    finally {
+      clearTimeout(timeout)
     }
+  }
 
-    return { addressIsSuspicious: isSuspicious }
-  }
-  catch (error) {
-    if (isAbortError(error)) {
-      logger.warn({ ctx: 'screen-address' }, 'TRM API timeout — failing closed')
+  // Mode 2: OFAC list check (OFAC_LIST_URL configured)
+  if (process.env.OFAC_LIST_URL) {
+    const sanctioned = isOfacSanctioned(address)
+    if (sanctioned) {
+      logger.warn({ ctx: 'screen-address', address }, 'OFAC sanctioned address')
     }
-    else {
-      logger.warn({ ctx: 'screen-address', err: error }, 'TRM API error — failing closed')
-    }
-    return { addressIsSuspicious: true }
+    return { addressIsSuspicious: sanctioned }
   }
-  finally {
-    clearTimeout(timeout)
-  }
+
+  // Mode 3: No screening configured — fail open
+  return { addressIsSuspicious: false }
 })
