@@ -46,22 +46,7 @@ defineEmits(['close'])
         />
       </div>
     </div>
-    <div class="mb-20 rounded-16 border border-line-default bg-card p-16">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="text-p2">
-            Rewards
-          </div>
-          <div class="text-p3 text-content-muted">
-            Include token rewards in displayed rates
-          </div>
-        </div>
-        <UiSwitch
-          :model-value="settings.enableRewardsApy"
-          @update:model-value="updateSetting('enableRewardsApy', $event ?? false)"
-        />
-      </div>
-    </div>
+    <!-- Rewards toggle hidden — no reward campaigns in this deployment -->
     <div class="mb-20 rounded-16 border border-line-default bg-card p-16">
       <div class="flex items-start justify-between gap-16">
         <div class="min-w-0">
