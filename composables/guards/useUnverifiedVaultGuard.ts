@@ -13,8 +13,14 @@ export const useUnverifiedVaultGuard = (vaultAddresses: ComputedRef<string[]>) =
 
   const sessionAccepted = ref(false)
 
+  let _skip = false
+  try {
+    _skip = !!useRuntimeConfig().public.configDisableGovernorVerification
+  }
+  catch { /* outside Nuxt context */ }
+
   const hasUnverifiedVault = computed(() => {
-    if (useRuntimeConfig().public.configDisableGovernorVerification) return false
+    if (_skip) return false
     return vaultAddresses.value.some((addr) => {
       const normalized = normalizeAddress(addr)
       return !verifiedVaultAddresses.value.includes(normalized)

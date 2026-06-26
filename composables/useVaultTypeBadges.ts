@@ -30,18 +30,20 @@ export const useVaultTypeBadges = (vault: Ref<VaultTypeBadgeVault>) => {
     return isVaultGovernorVerified(vault.value as EVault)
   })
 
+  const skipVerification = !!useRuntimeConfig().public.configDisableGovernorVerification
+
   const governanceType = computed<VaultGovernanceBadge>(() => {
     if (isEarn.value) {
-      return entities.value.length ? 'managed' : 'unknown'
+      return entities.value.length ? 'managed' : (skipVerification ? 'managed' : 'unknown')
     }
 
     if (isEVault(vault.value) && getVaultCategory(vault.value.address) === 'escrow') return 'escrow'
     const governor = isSecuritize.value
       ? (vault.value as SecuritizeCollateralVault).governor
       : (vault.value as EVault).governorAdmin
-    if (!governor) return 'unknown'
+    if (!governor) return skipVerification ? 'governed' : 'unknown'
     if (governor.toLowerCase() === zeroAddress) return 'ungoverned'
-    return entities.value.length ? 'governed' : 'unknown'
+    return entities.value.length ? 'governed' : (skipVerification ? 'governed' : 'unknown')
   })
 
   const isGovernanceLimited = computed(() =>

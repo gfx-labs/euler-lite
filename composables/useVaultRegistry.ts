@@ -195,7 +195,18 @@ const isEscrowVault = (address: string): boolean => {
 const isEarnVault = (address: string): boolean => getType(address) === 'earn'
 const isSecuritizeVault = (address: string): boolean => getType(address) === 'securitize'
 const isEVaultAddress = (address: string): boolean => getType(address) === 'evk'
+let _skipVerification: boolean | null = null
+
 const isVerifiedVault = (address: string): boolean => {
+  if (_skipVerification === null) {
+    try {
+      _skipVerification = !!useRuntimeConfig().public.configDisableGovernorVerification
+    }
+    catch {
+      _skipVerification = false
+    }
+  }
+  if (_skipVerification) return true
   const { verifiedVaultAddresses, earnVaults } = useEulerLabels()
   const normalized = normalizeAddress(address)
   return get(normalized)?.verified === true

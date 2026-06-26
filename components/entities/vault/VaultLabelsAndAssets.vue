@@ -25,14 +25,14 @@ const normalizeAddress = (address?: string) => {
 }
 
 const vaultAddress = computed(() => normalizeAddress(vault?.address))
-const { getVaultCategory, isVerifiedVault } = useVaultRegistry()
+const { getVaultCategory, isVerifiedVault: _isVerifiedVault } = useVaultRegistry()
 const product = useEulerProductOfVault(vaultAddress)
-const displayName = computed(() => {
+const _displayName = computed(() => {
   if (!vault) return ''
   if (getVaultCategory(vault.address) === 'escrow') {
     return 'Escrowed collateral'
   }
-  return product.name || vault.shares.name
+  return product.name || vault.asset.symbol || vault.shares.name
 })
 
 const pairVaultAddress = computed(() => pairVault ? normalizeAddress(pairVault.address) : '')
@@ -63,12 +63,12 @@ const getVaultLabel = (v?: EVault | EulerEarn | SecuritizeCollateralVault) => {
   }
   const addr = normalizeAddress(v.address)
   if (addr === vaultAddress.value) {
-    return product.name || vault?.shares.name || v.shares.name
+    return product.name || vault?.asset.symbol || vault?.shares.name || v.shares.name
   }
-  return pairProduct.name || v.shares.name
+  return pairProduct.name || v.asset.symbol || v.shares.name
 }
 
-const displayLabel = computed(() => {
+const _displayLabel = computed(() => {
   if (!vault) return ''
   const collateralLabel = getVaultLabel(vault)
 
@@ -109,19 +109,10 @@ const displayAssetsLabel = computed(() => assetsLabel || assets.map(asset => ass
     />
 
     <div class="min-w-0">
-      <div class="flex flex-wrap items-center gap-8 mb-4 min-w-0">
-        <span
-          class="text-content-tertiary min-w-0"
-          data-id="data-point"
-          :data-key="pairVault ? `${vault.address.toLowerCase()}:${pairVault.address.toLowerCase()}` : vault.address.toLowerCase()"
-          data-field="name"
-          :data-value="pairVault ? displayLabel : displayName"
-        >
-          <VaultDisplayName
-            :name="pairVault ? displayLabel : displayName"
-            :is-unverified="(!!vault && !isVerifiedVault(vault.address)) || !!(pairVault && !isVerifiedVault(pairVault.address))"
-          />
-        </span>
+      <div
+        v-if="isDeprecated || isRestricted"
+        class="flex flex-wrap items-center gap-8 mb-4 min-w-0"
+      >
         <span
           v-if="isDeprecated"
           class="inline-flex items-center gap-4 rounded-8 px-8 py-2 bg-warning-100 text-warning-500 text-p5"

@@ -1138,6 +1138,7 @@ export const useVaults = () => {
   // bare list membership. The SDK securitize type exposes `governor` (not
   // `governorAdmin`); the shared rule reads `governorAdmin ?? governor`.
   const isSecuritizeGovernorVerified = (vault: SecuritizeCollateralVault): boolean => {
+    if (useRuntimeConfig().public.configDisableGovernorVerification) return true
     const { isVerifiedVault } = useVaultRegistry()
     return verifyVaultGovernor(
       Object.assign(vault, { verified: isVerifiedVault(vault.address) }),
@@ -1147,6 +1148,7 @@ export const useVaults = () => {
 
   // Check if earn vault's on-chain owner matches any of the product's declared entities
   const isEarnVaultOwnerVerified = (earnVault: EulerEarn): boolean => {
+    if (useRuntimeConfig().public.configDisableGovernorVerification) return true
     const { isVerifiedVault } = useVaultRegistry()
     return verifyEarnVaultOwner(
       Object.assign(earnVault, { verified: isVerifiedVault(earnVault.address) }),

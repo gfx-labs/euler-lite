@@ -62,7 +62,7 @@ const isEscrowCollateral = computed(
   () => getVaultCategory(pair.collateral.address) === 'escrow',
 )
 
-const isAnyUnverified = computed(() => {
+const _isAnyUnverified = computed(() => {
   const collateralUnverified = !isVerifiedVault(pair.collateral.address)
   const borrowUnverified = !isVerifiedVault(pair.borrow.address)
   return collateralUnverified || borrowUnverified
@@ -82,8 +82,8 @@ const isPairEffectivelyBlocked = computed(() => {
 })
 
 const isRecentlyAdded = computed(() => isVaultRecentlyAdded(pair.collateral.address) || isVaultRecentlyAdded(pair.borrow.address))
-const isKeyring = computed(() => isVaultKeyring(pair.collateral.address) || isVaultKeyring(pair.borrow.address))
-const isCyclicalNote = computed(() => isVaultCyclicalNote(pair.borrow.address))
+const _isKeyring = computed(() => isVaultKeyring(pair.collateral.address) || isVaultKeyring(pair.borrow.address))
+const _isCyclicalNote = computed(() => isVaultCyclicalNote(pair.borrow.address))
 
 const isAnyDeprecated = computed(() => {
   const collateralAddr = getAddress(pair.collateral.address)
@@ -93,7 +93,7 @@ const isAnyDeprecated = computed(() => {
   return collateralDeprecated || borrowDeprecated
 })
 
-const pairName = computed(() => {
+const _pairName = computed(() => {
   // Handle escrow collateral specially
   const collateralName = isEscrowCollateral.value
     ? 'Escrowed collateral'
@@ -277,7 +277,7 @@ const linkPath = computed(() => ({
     <div class="contents mobile:!flex mobile:flex-col mobile:gap-12 mobile:py-16 mobile:px-16 mobile:pb-12 mobile:border-b mobile:border-line-subtle">
       <div
         :class="enableEntityBranding ? 'col-span-4' : 'col-span-3'"
-        class="flex pl-16 py-16 pb-12 mobile:!p-0 mobile:w-full mobile:min-w-0 mobile:items-center"
+        class="flex items-center pl-16 py-16 pb-12 mobile:!p-0 mobile:w-full mobile:min-w-0 mobile:items-center"
       >
         <AssetAvatar
           :asset="[pair.collateral.asset, pair.borrow.asset]"
@@ -285,23 +285,9 @@ const linkPath = computed(() => ({
         />
         <div class="flex-grow ml-12 min-w-0">
           <div
+            v-if="isAnyDeprecated || isGeoBlocked || isGeoRestricted"
             class="text-content-tertiary text-p3 mb-4 flex items-center gap-8"
-            data-id="data-point"
-            :data-key="pairKey"
-            data-field="name"
-            :data-value="pairName"
           >
-            <VaultDisplayName
-              :name="pairName"
-              :is-unverified="isAnyUnverified"
-            />
-            <RecentlyAddedBadge
-              v-if="isRecentlyAdded"
-              class="mobile:hidden"
-            />
-            <KeyringBadge v-if="isKeyring && !isAnyGovernorUnverified" />
-            <GovernanceLimitedBadge v-if="isAnyGovernanceLimited" />
-            <CyclicalNoteBadge v-if="isCyclicalNote && !isAnyGovernorUnverified" />
             <RestrictedBadge
               v-if="isGeoBlocked"
               variant="blocked"

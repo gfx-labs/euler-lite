@@ -214,11 +214,7 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "/logo.svg"
       }
 
-      # Swap API
-      env {
-        name  = "NUXT_PUBLIC_SWAP_API_URL"
-        value = "https://swap.euler.finance/"
-      }
+
 
       # Oracle checks (still fetched from upstream — no custom overrides)
       env {
