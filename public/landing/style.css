@@ -14,7 +14,6 @@
   --purple-end: #7E5FC6;
   --bg: #FAFBFE;
   --bg-alt: #F0F2FA;
-  --bg-dots: rgba(92, 95, 160, 0.06);
   --text: #1A1D3B;
   --text-secondary: #5A5E7E;
   --border: #D8DCF0;
@@ -34,9 +33,6 @@ body {
   background: var(--bg);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  /* Subtle dot grid across entire page */
-  background-image: radial-gradient(circle, var(--bg-dots) 1px, transparent 1px);
-  background-size: 24px 24px;
 }
 
 .container {
@@ -337,7 +333,7 @@ a { color: inherit; text-decoration: none; }
 .hl-coin  { top: 55%; right: 6%; animation-delay: 0.5s; }
 .hl-meta  { bottom: 18%; left: 12%; animation-delay: 3s; }
 .hl-amzn  { bottom: 22%; right: 14%; animation-delay: 1.5s; }
-.hl-spy   { top: 35%; right: 3%; animation-delay: 2.5s; }
+.hl-nflx  { top: 35%; right: 3%; animation-delay: 2.5s; }
 .hl-googl { bottom: 30%; left: 5%; animation-delay: 0.8s; }
 
 @keyframes float-logo {
@@ -414,116 +410,6 @@ a { color: inherit; text-decoration: none; }
 @keyframes scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
-}
-
-/* ── Geometric Elements ──────────────────────────────────────── */
-.section-geo { position: relative; overflow: hidden; }
-
-/* Rotating diamond shapes */
-.geo-diamond {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  border: 1.5px solid rgba(92,95,160,0.1);
-  border-radius: 24px;
-  transform: rotate(45deg);
-  pointer-events: none;
-}
-
-.geo-diamond-1 {
-  top: -60px;
-  right: -40px;
-  animation: spin-slow 20s linear infinite;
-}
-
-.geo-diamond-2 {
-  bottom: -80px;
-  left: -60px;
-  width: 160px;
-  height: 160px;
-  border-color: rgba(92,95,160,0.07);
-  animation: spin-slow 25s linear infinite reverse;
-}
-
-@keyframes spin-slow {
-  0% { transform: rotate(45deg); }
-  100% { transform: rotate(405deg); }
-}
-
-/* Ring outlines */
-.geo-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1.5px solid rgba(92,95,160,0.08);
-  pointer-events: none;
-}
-
-.geo-ring-1 {
-  width: 300px;
-  height: 300px;
-  top: -80px;
-  left: -100px;
-}
-
-.geo-ring-2 {
-  width: 220px;
-  height: 220px;
-  bottom: -60px;
-  right: -50px;
-  border-style: dashed;
-  animation: spin-slow 30s linear infinite;
-}
-
-/* Cross / plus marks */
-.geo-cross {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  pointer-events: none;
-  opacity: 0.15;
-}
-
-.geo-cross::before,
-.geo-cross::after {
-  content: '';
-  position: absolute;
-  background: var(--accent);
-}
-
-.geo-cross::before {
-  width: 2px;
-  height: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.geo-cross::after {
-  width: 100%;
-  height: 2px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.geo-cross-1 {
-  top: 20%;
-  right: 8%;
-  animation: pulse-cross 3s ease-in-out infinite;
-}
-
-@keyframes pulse-cross {
-  0%, 100% { opacity: 0.15; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.2); }
-}
-
-/* Dot grid pattern */
-.geo-dots {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(92,95,160,0.1) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: radial-gradient(ellipse 50% 60% at 80% 50%, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 50% 60% at 80% 50%, black 0%, transparent 70%);
-  pointer-events: none;
 }
 
 /* ── Sections ────────────────────────────────────────────────── */
@@ -912,38 +798,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 .cta-content { position: relative; z-index: 2; }
-
-.cta-grid {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(92,95,160,0.06) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-.cta-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  pointer-events: none;
-}
-
-.cta-orb-1 {
-  width: 300px;
-  height: 300px;
-  background: rgba(126,95,198,0.2);
-  top: -80px;
-  left: -60px;
-  animation: float-orb 9s ease-in-out infinite;
-}
-
-.cta-orb-2 {
-  width: 250px;
-  height: 250px;
-  background: rgba(46,204,113,0.1);
-  bottom: -60px;
-  right: -40px;
-  animation: float-orb 11s ease-in-out infinite reverse;
-}
 
 .cta-section h2 {
   font-size: clamp(28px, 4vw, 40px);
