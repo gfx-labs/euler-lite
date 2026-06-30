@@ -657,6 +657,16 @@ watch(
             class="flex flex-col gap-16 w-full min-w-0"
             @submit.prevent="onSubmit"
           >
+            <div
+              v-if="isMarketClosed"
+              class="flex items-start gap-8 rounded-12 border border-warning-200 bg-warning-100 px-12 py-10 text-p3 text-warning-600"
+            >
+              <SvgIcon
+                name="warning"
+                class="!w-16 !h-16 mt-1 flex-shrink-0"
+              />
+              <span>Market is currently closed — supply and borrow actions are paused until the oracle resumes.</span>
+            </div>
             <template v-if="pair">
               <UiTabs
                 v-if="formTabs.length > 1"

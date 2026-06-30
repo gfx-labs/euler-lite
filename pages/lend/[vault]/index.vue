@@ -926,6 +926,16 @@ watch(amount, async () => {
             @submit.prevent="submit"
           >
             <div
+              v-if="isMarketClosed"
+              class="flex items-start gap-8 rounded-12 border border-warning-200 bg-warning-100 px-12 py-10 mb-16 text-p3 text-warning-600"
+            >
+              <SvgIcon
+                name="warning"
+                class="!w-16 !h-16 mt-1 flex-shrink-0"
+              />
+              <span>Market is currently closed — deposits are paused until the oracle resumes.</span>
+            </div>
+            <div
               v-if="isVaultLoaded && asset"
               class="flex items-center justify-between"
             >
