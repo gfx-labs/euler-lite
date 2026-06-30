@@ -752,6 +752,33 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.6;
 }
 
+.cat-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cat-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 4px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+.cat-logo-pill img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
 .asset-cta { text-align: center; }
 
 @media (max-width: 768px) {
