@@ -1,0 +1,5 @@
+# CI/CD and workflow files — require approval from @elee1766
+.github/ @elee1766
+
+# Infrastructure
+opentofu/ @elee1766
