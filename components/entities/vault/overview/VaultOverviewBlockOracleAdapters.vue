@@ -18,7 +18,6 @@ const props = defineProps<{
   vaults?: EVault[]
   collateralVaults?: (EVault | SecuritizeCollateralVault)[]
 }>()
-const { isMarketOpen } = useMarketHours()
 const { oracleAdapters, loadOracleAdapter } = useEulerLabels()
 const { chainId } = useEulerAddresses()
 const { buildKnownSymbols, resolveSymbol: resolveTokenSymbol, shortenAddress } = useTokenSymbolResolver()
@@ -428,7 +427,7 @@ const onTooltipMouseLeave = () => {
                 name="warning"
                 class="mr-2 !w-20 !h-20"
               />
-              {{ isMarketOpen ? 'Unknown' : 'Market closed' }}
+              Market closed
             </span>
             <span
               v-else

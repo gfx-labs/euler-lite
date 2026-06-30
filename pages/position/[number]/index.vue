@@ -1005,7 +1005,7 @@ watch([isConnected, isSpyMode, address], () => {
               <span
                 v-if="hasQueryFailure"
                 class="text-warning-500"
-              >Unknown</span>
+              >Market closed</span>
               <template v-else>
                 {{ formatHealthScore(positionHealthScore ?? 0) }}
               </template>
@@ -1019,7 +1019,7 @@ watch([isConnected, isSpyMode, address], () => {
               <span
                 v-if="hasQueryFailure"
                 class="text-warning-500"
-              >Unknown</span>
+              >Market closed</span>
               <template v-else>
                 {{ timeToLiquidationDisplay }}
               </template>
@@ -1040,7 +1040,7 @@ watch([isConnected, isSpyMode, address], () => {
               <span
                 v-if="hasQueryFailure || positionLTVPercent === null"
                 class="text-warning-500"
-              >Unknown</span>
+              >Market closed</span>
               <template v-else>
                 <UiHoverPreviewTooltip
                   v-if="rampStatus?.isRamping"

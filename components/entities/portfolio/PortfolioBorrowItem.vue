@@ -696,7 +696,7 @@ const openPositionInformationModal = () => {
               <span
                 v-if="hasQueryFailure || health === undefined"
                 class="text-warning-500"
-              >Unknown</span>
+              >Market closed</span>
               <template v-else>
                 {{ formatNumber(nanoToValue(health, 18)) }}
               </template>
@@ -707,7 +707,7 @@ const openPositionInformationModal = () => {
               Your LTV
             </div>
             <template v-if="hasQueryFailure || userLTV === null">
-              <span class="text-warning-500 text-p3">Unknown</span>
+              <span class="text-warning-500 text-p3">Market closed</span>
             </template>
             <template v-else>
               <div class="flex justify-between items-center gap-16">
