@@ -451,9 +451,10 @@ const hasCollateralPriceFailure = (bVault: EVault | undefined, collAddr: string 
   const collateralPrice = getCollateralShareOraclePrice(bVault, { address: collAddr })
   if (!collateralPrice) return true
   return (
-    collateralPrice.queryFailure
+    (collateralPrice as any).queryFailure === true
     || collateralPrice.amountOutMid === undefined
     || collateralPrice.amountOutMid === null
+    || collateralPrice.amountOutMid === 0n
   )
 }
 
