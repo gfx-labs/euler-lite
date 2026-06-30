@@ -51,6 +51,8 @@ const supplyApyWithRewards = computed(() => withVaultIntrinsicApy(
   collateralVault.value,
   enableIntrinsicApy.value,
 ) + collateralRewardAPY.value)
+const { isMarketOpen } = useMarketHours()
+
 const borrowApyWithRewards = computed(() => withVaultIntrinsicApy(
   getVaultBorrowApy(borrowVault.value),
   borrowVault.value,
@@ -234,7 +236,7 @@ const rampDownModalData = computed(() => ({
                   name="warning"
                   class="mr-2 !w-20 !h-20"
                 />
-                Unknown
+                {{ isMarketOpen ? 'Unknown' : 'Market closed' }}
               </span>
             </template>
           </VaultOverviewLabelValue>
