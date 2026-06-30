@@ -311,37 +311,39 @@ a { color: inherit; text-decoration: none; }
 
 .hero-logo {
   position: absolute;
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 0 0 4px rgba(255,255,255,0.6);
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1), 0 0 0 4px rgba(255,255,255,0.8);
   animation: float-logo 6s ease-in-out infinite;
   overflow: hidden;
 }
 
 .hero-logo img {
-  border-radius: 4px;
-  object-fit: contain;
-}
-
-.hero-logo-lg {
-  width: 72px;
-  height: 72px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 50%;
 }
 
-/* Individual logo positions and colors */
-.hl-nvda { background: linear-gradient(135deg, #76B900 0%, #5A8F00 100%); top: 22%; left: 8%; animation-delay: 0s; }
-.hl-tsla { background: linear-gradient(135deg, #E82127 0%, #CC1C21 100%); top: 18%; right: 10%; animation-delay: 1s; border-radius: 50%; }
-.hl-aapl { background: linear-gradient(135deg, #1D1D1F 0%, #333 100%); top: 42%; left: 4%; animation-delay: 2s; border-radius: 50%; }
-.hl-coin { background: linear-gradient(135deg, #0052FF 0%, #0040CC 100%); top: 55%; right: 6%; animation-delay: 0.5s; }
-.hl-meta { background: linear-gradient(135deg, #0081FB 0%, #0064C8 100%); bottom: 18%; left: 12%; animation-delay: 3s; width: 48px; height: 48px; font-size: 10px; }
-.hl-amzn { background: linear-gradient(135deg, #FF9900 0%, #E68A00 100%); bottom: 22%; right: 14%; animation-delay: 1.5s; width: 48px; height: 48px; font-size: 10px; border-radius: 50%; }
-.hl-spy  { background: linear-gradient(135deg, #5C5FA0 0%, #7E5FC6 100%); top: 35%; right: 3%; animation-delay: 2.5s; width: 48px; height: 48px; font-size: 10px; }
-.hl-googl { background: linear-gradient(135deg, #4285F4 0%, #3367BD 100%); bottom: 30%; left: 5%; animation-delay: 0.8s; width: 44px; height: 44px; font-size: 9px; border-radius: 12px; }
+.hero-logo-lg {
+  width: 76px;
+  height: 76px;
+}
+
+/* Individual logo positions */
+.hl-nvda  { top: 22%; left: 8%; animation-delay: 0s; }
+.hl-tsla  { top: 18%; right: 10%; animation-delay: 1s; }
+.hl-aapl  { top: 42%; left: 4%; animation-delay: 2s; }
+.hl-coin  { top: 55%; right: 6%; animation-delay: 0.5s; }
+.hl-meta  { bottom: 18%; left: 12%; animation-delay: 3s; }
+.hl-amzn  { bottom: 22%; right: 14%; animation-delay: 1.5s; }
+.hl-spy   { top: 35%; right: 3%; animation-delay: 2.5s; }
+.hl-googl { bottom: 30%; left: 5%; animation-delay: 0.8s; }
 
 @keyframes float-logo {
   0%, 100% { transform: translateY(0); }
