@@ -178,9 +178,6 @@ const hasPriceFailure = (v: EVault | undefined): boolean => {
   )
 }
 
-// Market is closed when the oracle can't return a price
-const isMarketClosed = computed(() => hasPriceFailure(eVault.value))
-
 // Check if vault needs refresh (Pyth detected OR price failure)
 const needsRefresh = (v: EVault | undefined): boolean => {
   return hasPythOracles(v) || hasPriceFailure(v)
@@ -320,7 +317,6 @@ const assets = computed(() => [asset.value!])
 const hasActiveSession = computed(() => isConnected.value || isSpyMode.value)
 const isSubmitDisabled = computed(() => {
   if (!hasActiveSession.value) return false
-  if (isMarketClosed.value) return true
   if (eVault.value && isOpDisabled(eVault.value, OP_DEPOSIT)) return true
   if (activeBalance.value < valueToNano(amount.value, activeAsset.value?.decimals)) return true
   if (isLoading.value || !(+amount.value)) return true
@@ -339,7 +335,6 @@ const disabledReasonInfo = computed((): DisabledReasonInfo | undefined => {
   if (isGeoBlocked.value) return { message: 'This operation is not available in your region', variant: 'warning' }
   if (isSourceAssetBlocked.value) return { message: 'Paying with this asset is not available in your region', variant: 'warning' }
   if (isSwapRestricted.value) return { message: 'Swap deposits are not available in your region', variant: 'warning' }
-  if (isMarketClosed.value) return { message: 'Market is currently closed — deposits are paused until the oracle resumes', variant: 'warning' }
   if (eVault.value && isOpDisabled(eVault.value, OP_DEPOSIT)) return { message: 'Deposits are currently disabled for this vault', variant: 'warning' }
   if (isSupplyCapReached.value) return { message: 'Supply cap has been reached', variant: 'warning' }
   if (errorText.value) return { message: errorText.value, variant: 'error' }
@@ -925,16 +920,6 @@ watch(amount, async () => {
             class="w-full"
             @submit.prevent="submit"
           >
-            <div
-              v-if="isMarketClosed"
-              class="flex items-start gap-8 rounded-12 border border-warning-200 bg-warning-100 px-12 py-10 mb-16 text-p3 text-warning-600"
-            >
-              <SvgIcon
-                name="warning"
-                class="!w-16 !h-16 mt-1 flex-shrink-0"
-              />
-              <span>Market is currently closed — deposits are paused until the oracle resumes.</span>
-            </div>
             <div
               v-if="isVaultLoaded && asset"
               class="flex items-center justify-between"
