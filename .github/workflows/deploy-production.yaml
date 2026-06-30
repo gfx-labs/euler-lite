@@ -1,0 +1,98 @@
+name: Deploy Production
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - '!v*-rc*'
+      - '!v*-beta*'
+
+env:
+  PROJECT_ID: ondo-poppie-prod
+  REGION: us-central1
+  SERVICE: euler-lite
+  IMAGE: us-central1-docker.pkg.dev/ondo-poppie-prod/euler-lite/euler-lite
+  WIF_PROVIDER: projects/672110407756/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+  WIF_SERVICE_ACCOUNT: github-deploy@ondo-poppie-prod.iam.gserviceaccount.com
+
+jobs:
+  build:
+    name: Build & Push Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Nuxt app
+        run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Extract tag
+        id: meta
+        run: echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Install crane
+        run: |
+          CRANE_VERSION="0.20.3"
+          curl -sL "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" | tar -xzf - crane
+          sudo mv crane /usr/local/bin/
+
+      - name: Build and push image
+        run: |
+          mkdir -p /tmp/layer/app
+          cp -a .output /tmp/layer/app/.output
+          tar -cf /tmp/app-layer.tar -C /tmp/layer app
+          crane append \
+            --base gcr.io/distroless/nodejs24-debian12:nonroot \
+            --new_layer /tmp/app-layer.tar \
+            --new_tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
+          crane tag ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }} latest
+
+  deploy:
+    name: Deploy to Cloud Run
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production  # requires admin approval — shows tag in approval UI
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE }}:${{ needs.build.outputs.image_tag }}
