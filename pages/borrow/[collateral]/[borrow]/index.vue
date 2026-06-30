@@ -437,9 +437,12 @@ const hasBorrowPriceFailure = (vault: EVault | undefined): boolean => {
   )
 }
 
-const isMarketClosed = computed(() =>
-  hasBorrowPriceFailure(borrow.borrowVault.value) || hasBorrowPriceFailure(borrow.collateralVault.value as EVault | undefined),
-)
+const isMarketClosed = computed(() => {
+  const bVault = borrow.borrowVault?.value
+  const cVault = borrow.collateralVault?.value
+  if (!bVault && !cVault) return false
+  return hasBorrowPriceFailure(bVault) || hasBorrowPriceFailure(cVault as EVault | undefined)
+})
 
 const hasCollateralPriceFailure = (bVault: EVault | undefined, collAddr: string | undefined): boolean => {
   if (!bVault || !collAddr) return false
