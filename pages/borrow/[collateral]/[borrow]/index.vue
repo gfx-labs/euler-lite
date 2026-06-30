@@ -226,10 +226,11 @@ const { guardWithPriceImpact: guardWithBorrowSwapPriceImpact } = usePriceImpactG
 })
 
 // --- Submit disabled ---
-const reviewBorrowDisabled = computed(() => isGeoBlocked.value || isBorrowRestricted.value || borrow.isBorrowSwapRestricted.value || borrow.isBorrowPayWithBlocked.value || borrow.isSubmitDisabled.value)
+const reviewBorrowDisabled = computed(() => isMarketClosed.value || isGeoBlocked.value || isBorrowRestricted.value || borrow.isBorrowSwapRestricted.value || borrow.isBorrowPayWithBlocked.value || borrow.isSubmitDisabled.value)
 const reviewMultiplyDisabled = computed(() => isGeoBlocked.value || isMultiplyRestricted.value || multiply.isMultiplySubmitDisabled.value)
 
 const borrowDisabledReasonInfo = computed((): DisabledReasonInfo | undefined => {
+  if (isMarketClosed.value) return { message: 'Market is currently closed — borrowing is paused until the oracle resumes', variant: 'warning' }
   if (isGeoBlocked.value) return { message: 'This operation is not available in your region', variant: 'warning' }
   if (isBorrowRestricted.value) return { message: 'Borrowing this asset is not available in your region', variant: 'warning' }
   if (borrow.isBorrowPayWithBlocked.value) return { message: 'Paying with this asset is not available in your region', variant: 'warning' }
@@ -432,8 +433,13 @@ const hasBorrowPriceFailure = (vault: EVault | undefined): boolean => {
   return (
     price?.amountOutMid === undefined
     || price?.amountOutMid === null
+    || price?.amountOutMid === 0n
   )
 }
+
+const isMarketClosed = computed(() =>
+  hasBorrowPriceFailure(borrow.borrowVault.value) || hasBorrowPriceFailure(borrow.collateralVault.value as EVault | undefined),
+)
 
 const hasCollateralPriceFailure = (bVault: EVault | undefined, collAddr: string | undefined): boolean => {
   if (!bVault || !collAddr) return false
