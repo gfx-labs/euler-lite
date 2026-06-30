@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poppie Terms of Service</title>
+  <meta name="description" content="Poppie Terms and Conditions governing access to and use of Poppie and related services.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-primary btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <main class="legal-layout">
+    <article class="legal-content">
+      <h1>Poppie Terms and Conditions</h1>
+      <p class="legal-updated">Last modified: June 29, 2026</p>
+
+      <h2>Introduction</h2>
+      <p>These Terms and Conditions (this “Agreement”) govern your access to and use of Poppie and related services provided by GFX Labs, Inc. d/b/a Oku Trade (“GFX,” “Company,” “we,” “us”). “Poppie” means the Company’s non-custodial web-based interface(s), application(s), and related tools made available at poppie.io and any successor or related locations, through which users may interact, from a Wallet they control, with certain lending and borrowing markets deployed on the Euler protocol on the BNB Smart Chain (“BSC”) involving Tokenized Assets (the “Poppie Markets”).</p>
+      <p>By accessing or using Poppie, you agree to be bound by this Agreement. If you do not agree, do not access or use Poppie.</p>
+      <p><strong>Relationship to the Oku Trade Terms.</strong> Poppie is a product of GFX Labs, Inc., the same entity that operates Oku Trade. This Agreement incorporates by reference the Oku Trade Terms and Conditions (the “Master Terms”) as the general terms governing your use of the Company’s products, except that this Agreement contains Poppie-specific terms that control over the Master Terms with respect to Poppie where they directly conflict. Capitalized terms used but not defined in this Agreement have the meanings given in the Master Terms. In particular, certain general provisions of the Master Terms apply to Poppie, including those concerning intellectual property, your responsibilities, prohibited activity, sanctions and legal compliance, suspension, release and limitation of liability, indemnification, governing law, binding arbitration, and the class-action waiver.</p>
+
+      <div class="legal-notice">
+        <p><strong>Important notice.</strong> You control your Wallet and authorize transactions; we do not custody or control your Crypto Assets and generally cannot reverse transactions.</p>
+        <p>Unlike the Company’s general interface products, for the Poppie Markets the Company performs two specific operational functions: it configures and adjusts certain risk parameters of the Poppie Markets, and it operates a price oracle used by the Poppie Markets. The Company does not exercise discretion over your individual transactions or positions, take custody of your assets, or act as your broker, dealer, or agent.</p>
+        <p>The collateral assets used in the Poppie Markets are Tokenized Assets that reference publicly traded equity securities. A Tokenized Asset is not the registered security it references and confers no shareholder, voting, dividend, or similar rights. We do not issue these assets.</p>
+        <p>Borrowing against volatile collateral exposes you to liquidation. Most Risk Parameter and Oracle changes are subject to at least a 24-hour timelock, but emergency changes may take effect immediately; we do not separately notify you of changes, and market price movements and liquidation are not subject to any timelock and can occur faster than you are able to act.</p>
+        <p>This Agreement, through the Master Terms, includes binding arbitration and a class/representative-action waiver.</p>
+      </div>
+
+      <h2>1. Definitions</h2>
+      <p>For purposes of this Agreement, the following terms have the meanings set forth below. Other capitalized terms have the meanings given in the Master Terms.</p>
+      <p><strong>“Collateral Vault”</strong> means a Poppie Market vault that holds a particular Tokenized Asset as collateral and against which a Borrowable Asset may be borrowed.</p>
+      <p><strong>“Borrowable Asset”</strong> means an asset made available to be borrowed in a Poppie Market (currently USDT on BSC).</p>
+      <p><strong>“Euler”</strong> means the Euler protocol, an autonomous system of Smart Contracts not owned or controlled by the Company, as deployed on BSC, including the Euler Vault Kit, the Ethereum Vault Connector, and related contracts on which the Poppie Markets are built. Euler is a Third-Party Protocol and a Third-Party Service.</p>
+      <p><strong>“Liquidation”</strong> means the process by which some or all of the collateral in a position is seized and sold or transferred when the position fails to satisfy the applicable collateralization requirement, as determined by the Euler Smart Contracts using, among other things, the value reported by the Oracle and the Risk Parameters.</p>
+      <p><strong>“Oracle”</strong> means the price oracle system used by the Poppie Markets to report the value of collateral and borrowed assets, including the PoppieEuler oracle contract operated by the Company, any router or adapter contracts it relies on, and the off-chain data sources and keeper processes used to update reported prices.</p>
+      <p><strong>“Risk Parameters”</strong> means the configurable parameters of the Poppie Markets, which may include, without limitation, per-collateral borrow loan-to-value (“LTV”) and liquidation LTV, supply and borrow caps, interest-rate model, interest fee, maximum liquidation discount, liquidation cool-off, and the selection and configuration of the Oracle and related contracts.</p>
+      <p><strong>“Tokenized Asset”</strong> has the meaning given in the Master Terms. The Tokenized Assets used in the Poppie Markets reference publicly traded equity securities. Additional terms and disclosures applicable to Tokenized Assets appear in Section 3 of this Agreement and in Section 3.6 of the Master Terms.</p>
+
+      <h2>2. What Poppie Is and How It Works</h2>
+      <h3>2.1 Non-Custodial Interface to Euler Markets</h3>
+      <p>Poppie is non-custodial software that helps you view information and prepare and submit transactions, from a Wallet you control, to lending and borrowing markets built on Euler on BSC. We never have custody, possession, or control of your Crypto Assets at any time. You initiate and authorize all transactions through your Wallet; we do not execute transactions on your behalf. The Poppie Markets execute autonomously through the Euler Smart Contracts.</p>
+      <h3>2.2 Borrowing and Lending Mechanics</h3>
+      <p>In the Poppie Markets, you may supply a Borrowable Asset to earn yield, and/or deposit a Tokenized Asset as collateral and borrow a Borrowable Asset against it. Whether and how much you may borrow, and whether your position is subject to Liquidation, are determined by the Euler Smart Contracts based on the value of your collateral and borrowings (as reported by the Oracle), the applicable Risk Parameters, and other protocol mechanics. You are solely responsible for monitoring and managing your positions; we do not do so for you. See Section 7 and the Master Terms (No Monitoring; No Duty to Act).</p>
+      <h3>2.3 Euler Is a Third-Party Protocol</h3>
+      <p>Euler is a Third-Party Protocol that we do not own, control, or operate. The Poppie Markets are built on Euler’s contracts, and your interactions ultimately execute on Euler and on BSC. Euler and BSC are Third-Party Services, and the disclosures, disclaimers, and limitations in the Master Terms applicable to Third-Party Services and Third-Party Protocols apply to them. Our specific operational role with respect to the Poppie Markets, described in Section 4, does not extend to owning, controlling, or guaranteeing Euler or BSC themselves.</p>
+
+      <h2>3. Tokenized Assets (Collateral)</h2>
+      <h3>3.1 What a Tokenized Asset Is (and Is Not)</h3>
+      <p>The collateral assets in the Poppie Markets are Tokenized Assets (as defined in the Master Terms) that reference publicly traded equity securities. As stated in that definition, a Tokenized Asset is a distinct onchain instrument; it is not the underlying security itself and is not the registered security, share, or other instrument it references. Holding or using a Tokenized Asset as collateral does not make you a holder of record of the underlying security and, except as the issuer of the Tokenized Asset may expressly provide in its own terms, does not confer any rights in the underlying security, including any ownership, voting, dividend, distribution, redemption, registration, shareholder, or similar rights. Any rights you have with respect to a Tokenized Asset, and any backing, redemption, or settlement mechanics, are defined solely by the issuer of that Tokenized Asset and its applicable terms, which are Third-Party Services. The names, tickers, or symbols used to identify a Tokenized Asset indicate the underlying security it references and do not imply any sponsorship, endorsement, affiliation, or involvement by the issuer of the underlying security.</p>
+      <h3>3.2 We Do Not Issue Tokenized Assets</h3>
+      <p>We do not create, issue, mint, originate, underwrite, sponsor, guarantee, back, custody, or redeem any Tokenized Asset, and we are not the issuer, transfer agent, custodian, or administrator of any Tokenized Asset or any underlying security. Tokenized Assets are issued and administered by third parties, and each Tokenized Asset and its issuer is a Third-Party Service. Activity you conduct through Poppie is self-directed activity in already-issued Tokenized Assets and Borrowable Assets, conducted through the Euler Smart Contracts using a Wallet you control.</p>
+      <h3>3.3 Issuer Risk</h3>
+      <p>Because a Tokenized Asset depends on its issuer and on the arrangements the issuer maintains with respect to the underlying security, you assume all risks relating to the issuer and those arrangements, including, without limitation: that the issuer may fail to maintain, or may misrepresent, any backing, collateral, reserves, or custody of the underlying security; that the issuer may become insolvent, cease operations, suspend or restrict minting or redemption, or fail to honor redemption; that the Tokenized Asset may trade at a price that diverges from the value of the underlying security, including due to liquidity, market conditions, trading halts in the underlying security, or loss of confidence in the issuer; that the issuer’s terms, or the legal or regulatory status or trading eligibility of the Tokenized Asset, may change; and that the issuer’s practices, disclosures, and obligations are governed by the issuer’s own terms and applicable law, not by us. A divergence between a Tokenized Asset’s price and the value of its underlying security, including as a result of issuer problems or of how the Oracle values the asset, may itself trigger Liquidation of your position. We do not verify, endorse, or guarantee any issuer, any Tokenized Asset, or the existence, sufficiency, or custody of any backing or underlying security.</p>
+      <h3>3.4 Asset Status; Eligibility; Restrictions</h3>
+      <p>You are solely responsible for determining whether your acquisition, holding, use as collateral, borrowing against, or disposition of any Tokenized Asset is lawful and permitted for you under the laws and regulations applicable to you, and for complying with any eligibility, jurisdictional, or other restrictions that may apply. We do not determine, verify, or guarantee whether any Tokenized Asset (or any underlying security) is a security or other regulated instrument, is registered or exempt from registration, or is otherwise compliant with any securities, commodities, or other laws. Access to Poppie, or to particular Poppie Markets or Tokenized Assets, may be restricted or unavailable in certain jurisdictions or to certain persons, and we may impose or apply eligibility or geographic restrictions as described in the Master Terms (Sanctions; Suspension). Nothing in Poppie is an offer, solicitation, or recommendation to buy, sell, hold, lend, or borrow any Tokenized Asset, Borrowable Asset, or underlying security.</p>
+
+      <h2>4. Our Role: Risk Parameters and Oracle</h2>
+      <h3>4.1 Scope of Our Role</h3>
+      <p>This Section describes the specific, limited operational role the Company performs with respect to the Poppie Markets. This Section controls over any provision of the Master Terms that, read generally, would disclaim any role of the Company in setting parameters or operating an oracle; with respect to the Poppie Markets, the following disclosures are accurate and govern.</p>
+      <h3>4.2 We Configure Risk Parameters</h3>
+      <p>The Company sets, and may adjust from time to time, the Risk Parameters of the Poppie Markets. Among other things, the Company sets per-collateral borrow LTV and liquidation LTV (which differ by Tokenized Asset and reflect the Company’s assessment of each asset’s relative risk), supply and borrow caps, the interest-rate model, the interest fee, the maximum liquidation discount, and the liquidation cool-off, and the Company selects and configures the Oracle and related router and adapter contracts. The Company makes these configuration decisions at the level of the Poppie Markets generally; it does not thereby make decisions about, or exercise discretion over, any individual user’s transactions, positions, or assets. All Risk Parameters are recorded on-chain and are publicly viewable.</p>
+      <h3>4.3 We Operate the Oracle</h3>
+      <p>The Company operates the Oracle used by the Poppie Markets, including a PoppieEuler oracle contract that the Company deployed and that has been independently audited, together with the off-chain data sources and keeper process used to update reported prices. The Oracle reports the values that the Euler Smart Contracts use to determine borrowing capacity and Liquidation. The Oracle’s contract address is recorded on-chain and is publicly viewable. The Company currently does not configure a fallback oracle for the Poppie Markets; if the Oracle becomes unavailable, reports stale or incorrect values, or otherwise malfunctions, there may be no automatic backstop, and the consequences (including erroneous Liquidation or the inability to borrow, repay, or withdraw) may be borne by users. See Section 5.</p>
+      <h3>4.4 Parameter Changes Are Subject to a Timelock; Emergency Changes; No Notice</h3>
+      <p>The Company may change the Risk Parameters and Oracle configuration from time to time. Other than emergency changes described below, all such changes are subject to a timelock of at least 24 hours, meaning the change does not take effect until at least 24 hours after it is submitted on-chain, and the pending change is recorded on-chain and publicly viewable during that period. The Company also holds emergency powers that are not subject to the timelock and that may take effect immediately upon submission on-chain, for example, reducing loan-to-value parameters, reducing or freezing supply or borrow caps, and disabling or adjusting certain controls. The Company does not separately notify you of any change to the Risk Parameters or Oracle, whether timelocked or emergency, and whether pending or effective, and you should not rely on receiving any such notice from the Company. Your protections are that Risk Parameters and Oracle configuration, including any pending timelocked change, are recorded on-chain and publicly viewable, so that you can inspect them before and during your use of the Poppie Markets, and you retain the continuous ability to repay, reduce, or exit your position as described in Section 4.5. You acknowledge, however, that an emergency change may take effect without any advance period during which you could act, and that you are solely responsible for monitoring the Poppie Markets and your positions. The timelock and emergency powers govern changes the Company makes to the Risk Parameters and Oracle configuration; they do not delay or prevent Liquidation or other consequences arising from market price movements or from values reported by the Oracle, which can occur at any time and without delay (see Section 5).</p>
+      <h3>4.5 Configuration Discretion Is Not Transactional Discretion; Your Exit Right</h3>
+      <p>The Company’s role is limited to configuring the Poppie Markets and operating the Oracle. The Company does not exercise transaction-by-transaction discretion over your positions, does not decide when you enter, adjust, or exit a position, does not take the other side of your transactions, and does not take custody of or direct your assets. You decide whether to enter a position with knowledge of the then-current, publicly viewable Risk Parameters, and you retain a continuous, unilateral ability to repay your borrowings and withdraw your collateral (subject to protocol mechanics, available liquidity, and network conditions). This exit right is structural: the Company cannot lock you into a position. It is not, however, a guarantee that you can avoid loss or Liquidation. Most Risk Parameter and Oracle configuration changes are subject to at least a 24-hour timelock (see Section 4.4), giving you an opportunity to respond to a pending change during that period; however, emergency changes are not subject to the timelock and may take effect immediately, the Company does not separately notify you of changes, and market price movements, values reported by the Oracle, and resulting Liquidation are not subject to any timelock and can occur at any time and faster than you are able to act. Accordingly, your ability to exit does not ensure that you can do so before an emergency change, a price movement, or a Liquidation affects your position.</p>
+      <h3>4.6 No Advice; No Fiduciary or Broker Relationship</h3>
+      <p>Nothing in this Section or in your use of Poppie creates any advisory, fiduciary, brokerage, dealer, agency, or similar relationship between you and the Company, all of which are disclaimed to the maximum extent permitted by law (see the Master Terms, No Professional Relationship; Not Registered; No Brokerage). The Company’s vault configuration and Oracle functions are performed for the Poppie Markets as a whole and not on your behalf or for your individual benefit.</p>
+
+      <h2>5. Additional Risk Disclosures for Poppie</h2>
+      <p>In addition to the risks described in the Master Terms (including the general Assumption of Risk and DeFi-related risks) and elsewhere in this Agreement, you acknowledge and accept the following risks specific to Poppie. These risks operate on a continuous basis: unlike a one-off swap, a lending or borrowing position remains open and exposed over time.</p>
+      <h3>5.1 Liquidation Risk</h3>
+      <p>If the value of your collateral falls relative to your borrowings (as reported by the Oracle and measured against the applicable liquidation LTV), some or all of your collateral may be liquidated, possibly at a discount and possibly resulting in the loss of a substantial portion or all of your collateral. Liquidation can result from market price movements, from a Tokenized Asset’s price diverging from its underlying security, from changes to the Risk Parameters, or from Oracle behavior. Liquidation may occur at any time, including immediately and without notice.</p>
+      <h3>5.2 Parameter Risk</h3>
+      <p>The Risk Parameters directly affect your borrowing capacity and your exposure to Liquidation, and the Company may change them from time to time. Most changes are subject to a timelock of at least 24 hours and are publicly viewable on-chain during that period; emergency changes, however, are not subject to the timelock and may take effect immediately (see Section 4.4). In each case the Company does not separately notify you. A change in a parameter (for example, a reduction in liquidation LTV or a reduction in a borrow cap) may move a position closer to, or into, Liquidation when it takes effect, and in the case of an emergency change this may occur without any advance period during which you could act. You should monitor the Risk Parameters, including any pending changes, and manage your position accordingly.</p>
+      <h3>5.3 Oracle Risk</h3>
+      <p>The Poppie Markets depend on the Oracle, which the Company operates. The PoppieEuler oracle contract was deployed by the Company and has been independently audited and tested. Smart-contract risk nonetheless cannot be eliminated; audits reduce but do not remove the possibility of a bug or vulnerability, and the residual probability of a contract-level exploit is low but non-zero.</p>
+      <p>Beyond the contract, the Oracle relies on off-chain data sources and a keeper process to update reported prices. This is a standing operational surface: prices may be delayed, stale, incorrect, or manipulable, and the data or keeper infrastructure may fail. Because positions remain open over time and Liquidation depends on reported prices, errors or manipulation in the Oracle system can cascade into wrongful Liquidation or bad debt in a way that a single atomic transaction would not be exposed to. The Company takes measures intended to mitigate these risks but cannot eliminate them, and the probability of an exploit or failure is non-zero.</p>
+      <p>As noted in Section 4.3, there is currently no fallback oracle. If the Oracle fails or misreports, there may be no automatic backstop.</p>
+      <h3>5.4 Euler Protocol Risk</h3>
+      <p>The Poppie Markets are built on Euler, a Third-Party Protocol. Euler’s contracts are mature, have operated at scale for an extended period, hold substantial assets, and have been audited. That history reduces, but does not eliminate, the risk of a protocol-level bug, vulnerability, or exploit; smart-contract protocols (including Euler) have experienced significant exploits in the past, and no protocol can be assured to be free of defects. We do not control Euler and are not responsible for its performance, security, or correctness. See Section 2.3 and the Master Terms (Third-Party Services).</p>
+      <h3>5.5 Network and BSC Risk</h3>
+      <p>The Poppie Markets operate on BSC. Network outages, congestion, latency, reorganizations, forks, validator or sequencing issues, and gas spikes may delay, prevent, reorder, or otherwise affect transactions, including transactions you attempt in order to repay, add collateral, or exit a position to avoid Liquidation.</p>
+      <h3>5.6 Interest, Fees, and Discounts</h3>
+      <p>Borrowing accrues interest according to the applicable interest-rate model, and the Company receives an interest fee on the Poppie Markets. Liquidations may occur at a discount up to the maximum liquidation discount. These parameters affect the cost and risk of your positions and may change. See Section 4.2.</p>
+
+      <h2>6. Your Responsibilities; Compliance</h2>
+      <p>Your responsibilities when using Poppie include those set out in the Master Terms (including Wallet responsibilities; Gas and fees; No Monitoring; Legal Compliance; Sanctions; and Tax Obligations), which are incorporated here. Without limiting them, you are solely responsible for monitoring your positions, the Risk Parameters, and the Oracle-reported values; for deciding whether any position is appropriate for you; for maintaining sufficient collateralization; and for taking any action needed to avoid Liquidation. You acknowledge that we do not monitor your positions, do not notify you of margin, health, Liquidation, or parameter changes, and have no duty to act on your behalf.</p>
+
+      <h2>7. Disclaimers; Limitation of Liability; Indemnification</h2>
+      <p>The disclaimers, releases, limitations of liability, and indemnification provisions of the Master Terms (including the “as is” and “as available” disclaimer, the disclaimer of warranties, the release of claims, the limitation of liability and liability cap, and your indemnification obligations) are incorporated into and apply to this Agreement and your use of Poppie, including with respect to the Tokenized Assets, the Risk Parameters, the Oracle, Euler, and BSC.</p>
+      <h3>7.1 Oracle and Parameter Functions Provided “As Is”</h3>
+      <p>Without limiting the Master Terms, the Company provides its Risk Parameter configuration and Oracle operation on an “as is” and “as available” basis, and to the maximum extent permitted by law disclaims all warranties regarding the accuracy, timeliness, availability, security, or correctness of the Risk Parameters and the Oracle (including any prices it reports). To the maximum extent permitted by law, the Company is not liable for any Liquidation, loss, or damage arising from or relating to the Risk Parameters, any change to them, the Oracle, any Oracle error, delay, staleness, manipulation, or failure, or the absence of a fallback oracle, except to the extent such limitation is prohibited by applicable law.</p>
+      <h3>7.2 No Guarantee of Availability or Outcomes</h3>
+      <p>We do not guarantee that Poppie, the Poppie Markets, the Oracle, or Euler will be available, uninterrupted, or error-free, that any transaction (including a repayment, withdrawal, or other action intended to avoid Liquidation) will be completed or completed in time, or that you will be able to avoid Liquidation or loss.</p>
+
+      <h2>8. Other Terms</h2>
+      <h3>8.1 Incorporated Provisions</h3>
+      <p>The following provisions of the Master Terms are incorporated into this Agreement and apply to your use of Poppie: Intellectual Property Rights; Your Responsibilities (including Prohibited Activity and Sanctions); Suspensions and API limits; Release of Claims; Limitation of Liability; Indemnification; Governing Law, Dispute Resolution, Binding Arbitration, and Class/Representative-Action Waiver; and the general provisions (Changes, Notice, Entire Agreement, Severability, Assignment, No Waiver, Relationship of the Parties, Force Majeure, Survival, and Third-Party Beneficiaries).</p>
+      <h3>8.2 Conflicts</h3>
+      <p>If there is a direct conflict between this Agreement and the Master Terms with respect to Poppie, this Agreement controls. Otherwise, the Master Terms and this Agreement are intended to be read together.</p>
+      <h3>8.3 Changes to This Agreement</h3>
+      <p>We may modify this Agreement from time to time as described in the Master Terms. The “Last modified” date above indicates when this Agreement was last updated.</p>
+      <h3>8.4 Privacy</h3>
+      <p>Our collection and use of information in connection with Poppie are described in the <a href="/privacy-policy">Poppie Privacy Policy</a>.</p>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/lend">App</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/terms-of-service">Terms</a>
+        <a href="/privacy-policy">Privacy</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>
