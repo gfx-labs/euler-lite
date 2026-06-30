@@ -16,9 +16,9 @@ export const useDeployConfig = () => {
     // URLs (empty string = not configured, hide UI element)
     docsUrl: rc.configDocsUrl,
     stargateUrl: rc.configStargateUrl,
-    tosUrl: rc.configTosUrl || 'https://www.euler.finance/terms',
+    tosUrl: rc.configTosUrl || '/terms-of-service',
     tosMdUrl: rc.configTosMdUrl,
-    privacyPolicyUrl: rc.configPrivacyPolicyUrl || 'https://www.euler.finance/privacy-policy',
+    privacyPolicyUrl: rc.configPrivacyPolicyUrl || '/privacy-policy',
     riskDisclosuresUrl: rc.configRiskDisclosuresUrl || 'https://www.euler.finance/risk-disclosures',
     micaWhitepaperUrl: rc.configMicaWhitepaperUrl || 'https://www.euler.finance/MICA-Whitepaper.pdf',
     xUrl: rc.configXUrl,
