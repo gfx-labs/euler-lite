@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governance - Poppie Docs</title>
+  <meta name="description" content="Poppie protocol configuration, LTV parameters, timelock, and governance transparency.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html">How It Works</a>
+      <a href="/landing/docs/governance.html" class="active">Governance</a>
+      <a href="/landing/docs/faq.html">FAQ</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Governance</h1>
+      <p class="docs-subtitle">Poppie's protocol configuration on Euler V2 is managed by the Poppie team. All parameters are set onchain, publicly verifiable, and subject to a timelock.</p>
+
+      <h2>Who Manages Poppie?</h2>
+      <p>The Poppie team at <a href="https://oku.trade" target="_blank">Oku Trade</a> manages the protocol's configuration on Euler V2. This includes setting collateral parameters (LTV ratios), vault caps, interest rate models, and oracle configuration.</p>
+      <p>Every configuration change is executed through onchain transactions on BNB Smart Chain. This means all current parameters and any changes to them are publicly visible and independently verifiable by anyone.</p>
+
+      <h2>Timelock</h2>
+      <p>All parameter changes to the Poppie protocol go through a <strong>timelock contract</strong> with a <strong>minimum delay of 1 day</strong>. This means that when the Poppie team proposes a change (for example, adjusting an LTV ratio or modifying a vault cap), the change cannot take effect for at least 24 hours after it is submitted onchain.</p>
+      <p>During this delay period, anyone can see the pending change on the blockchain. This gives users time to review proposed changes and adjust their positions if needed before they go into effect.</p>
+
+      <div class="callout callout-info">
+        <p><strong>Coming soon:</strong> We plan to offer an email notification service so users can receive alerts whenever a parameter change is proposed. This will make it even easier to stay informed without needing to monitor the blockchain directly.</p>
+      </div>
+
+      <h2>USDT Vault Configuration</h2>
+      <p>The USDT vault is the borrowable vault that all collateral assets borrow from. Its current parameters are:</p>
+      <table>
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Supply Cap</td><td>100,000,000 USDT</td></tr>
+          <tr><td>Borrow Cap</td><td>90,000,000 USDT</td></tr>
+          <tr><td>Interest Fee</td><td>25%</td></tr>
+          <tr><td>Max Liquidation Discount</td><td>15%</td></tr>
+          <tr><td>Liquidation Cool-Off</td><td>10 seconds</td></tr>
+          <tr><td>Unit of Account</td><td>USD</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Collateral LTV Ratios</h2>
+      <p>Each collateral asset has two LTV (loan-to-value) thresholds:</p>
+      <ul>
+        <li><strong>Borrow LTV</strong> is the maximum percentage of your collateral's value that you can borrow. For example, a 65% Borrow LTV means you can borrow up to $6,500 against $10,000 of collateral.</li>
+        <li><strong>Liquidation LTV</strong> is the threshold at which your position becomes eligible for liquidation. If your loan value exceeds this percentage of your collateral's value, liquidators can step in.</li>
+      </ul>
+      <p>LTV ratios are set conservatively based on asset characteristics. Broad ETFs (SPY, QQQ) receive the highest LTVs because they are less volatile. Mega-cap stocks (AAPL, MSFT, GOOGL) receive moderate LTVs. More volatile or concentrated assets (MSTR, RKLB) receive the most conservative LTVs.</p>
+
+      <table class="asset-table">
+        <thead><tr><th>Collateral</th><th>Borrow LTV</th><th>Liquidation LTV</th></tr></thead>
+        <tbody>
+          <tr><td><code>SPYon</code></td><td>70%</td><td>80%</td></tr>
+          <tr><td><code>QQQon</code></td><td>70%</td><td>80%</td></tr>
+          <tr><td><code>AAPLon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>AMZNon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>GOOGLon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>METAon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>MSFTon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>NVDAon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>TSMon</code></td><td>65%</td><td>75%</td></tr>
+          <tr><td><code>TSLAon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>AMDon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>COINon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>INTCon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>MUon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>NFLXon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>ORCLon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>SNDKon</code></td><td>60%</td><td>70%</td></tr>
+          <tr><td><code>BABAon</code></td><td>55%</td><td>65%</td></tr>
+          <tr><td><code>CRCLon</code></td><td>55%</td><td>65%</td></tr>
+          <tr><td><code>MSTRon</code></td><td>45%</td><td>55%</td></tr>
+          <tr><td><code>RKLBon</code></td><td>45%</td><td>55%</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Verifying Parameters Yourself</h2>
+      <p>Because Poppie is built on Euler V2 and deployed on a public blockchain, you do not need to take our word for any of the values listed above. You can verify every parameter independently:</p>
+      <ul>
+        <li>View the USDT vault configuration directly on <a href="https://bscscan.com/address/0xf4940CdE23c164f8CA8D536f3567337349b3208F" target="_blank">BscScan</a></li>
+        <li>Check the timelock contract and any pending proposals at <a href="https://bscscan.com/address/0x290f000000000000000000000000000000d270" target="_blank">its address on BscScan</a></li>
+        <li>Review LTV configurations through the Euler protocol's public contract reads</li>
+      </ul>
+      <p>Transparency is a core principle of Poppie. If a parameter listed on this page ever falls out of date, the onchain values are always the source of truth.</p>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/how-it-works.html">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">How It Works</span>
+        </a>
+        <a href="/landing/docs/faq.html" class="docs-nav-next">
+          <span class="docs-nav-label">Next</span>
+          <span class="docs-nav-title">FAQ</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works - Poppie Docs</title>
+  <meta name="description" content="The technology behind Poppie: Euler V2, Chainlink oracles, and safety mechanisms explained.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html" class="active">How It Works</a>
+      <a href="/landing/docs/governance.html">Governance</a>
+      <a href="/landing/docs/faq.html">FAQ</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>How It Works</h1>
+      <p class="docs-subtitle">A look at the technology behind Poppie, from price feeds to safety mechanisms, explained for users, not just engineers.</p>
+
+      <h2>The Big Picture</h2>
+      <p>Poppie connects three systems together:</p>
+      <ol>
+        <li><strong>Price feeds:</strong> real-time stock prices from <a href="https://data.chain.link" target="_blank">Chainlink Data Streams</a>, the industry standard for decentralized price data</li>
+        <li><strong>Smart contracts:</strong> onchain code on BNB Smart Chain that stores prices and enforces safety rules</li>
+        <li><strong>Euler V2:</strong> the lending protocol that uses those prices to manage deposits, loans, and liquidations</li>
+      </ol>
+      <p>An automated keeper service runs on a regular interval, fetching the latest stock prices, validating them, and pushing them to the blockchain. Euler reads these prices to determine how much you can borrow, whether your position is healthy, and when liquidations should occur.</p>
+
+      <h2>Built on Euler V2</h2>
+      <p><a href="https://euler.finance" target="_blank">Euler V2</a> is a modular, permissionless lending protocol that has secured billions in assets across DeFi. Poppie uses Euler as its lending engine, which means:</p>
+      <ul>
+        <li><strong>Battle-tested infrastructure.</strong> Euler's smart contracts have been extensively audited and have a proven track record. Poppie doesn't reinvent the wheel for core lending mechanics.</li>
+        <li><strong>Isolated risk.</strong> Each collateral vault on Poppie operates independently. A problem with one asset doesn't cascade to others. If NVDAon experiences an issue, your SPYon position is unaffected.</li>
+        <li><strong>ERC-4626 vaults.</strong> Your deposits are held in standard, composable vaults. This means Poppie is compatible with the broader DeFi ecosystem.</li>
+        <li><strong>Efficient liquidations.</strong> Euler uses a reverse Dutch auction for liquidations, which typically results in lower penalties for borrowers compared to other protocols.</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <p><strong>Want to learn more about Euler?</strong> Visit the <a href="https://docs.euler.finance" target="_blank">Euler documentation</a> for a deep dive into the protocol's architecture, vault system, and risk management.</p>
+      </div>
+
+      <h2>Price Feeds: From Wall Street to Blockchain</h2>
+      <p>Since Poppie deals with tokenized stocks, accurate and timely pricing is critical. Here's how prices get from the stock market to the smart contract:</p>
+
+      <ol class="docs-steps">
+        <li>
+          <strong>Chainlink Data Streams publishes stock prices.</strong>
+          <p><a href="https://data.chain.link" target="_blank">Chainlink</a> aggregates price data from multiple sources and publishes separate feeds for each trading session (regular, pre-market, post-market, and overnight).</p>
+        </li>
+        <li>
+          <strong>The keeper selects the freshest price.</strong>
+          <p>Poppie's automated keeper evaluates all available sessions for each asset and picks whichever has the most recent price. This means the system automatically adapts to market hours without manual intervention.</p>
+        </li>
+        <li>
+          <strong>Ondo's conversion rate is applied.</strong>
+          <p>Since the collateral tokens are Ondo Global Markets shares (not direct stock representations), the keeper multiplies the stock price by Ondo's share conversion rate to get the final tokenized price.</p>
+        </li>
+        <li>
+          <strong>Safety checks validate the price.</strong>
+          <p>Before anything is written onchain, the price must pass two independent safety checks (described below). If either check fails, that asset's price update is skipped.</p>
+        </li>
+        <li>
+          <strong>The price is pushed to the oracle contract.</strong>
+          <p>The validated price is written to a smart contract on BSC, signed by a hardware-secured key that cannot be extracted by anyone. Euler reads from this contract whenever it needs a price.</p>
+        </li>
+      </ol>
+
+      <h2>Safety Mechanisms</h2>
+      <p>Poppie has multiple layers of protection to prevent bad data from affecting your position:</p>
+
+      <h3>Circuit breaker</h3>
+      <p>Every price update is compared to the last accepted price. If the change is larger than a configured threshold, the update is rejected. This prevents a corrupted data source or feed error from causing a sudden, unrealistic price jump. The threshold is set per asset, so ETFs like SPY have tighter limits than volatile stocks like MSTR.</p>
+
+      <h3>Cumulative deviation cap</h3>
+      <p>Even if each individual price update is small enough to pass the circuit breaker, the system tracks how far the price has drifted from a reference point over time. If the total drift exceeds a limit, further updates are blocked until the reference resets. This prevents slow-drip manipulation through many small, individually acceptable changes.</p>
+
+      <h3>Staleness protection</h3>
+      <p>If prices become too old (for example, if the keeper stops running), the oracle marks them as stale. Euler treats stale prices as unavailable, which means:</p>
+      <ul>
+        <li>New borrows against that asset are paused</li>
+        <li>Collateral withdrawals from open positions are paused</li>
+        <li>Liquidations are paused (protecting borrowers from bad data)</li>
+        <li>You can still add collateral or repay loans</li>
+      </ul>
+      <p>This is a safety feature, not a bug. It ensures the protocol never acts on outdated information.</p>
+
+      <h3>Hardware-secured signing</h3>
+      <p>The key used to sign price updates lives inside a hardware security module (HSM) in Google Cloud. The key material cannot be extracted, even by the Poppie team. Every signature requires authenticated access. This means even if an attacker gained access to the keeper's software environment, they could not steal the signing key.</p>
+
+      <h3>Automatic shutdown</h3>
+      <p>If the keeper encounters repeated failures, it automatically shuts itself down and alerts the team. A human must investigate and manually restart it. The system is designed to stop and wait rather than continue operating in a potentially degraded state.</p>
+
+      <h3>Per-asset pause</h3>
+      <p>Individual assets can be paused instantly if needed, such as during a stock split, a corporate action, or a trading halt on the traditional exchange. Pausing an asset makes its price unavailable, effectively freezing all borrowing activity for that asset while leaving everything else running normally.</p>
+      <p>Unpausing requires a deliberate two-step process: an admin sets a known-good reference price, and then normal price updates resume. This prevents accidental or premature resumption.</p>
+
+      <h2>Monitoring and Alerting</h2>
+      <p>A separate monitoring system runs alongside the keeper, continuously checking:</p>
+      <ul>
+        <li>Are prices fresh for each asset?</li>
+        <li>Is the keeper running on schedule?</li>
+        <li>Does the keeper wallet have enough gas funds?</li>
+        <li>Have any unexpected contract changes occurred?</li>
+        <li>How close are prices to safety thresholds?</li>
+      </ul>
+      <p>Any issues are flagged immediately. The monitoring system is completely independent from the keeper, so if the keeper goes down, the monitor will detect it and alert the team.</p>
+
+      <h2>Audited and Verified</h2>
+      <p>Poppie's oracle contracts have been <a href="https://github.com/gfx-labs/poppie-oracle/blob/main/audit/poppie-oracle-june-2026-preliminary.pdf" target="_blank">audited by Chain Defenders</a>, receiving a security grade of 97/100 with zero high or medium severity findings. The contracts include 127 tests spanning unit tests, fuzz tests, invariant tests, and formal verification (symbolic execution with Halmos).</p>
+      <p>Euler V2's core contracts have undergone multiple independent audits and have been battle-tested with billions of dollars in value.</p>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/supported-assets.html">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">Assets &amp; Market Hours</span>
+        </a>
+        <a href="/landing/docs/governance.html" class="docs-nav-next">
+          <span class="docs-nav-label">Next</span>
+          <span class="docs-nav-title">Governance</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>
