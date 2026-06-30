@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Poppie Docs</title>
+  <meta name="description" content="Frequently asked questions about Poppie: fees, risks, liquidation, market hours, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html">How It Works</a>
+      <a href="/landing/docs/governance.html">Governance</a>
+      <a href="/landing/docs/faq.html" class="active">FAQ</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Frequently Asked Questions</h1>
+      <p class="docs-subtitle">Common questions about fees, risks, availability, and how Poppie works in practice.</p>
+
+      <h2>Fees &amp; Costs</h2>
+
+      <h3>Are there origination fees?</h3>
+      <p>No. Poppie charges zero origination fees. You are not penalized for borrowing for short periods. The only cost is the borrowing interest rate, which accrues over time. Borrow for an hour or a year; you pay only for the time you use.</p>
+
+      <h3>What fees do I pay?</h3>
+      <p>You pay two things:</p>
+      <ul>
+        <li><strong>Borrowing interest,</strong> which accrues continuously on your outstanding loan balance. The rate is set by the vault's interest rate model and adjusts based on utilization (how much of the available USDT is being borrowed).</li>
+        <li><strong>Gas fees,</strong> a small amount of BNB for each transaction on BSC. These are typically a few cents.</li>
+      </ul>
+
+      <h3>Do lenders pay fees?</h3>
+      <p>USDT lenders do not pay any protocol fees to deposit or withdraw. Gas fees on BSC apply to deposit and withdrawal transactions.</p>
+
+      <h2>Borrowing &amp; Positions</h2>
+
+      <h3>How much can I borrow?</h3>
+      <p>The amount you can borrow depends on your collateral's value and the <strong>loan-to-value (LTV) ratio</strong> set for that asset. LTV ratios are configured conservatively based on asset class, so broad ETFs like SPY have higher LTV ratios than volatile individual stocks. The exact LTV for each asset is visible in the app.</p>
+
+      <h3>Can I use multiple assets as collateral?</h3>
+      <p>Yes, but each collateral vault is independent. If you hold NVDAon and SPYon, you open separate positions for each. This isolation is actually a safety feature, because a problem with one asset won't affect your other positions.</p>
+
+      <h3>How does interest work?</h3>
+      <p>Interest accrues continuously on your outstanding loan. There is no fixed term, and you can repay at any time. The interest rate fluctuates based on how much of the available USDT is being borrowed (utilization). Higher utilization means higher rates, which encourages more USDT supply and discourages excessive borrowing.</p>
+
+      <h3>Can I repay my loan early?</h3>
+      <p>Yes, at any time. There are no early repayment penalties. You can repay all at once or in partial amounts. Once fully repaid, you can withdraw your collateral immediately.</p>
+
+      <h2>Risks &amp; Liquidation</h2>
+
+      <h3>What is liquidation?</h3>
+      <p>Liquidation occurs when your health score drops below 1. This means your loan has become under-collateralized, meaning the value of your collateral is too low relative to your debt. A third party can repay part of your debt and claim a portion of your collateral at a small discount.</p>
+      <p>Liquidation is not a total loss. You keep the USDT you borrowed and any remaining collateral after the process.</p>
+
+      <h3>How can I avoid liquidation?</h3>
+      <ul>
+        <li>Don't borrow the maximum allowed amount; leave a safety buffer</li>
+        <li>Monitor your health score, especially during volatile markets</li>
+        <li>Add more collateral if your health score is declining</li>
+        <li>Repay some of your loan to improve your health score</li>
+        <li>Be mindful that individual stocks are more volatile than ETFs</li>
+      </ul>
+
+      <h3>What are the risks of using Poppie?</h3>
+      <p>Like all DeFi protocols, Poppie carries risks:</p>
+      <ul>
+        <li><strong>Liquidation risk:</strong> if your collateral's value drops, you may be liquidated</li>
+        <li><strong>Smart contract risk:</strong> despite audits and extensive testing, smart contracts may contain bugs</li>
+        <li><strong>Oracle risk:</strong> if price feeds are delayed or incorrect, it could affect the protocol (mitigated by multiple safety layers)</li>
+        <li><strong>Market risk:</strong> tokenized equities are subject to the same volatility as their underlying stocks</li>
+        <li><strong>Regulatory risk:</strong> the regulatory landscape for tokenized securities is evolving</li>
+      </ul>
+
+      <div class="callout callout-warn">
+        <p><strong>Important:</strong> Poppie is experimental software. Never deposit more than you can afford to lose. This is not financial advice.</p>
+      </div>
+
+      <h2>Market Hours &amp; Availability</h2>
+
+      <h3>Can I use Poppie on weekends?</h3>
+      <p>Partially. On weekends, you can:</p>
+      <ul>
+        <li>Deposit additional collateral</li>
+        <li>Repay loans</li>
+        <li>Withdraw collateral if you have no open loan</li>
+        <li>Deposit or withdraw USDT from the lending vault</li>
+      </ul>
+      <p>You <strong>cannot</strong> borrow new funds, withdraw collateral from an open position, or trigger liquidations on weekends. These actions resume when markets reopen on Sunday evening (8:00 PM ET for 24/5 assets).</p>
+
+      <h3>What happens on holidays?</h3>
+      <p>US federal holidays follow the same pattern as weekends. When the stock market is closed, no fresh prices are available, so borrow and withdrawal operations pause. Everything resumes automatically when markets reopen.</p>
+
+      <h3>Why can't I borrow outside market hours?</h3>
+      <p>Borrowing requires a current price to calculate your health score and ensure the loan is safe. When markets are closed, no new prices are available. Rather than using stale prices (which could be inaccurate), the system pauses these operations until fresh data is available. This protects both borrowers and lenders.</p>
+
+      <h2>Technical Questions</h2>
+
+      <h3>Where does Poppie get its prices?</h3>
+      <p>Prices come from <a href="https://data.chain.link" target="_blank">Chainlink Data Streams</a>, multiplied by Ondo's share conversion rate. Chainlink aggregates data from multiple sources, and separate feed IDs are used for each trading session (regular, pre-market, post-market, overnight). See <a href="/landing/docs/how-it-works.html">How It Works</a> for more details.</p>
+
+      <h3>What happens if a stock splits?</h3>
+      <p>Stock splits are handled through Ondo's share conversion rate (the "multiplier"). When a stock splits, the multiplier adjusts accordingly. The Poppie team monitors for upcoming stock splits and coordinates the transition. During the split event, the affected asset may be temporarily paused as a precaution and resumed once the new multiplier is active.</p>
+
+      <h3>What blockchain is Poppie on?</h3>
+      <p>Poppie is deployed on <strong>BNB Smart Chain (BSC)</strong>. You need a BSC-compatible wallet and a small amount of BNB for gas fees. BSC was chosen for its low transaction costs and its existing ecosystem of Ondo GM tokens.</p>
+
+      <h3>Is Poppie audited?</h3>
+      <p>Yes. Poppie's oracle contracts have been audited by Chain Defenders with a security grade of 97/100. The lending infrastructure is built on Euler V2, which has undergone multiple independent audits. The oracle contracts also include 127 automated tests, including fuzz testing, invariant testing, and formal verification.</p>
+
+      <h3>Can I access Poppie from other interfaces?</h3>
+      <p><a href="https://poppie.io">poppie.io</a> is the primary interface, but Poppie's vaults are standard Euler V2 vaults. They are accessible through the <a href="https://app.euler.finance" target="_blank">Euler app</a>, and any DeFi application is welcome to integrate with Poppie's contracts directly.</p>
+
+      <h3>Who built Poppie?</h3>
+      <p>Poppie was built by the team at <a href="https://oku.trade" target="_blank">Oku Trade</a>.</p>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/governance.html">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">Governance</span>
+        </a>
+        <div></div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>

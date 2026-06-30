@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Use Poppie - Poppie Docs</title>
+  <meta name="description" content="Step-by-step guide to borrowing USDT against tokenized stocks on Poppie.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html" class="active">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html">How It Works</a>
+      <a href="/landing/docs/governance.html">Governance</a>
+      <a href="/landing/docs/faq.html">FAQ</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>How to Use Poppie</h1>
+      <p class="docs-subtitle">A practical guide to depositing collateral, borrowing USDT, managing your position, and repaying your loan.</p>
+
+      <h2>Before You Start</h2>
+      <p>To use Poppie, you need:</p>
+      <ul>
+        <li>A Web3 wallet (MetaMask, Rabby, or any WalletConnect-compatible wallet)</li>
+        <li>Ondo Global Markets tokens on BNB Smart Chain (BSC), which serve as your collateral</li>
+        <li>A small amount of BNB for gas fees on BSC (typically a few cents per transaction)</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <p><strong>Don't have Ondo GM tokens yet?</strong> You can acquire tokenized equities through <a href="https://ondo.finance" target="_blank">Ondo Finance</a>. Once you have them in your wallet on BSC, you're ready to use Poppie.</p>
+      </div>
+
+      <h2>Depositing Collateral and Borrowing</h2>
+      <ol class="docs-steps">
+        <li>
+          <strong>Go to <a href="/lend">poppie.io</a> and connect your wallet.</strong>
+          <p>Click "Launch App" or navigate to the lending page. Connect your wallet and make sure you're on BNB Smart Chain (BSC).</p>
+        </li>
+        <li>
+          <strong>Choose an asset to deposit.</strong>
+          <p>Browse the available collateral vaults. Each vault represents a different tokenized equity (e.g., NVDAon, AAPLon, SPYon). Select the asset you hold and want to use as collateral.</p>
+        </li>
+        <li>
+          <strong>Approve and deposit your tokens.</strong>
+          <p>Enter the amount you want to deposit. You'll need to approve the contract to spend your tokens (a one-time step per asset), then confirm the deposit transaction. Your tokens are now held as collateral.</p>
+        </li>
+        <li>
+          <strong>Borrow USDT.</strong>
+          <p>Once your collateral is deposited, specify how much USDT you want to borrow. The interface shows you the maximum you can borrow based on your collateral's value and the loan-to-value (LTV) ratio. Confirm the transaction, and USDT is sent to your wallet.</p>
+        </li>
+      </ol>
+
+      <div class="callout callout-warn">
+        <p><strong>Don't borrow the maximum.</strong> Borrowing up to the limit leaves no safety margin. If your collateral's value drops even slightly, you risk liquidation. A good rule of thumb is to stay well below the maximum LTV.</p>
+      </div>
+
+      <h2>Real-World Scenarios</h2>
+
+      <div class="scenario">
+        <h4>Scenario: You need short-term cash without selling NVDA</h4>
+        <p>You hold $10,000 worth of NVDAon tokens and need $3,000 for a down payment. You deposit your NVDAon as collateral and borrow $3,000 USDT. Since there are no origination fees, you can repay the loan next week when your paycheck arrives, paying only a few days of interest. Your NVDA exposure stays intact the entire time.</p>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario: Diversifying without selling</h4>
+        <p>You have a concentrated position in AAPLon and want to diversify into other investments. Instead of selling AAPL (and triggering a taxable event), you deposit your AAPLon as collateral, borrow USDT, and use it to buy other assets. You maintain your AAPL exposure while deploying capital elsewhere.</p>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario: Earning yield on USDT</h4>
+        <p>You hold USDT and want to earn passive income. Navigate to the USDT lending vault and deposit your USDT. You earn interest generated from borrowers using Poppie. Your yield comes from real borrowing demand backed by tokenized equities. You can withdraw at any time, subject to available liquidity.</p>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario: Borrowing across multiple assets</h4>
+        <p>You hold $10,000 of NVDAon and $5,000 of SPYon. On Poppie, each collateral vault is separate, so you can open two independent loans: one backed by NVDAon and another backed by SPYon. If NVDAon has 24/5 availability and you want to borrow more against it on a Tuesday evening, you can, even outside regular market hours. Your SPYon loan operates independently.</p>
+      </div>
+
+      <h2>Managing Your Position</h2>
+
+      <h3>Monitor your health score</h3>
+      <p>Your <strong>health score</strong> reflects how safe your loan is relative to your collateral value. A health score above 1 means you're safe. If it drops below 1, your position can be liquidated.</p>
+      <p>The health score changes as:</p>
+      <ul>
+        <li>Your collateral's stock price moves up (health improves) or down (health worsens)</li>
+        <li>Interest accrues on your loan (health slowly decreases over time)</li>
+        <li>You add more collateral (health improves) or withdraw some (health worsens)</li>
+        <li>You repay part of your loan (health improves) or borrow more (health worsens)</li>
+      </ul>
+
+      <h3>Adding collateral</h3>
+      <p>You can deposit additional collateral at any time, including on weekends and outside market hours. Adding collateral improves your health score and reduces liquidation risk.</p>
+
+      <h3>Repaying your loan</h3>
+      <p>Repay all or part of your USDT loan at any time. Once fully repaid, you can withdraw your collateral. Partial repayments are also supported, which will improve your health score.</p>
+
+      <h3>Withdrawing collateral</h3>
+      <p>If you have excess collateral (your health score is well above 1), you can withdraw some of your deposited tokens. The system won't let you withdraw so much that it would put your health score at risk. Collateral withdrawals from open loans are only available during the asset's <a href="/landing/docs/supported-assets.html">market hours</a>.</p>
+
+      <h2>Understanding Liquidation</h2>
+      <p>If your health score drops below 1, your position becomes eligible for <strong>liquidation</strong>. In a liquidation, a third party repays part of your debt in exchange for a portion of your collateral at a small discount.</p>
+      <p>Liquidation is a safety mechanism that protects lenders. It is not a total loss for the borrower. You keep the borrowed USDT and any remaining collateral after the liquidation.</p>
+
+      <h3>How to avoid liquidation</h3>
+      <ul>
+        <li><strong>Don't over-borrow.</strong> Stay well below the maximum LTV ratio.</li>
+        <li><strong>Monitor your position.</strong> Check your health score regularly, especially during volatile market periods.</li>
+        <li><strong>Act proactively.</strong> If your collateral drops in value, add more collateral or repay some of your loan before your health score reaches critical levels.</li>
+        <li><strong>Understand the asset.</strong> More volatile stocks carry more risk. ETFs like SPY tend to be less volatile than individual stocks like TSLA or MSTR.</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <p><strong>Good to know:</strong> Poppie uses Euler V2's reverse Dutch auction liquidation mechanism, which typically results in lower liquidation penalties than most other DeFi protocols. This is better for borrowers, but you should still manage your risk carefully.</p>
+      </div>
+
+      <h2>Key Operations at a Glance</h2>
+      <table>
+        <thead><tr><th>Action</th><th>When Available</th><th>Requirements</th></tr></thead>
+        <tbody>
+          <tr><td>Deposit collateral</td><td>Anytime</td><td>Ondo GM tokens + BNB for gas</td></tr>
+          <tr><td>Borrow USDT</td><td>During asset's market hours</td><td>Sufficient collateral deposited</td></tr>
+          <tr><td>Repay loan</td><td>Anytime</td><td>USDT in wallet + BNB for gas</td></tr>
+          <tr><td>Withdraw collateral (with open loan)</td><td>During asset's market hours</td><td>Health score stays safe after withdrawal</td></tr>
+          <tr><td>Withdraw collateral (no loan)</td><td>Anytime</td><td>No outstanding debt</td></tr>
+          <tr><td>Supply USDT to earn yield</td><td>Anytime</td><td>USDT in wallet + BNB for gas</td></tr>
+          <tr><td>Withdraw supplied USDT</td><td>Anytime (subject to liquidity)</td><td>None</td></tr>
+        </tbody>
+      </table>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/why-poppie.html">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">Why Poppie</span>
+        </a>
+        <a href="/landing/docs/supported-assets.html" class="docs-nav-next">
+          <span class="docs-nav-label">Next</span>
+          <span class="docs-nav-title">Assets &amp; Market Hours</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>

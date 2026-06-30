@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Poppie - Poppie Docs</title>
+  <meta name="description" content="Why we built Poppie, who it's for, and how it compares to traditional margin lending.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html" class="active">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html">How It Works</a>
+      <a href="/landing/docs/governance.html">Governance</a>
+      <a href="/landing/docs/faq.html">FAQ</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Why Poppie</h1>
+      <p class="docs-subtitle">Your stocks shouldn't be dead capital. Poppie turns your investment portfolio into a source of liquidity.</p>
+
+      <h2>The Problem</h2>
+      <p>The vast majority of investors cannot easily borrow against their stock portfolios. The few who can face high minimums, fixed term lengths, heavy paperwork, and borrowing rates that penalize short-term loans with origination fees.</p>
+      <p>For many people, investing in stocks feels like locking up money. Once they buy shares, that capital sits idle until they sell, often years or decades later. If they need cash in the meantime, their only option is to liquidate, potentially at an unfavorable time, triggering tax events and missing future gains.</p>
+      <p>DeFi lending solved this problem for crypto assets years ago. Protocols like Aave and Compound let you borrow against ETH and stablecoins instantly. But until now, there was nothing purpose-built for the growing world of <strong>tokenized real-world assets</strong> like tokenized stocks, ETFs, and other securities.</p>
+
+      <h2>Why Now</h2>
+      <p>Tokenized stocks are finally here. Ondo Finance has issued 400+ tokenized assets representing hundreds of millions of dollars in value. But while the tokens exist, the infrastructure to <em>do things</em> with them has lagged behind.</p>
+      <p>When our team at <a href="https://oku.trade" target="_blank">Oku Trade</a> researched lending options for tokenized stocks, we came up dry. Only a handful of assets were supported as collateral across all of DeFi, and nobody was building a comprehensive solution. So we built Poppie.</p>
+
+      <div class="callout callout-info">
+        <p><strong>Poppie's goal:</strong> To be the base layer for borrowing and lending tokenized assets onchain. We started with 21 assets and plan to expand significantly.</p>
+      </div>
+
+      <h2>Who is Poppie For?</h2>
+
+      <div class="scenario">
+        <h4>Stock holders who need liquidity</h4>
+        <p>You own tokenized equities through Ondo Finance and want to access cash without selling. Maybe you need funds for a purchase, an investment opportunity, or just operating expenses. With Poppie, you deposit your tokens as collateral, borrow USDT, and keep your stock exposure. When you're ready, repay the loan and withdraw your collateral.</p>
+      </div>
+
+      <div class="scenario">
+        <h4>DeFi users who want equity exposure</h4>
+        <p>You're familiar with DeFi lending and want to add traditional market assets to your portfolio. Poppie brings Wall Street assets onchain with the composability and permissionless access you expect from DeFi. Supply USDT to earn yield from borrowing demand, or use tokenized stocks as part of a broader DeFi strategy.</p>
+      </div>
+
+      <div class="scenario">
+        <h4>Professional investors and institutions</h4>
+        <p>You need capital-efficient access to tokenized securities without the overhead of traditional prime brokerage. Poppie offers transparent, auditable lending with onchain risk parameters. Every user plays by the same rules, with no special deals, no hidden fees, and no counterparty opacity.</p>
+      </div>
+
+      <div class="scenario">
+        <h4>USDT lenders seeking yield</h4>
+        <p>You hold stablecoins and want to earn interest. By supplying USDT to the Poppie lending vault, you earn yield generated from borrowers who are paying interest on their loans. You can deposit or withdraw at any time.</p>
+      </div>
+
+      <h2>Poppie vs. Traditional Margin</h2>
+      <p>Here's how Poppie compares to a traditional brokerage margin loan:</p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card comparison-old">
+          <h4>Traditional Margin</h4>
+          <ul>
+            <li>Application and credit check required</li>
+            <li>2&ndash;3 day settlement</li>
+            <li>Market hours only</li>
+            <li>Opaque liquidation process</li>
+            <li>Origination fees on most products</li>
+            <li>Minimum balances and term lengths</li>
+            <li>Different rates for different clients</li>
+          </ul>
+        </div>
+        <div class="comparison-card comparison-new">
+          <h4>Poppie</h4>
+          <ul>
+            <li>Just connect a wallet</li>
+            <li>Instant settlement onchain</li>
+            <li>24/5 access for most assets</li>
+            <li>Transparent, onchain liquidation rules</li>
+            <li>Zero origination fees</li>
+            <li>No minimums, no term lengths</li>
+            <li>Same rules for every user</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>What Makes Poppie Different</h2>
+      <ul>
+        <li><strong>Purpose-built for equities.</strong> Risk tiers, oracle feeds, and market-hour awareness designed specifically for stocks and ETFs, not adapted from a generic crypto lending protocol.</li>
+        <li><strong>No origination fees.</strong> You only pay the borrowing interest rate. Borrow for an hour or a year without being penalized for short-term usage.</li>
+        <li><strong>Built on Euler V2.</strong> Not a fork or a toy protocol. Euler V2 is battle-tested infrastructure that has secured billions in DeFi. Poppie inherits its audited smart contracts, isolated risk architecture, and liquidation mechanics.</li>
+        <li><strong>Transparent and trustless.</strong> Every parameter (LTV ratios, interest rates, liquidation thresholds) is publicly visible onchain. No backroom deals, no preferential treatment.</li>
+        <li><strong>Real-time Chainlink oracles.</strong> Prices come from Chainlink Data Streams with multiple safety checks to prevent bad data from reaching the protocol.</li>
+      </ul>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">Overview</span>
+        </a>
+        <a href="/landing/docs/how-to-use.html" class="docs-nav-next">
+          <span class="docs-nav-label">Next</span>
+          <span class="docs-nav-title">How to Use Poppie</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>
