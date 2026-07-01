@@ -16,6 +16,9 @@ declare global {
 }
 
 export default defineNuxtPlugin(() => {
+  // Uncomment the next line to disable the chat widget
+  // return
+
   const token = 'fa2635bec4735a8f9cd48fbd03a62855b7d8d1001b8d2d8a6bf1176788e55f8e'
 
   function loadMava() {
