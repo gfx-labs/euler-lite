@@ -7,6 +7,10 @@ const advancedFeatures = [
 ]
 
 defineEmits(['close'])
+
+const openSupport = () => {
+  window.MavaWebChatToggle?.()
+}
 </script>
 
 <template>
@@ -71,5 +75,25 @@ defineEmits(['close'])
     </div>
     <Permit2Settings />
     <!-- SlippageSettings hidden: swap features are disabled in this deployment -->
+    <div class="mt-20 rounded-16 border border-line-default bg-card p-16">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-p2">
+            Support
+          </div>
+          <div class="text-p3 text-content-muted">
+            Need help? Chat with our support team.
+          </div>
+        </div>
+        <UiButton
+          size="small"
+          rounded
+          variant="primary-stroke"
+          @click="openSupport"
+        >
+          Open chat
+        </UiButton>
+      </div>
+    </div>
   </BaseModalWrapper>
 </template>
