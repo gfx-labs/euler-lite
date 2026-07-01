@@ -182,7 +182,7 @@ export function buildCsp(
     'style-src \'unsafe-inline\' \'self\' https://fonts.googleapis.com',
     'object-src \'none\'',
     'base-uri \'self\'',
-    `connect-src ${connectSrc.join(' ')} https://chat.mava.app https://widget.mava.app`,
+    `connect-src ${connectSrc.join(' ')} https://chat.mava.app https://widget.mava.app wss://chat.mava.app`,
     'font-src \'self\' https://fonts.reown.com https://fonts.gstatic.com',
     'frame-src \'self\' https://verify.walletconnect.org https://verify.walletconnect.com https://chat.mava.app',
     'frame-ancestors \'none\'',
