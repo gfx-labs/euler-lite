@@ -16,10 +16,7 @@ declare global {
 }
 
 export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig()
-  const token = config.public.mavaToken as string
-
-  if (!token) return
+  const token = 'b1b9784e81c423a48ac0688b5239a32381f201259d0fa1d39c089c036a0ec5ff'
 
   function loadMava() {
     const script = document.createElement('script')

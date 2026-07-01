@@ -40,12 +40,6 @@ variable "lb_domains" {
   default     = ["poppie.io", "www.poppie.io"]
 }
 
-variable "mava_token" {
-  description = "Mava chat widget token"
-  type        = string
-  default     = ""
-}
-
 variable "cloud_run_min_instances" {
   description = "Minimum Cloud Run instances (1 keeps warm cache alive)"
   type        = number

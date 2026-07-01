@@ -159,8 +159,7 @@ export default defineNuxtConfig({
       configEnableAppTitle: '',
       // Skip on-chain governor verification for single-curator deployments.
       configDisableGovernorVerification: '',
-      // Mava chat widget token
-      mavaToken: '',
+
       // Incentives provider flags: enabled by default. Set to 'false' to disable.
       configEnableMerkl: '',
       configEnableIncentra: '',
