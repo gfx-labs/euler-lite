@@ -193,6 +193,11 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         name  = "OFAC_LIST_URL"
         value = "https://cdn.oku.trade/ofac.json"
       }
+      # Mava chat widget
+      env {
+        name  = "NUXT_PUBLIC_MAVA_TOKEN"
+        value = var.mava_token
+      }
       # Geo-blocking handled at Cloudflare edge — disable app-level gate
       env {
         name  = "DISABLE_GEO_GATE"
