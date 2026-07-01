@@ -1,6 +1,7 @@
 // Sanctioned countries — always blocked for all products
 // Commented-out entries can be enabled when needed
 export const SANCTIONED_COUNTRIES: readonly string[] = [
+  'US', // United States
   'AF', // Afghanistan
   'BY', // Belarus
   'CF', // Central African Republic
