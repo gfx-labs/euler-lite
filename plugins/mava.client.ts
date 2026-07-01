@@ -16,7 +16,7 @@ declare global {
 }
 
 export default defineNuxtPlugin(() => {
-  const token = 'b1b9784e81c423a48ac0688b5239a32381f201259d0fa1d39c089c036a0ec5ff'
+  const token = 'fa2635bec4735a8f9cd48fbd03a62855b7d8d1001b8d2d8a6bf1176788e55f8e'
 
   function loadMava() {
     const script = document.createElement('script')
