@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { POLL_INTERVAL_60S_MS } from '~/entities/tuning-constants'
+import { SANCTIONED_COUNTRIES } from '~/entities/country-constants'
 import { BatchAnnouncementModal } from '#components'
 import { useModal } from '~/components/ui/composables/useModal'
 
@@ -15,7 +16,12 @@ const { loadEulerConfig, chainId } = useEulerAddresses()
 const { loadVaults, isReady: isVaultsReady, resetVaultsState, refreshVaults, setShowAllLabelEntries } = useVaults()
 const { loadTokenList, isLoaded: isTokenListLoaded } = useTokenList()
 const { loadLabels } = useEulerLabels()
-const { loadCountry } = useGeoBlock()
+const { loadCountry, country } = useGeoBlock()
+
+const isGeoBlocked = computed(() => {
+  if (!country.value) return false
+  return SANCTIONED_COUNTRIES.includes(country.value)
+})
 const { updateBalances, resetBalances } = useWallets()
 const { isConnected, address } = useWagmi()
 const showAllLabelEntries = useShowAllLabelEntries()
@@ -197,6 +203,12 @@ onUnmounted(() => {
   >
     <SpyModeBanner />
     <TheHeader v-if="isHeaderVisible" />
+  </div>
+  <div
+    v-if="isGeoBlocked"
+    class="bg-error-500 text-white text-center py-12 px-16 text-p2"
+  >
+    This service is not available in your region.
   </div>
   <main>
     <section
