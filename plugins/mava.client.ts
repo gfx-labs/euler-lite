@@ -30,6 +30,10 @@ export default defineNuxtPlugin(() => {
     script.setAttribute('data-token', token)
     script.onload = () => {
       window.Mava?.initialize()
+      // Hide the floating launcher — support is accessed via Settings
+      const style = document.createElement('style')
+      style.textContent = '#mava-webchat-launcher { display: none !important; }'
+      document.head.appendChild(style)
     }
     document.head.appendChild(script)
   }
