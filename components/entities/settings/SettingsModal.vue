@@ -6,10 +6,13 @@ const advancedFeatures = [
   'Batch transactions: queue multiple actions into one atomic transaction',
 ]
 
-defineEmits(['close'])
+const emit = defineEmits(['close'])
 
 const openSupport = () => {
-  window.MavaWebChatToggle?.()
+  emit('close')
+  setTimeout(() => {
+    window.MavaWebChatToggle?.()
+  }, 300)
 }
 </script>
 
@@ -75,25 +78,24 @@ const openSupport = () => {
     </div>
     <Permit2Settings />
     <!-- SlippageSettings hidden: swap features are disabled in this deployment -->
-    <div class="mt-20 rounded-16 border border-line-default bg-card p-16">
+    <button
+      class="mt-20 w-full rounded-16 border border-line-default bg-card p-16 text-left hover:bg-card-hover transition-colors cursor-pointer"
+      @click="openSupport"
+    >
       <div class="flex items-center justify-between">
         <div>
-          <div class="text-p2">
+          <div class="text-p2 text-content-primary">
             Support
           </div>
           <div class="text-p3 text-content-muted">
             Need help? Chat with our support team.
           </div>
         </div>
-        <UiButton
-          size="small"
-          rounded
-          variant="primary-stroke"
-          @click="openSupport"
-        >
-          Open chat
-        </UiButton>
+        <SvgIcon
+          name="arrow-top-right"
+          class="!w-16 !h-16 text-content-muted"
+        />
       </div>
-    </div>
+    </button>
   </BaseModalWrapper>
 </template>
