@@ -133,7 +133,7 @@ export default defineNuxtConfig({
       configPrivacyPolicyUrl: '',
       configRiskDisclosuresUrl: '',
       configMicaWhitepaperUrl: '',
-      configXUrl: 'https://x.com/poppiefinance',
+      configXUrl: '',
       configDiscordUrl: '',
       configTelegramUrl: '',
       configGithubUrl: '',
