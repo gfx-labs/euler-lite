@@ -322,6 +322,164 @@ resource "google_cloud_run_v2_service_iam_member" "public" {
   member   = "allUsers"
 }
 
+# ── Dev Cloud Run Service (auto-deploy, scale to zero) ───────────────
+
+resource "google_cloud_run_v2_service" "euler_lite_dev" {
+  name     = "euler-lite-dev"
+  location = var.region
+
+  lifecycle {
+    ignore_changes = [
+      template[0].containers[0].image,
+    ]
+  }
+
+  template {
+    service_account = google_service_account.cloudrun_runtime.email
+
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 1
+    }
+
+    containers {
+      image       = "us-docker.pkg.dev/cloudrun/container/hello"
+      command     = ["/nodejs/bin/node", "/app/.output/server/index.mjs"]
+      working_dir = "/app"
+
+      resources {
+        limits = {
+          cpu    = var.cloud_run_cpu
+          memory = var.cloud_run_memory
+        }
+        cpu_idle          = true
+        startup_cpu_boost = true
+      }
+
+      ports {
+        container_port = 3000
+      }
+
+      # Same env vars as production
+      env {
+        name  = "NODE_ENV"
+        value = "production"
+      }
+      env {
+        name  = "HOST"
+        value = "0.0.0.0"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_DISABLE_GOVERNOR_VERIFICATION"
+        value = "true"
+      }
+      env {
+        name  = "DISABLE_GEO_GATE"
+        value = "true"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_APP_TITLE"
+        value = "Poppie (Dev)"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_APP_DESCRIPTION"
+        value = "Poppie Finance is a Euler curator that focuses on RWAs."
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_APP_TITLE"
+        value = "true"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_LOGO_URL"
+        value = "/logo.svg"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ORACLE_CHECKS_REPO"
+        value = "euler-xyz/oracle-checks"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_ENTITY_BRANDING"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_VAULT_TYPE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_EARN_PAGE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_EXPLORE_PAGE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_MERKL"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_INCENTRA"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_FUUL"
+        value = "false"
+      }
+      env {
+        name  = "OFAC_LIST_URL"
+        value = "https://cdn.oku.trade/ofac.json"
+      }
+      env {
+        name  = "V3_API_URL"
+        value = "https://v3.euler.finance"
+      }
+      env {
+        name  = "NUXT_PUBLIC_PYTH_HERMES_URL"
+        value = "https://hermes.pyth.network"
+      }
+      env {
+        name  = "SUBGRAPH_URL_56"
+        value = "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-simple-bsc/latest/gn"
+      }
+      env {
+        name = "RPC_URL_56"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.secrets["RPC_URL_56"].secret_id
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "NUXT_PUBLIC_APP_KIT_PROJECT_ID"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.secrets["APPKIT_PROJECT_ID"].secret_id
+            version = "latest"
+          }
+        }
+      }
+    }
+  }
+
+  depends_on = [
+    google_project_service.apis,
+    google_secret_manager_secret_iam_member.runtime_reads_secret,
+  ]
+}
+
+resource "google_cloud_run_v2_service_iam_member" "dev_public" {
+  name     = google_cloud_run_v2_service.euler_lite_dev.name
+  location = var.region
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
+output "dev_url" {
+  description = "Dev Cloud Run service URL"
+  value       = google_cloud_run_v2_service.euler_lite_dev.uri
+}
+
 # ── Load Balancer ────────────────────────────────────────────────────
 
 # Static IP
