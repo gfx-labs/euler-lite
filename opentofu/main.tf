@@ -274,21 +274,6 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "https://v3.euler.finance"
       }
 
-      # Read vault data (incl. collateral/LTV lists) directly on-chain rather
-      # than from the V3 indexer. The shared V3 indexer lags behind on-chain
-      # LTV configuration for this curator's vaults, so newly added collateral
-      # markets don't appear via V3. On-chain reads reflect the current
-      # configuration immediately. Applies to both the server snapshot builder
-      # and the browser's "fast" SDK instance.
-      env {
-        name  = "SERVER_VAULT_CACHE_SOURCE"
-        value = "onchain"
-      }
-      env {
-        name  = "NUXT_PUBLIC_BROWSER_VAULT_SOURCE"
-        value = "onchain"
-      }
-
       # Pyth oracle price feeds (proxied through /api/pyth/)
       env {
         name  = "NUXT_PUBLIC_PYTH_HERMES_URL"
