@@ -33,7 +33,7 @@ import type {
 } from '@eulerxyz/euler-v2-sdk'
 import { useConfig, useSendTransaction, useSignTypedData } from '@wagmi/vue'
 import { getAccount } from '@wagmi/vue/actions'
-import { getEulerSdk, getEulerSdkFresh, buildSubgraphProxyApiPath } from '~/composables/useEulerSdk'
+import { getEulerSdkForChain, getEulerSdkFresh, buildSubgraphProxyApiPath } from '~/composables/useEulerSdk'
 import { logWarn } from '~/utils/errorHandling'
 import { invalidateSdkQueries } from '~/utils/sdk-query-cache'
 import { INVALIDATE_AFTER_TX } from '~/utils/sdk-query-policy'
@@ -384,6 +384,13 @@ export interface PlanDebtChangeInput {
   // Swap path
   swapQuote?: SwapQuote
   swapperMode?: SwapperMode
+  /** Pre-fetched account snapshot. When provided, plan construction skips its own freshPlanContext fetch. */
+  account?: Account<IHasVaultAddress>
+}
+
+export interface PlanRefinancePositionInput {
+  collateral?: Omit<PlanCollateralChangeInput, 'account'>
+  debt?: Omit<PlanDebtChangeInput, 'account'>
   /** Pre-fetched account snapshot. When provided, plan construction skips its own freshPlanContext fetch. */
   account?: Account<IHasVaultAddress>
 }
@@ -892,6 +899,63 @@ export const useEulerTx = () => {
     })
   }
 
+  const planRefinancePosition = async (input: PlanRefinancePositionInput): Promise<TransactionPlan> => {
+    if (!input.collateral && !input.debt) {
+      throw new Error('planRefinancePosition: collateral or debt change is required')
+    }
+
+    const { sdk, account } = await freshPlanContext(input.account)
+    const plans: TransactionPlan[] = []
+
+    if (input.collateral) {
+      plans.push(
+        input.collateral.swapQuote
+          ? sdk.executionService.planSwapCollateral({
+              account,
+              swapQuote: input.collateral.swapQuote,
+              swapperMode: input.collateral.swapperMode,
+            })
+          : sdk.executionService.planMigrateSameAssetCollateral({
+              account,
+              fromVault: input.collateral.fromVault,
+              toVault: input.collateral.toVault,
+              amount: input.collateral.amount,
+              positionAccount: input.collateral.positionAccount,
+              fromAsset: input.collateral.fromAsset,
+              toAsset: input.collateral.toAsset,
+              isMax: input.collateral.isMax,
+              maxShares: input.collateral.maxShares,
+              enableCollateralTo: input.collateral.enableCollateralTo,
+              disableCollateralFrom: input.collateral.disableCollateralFrom,
+            }),
+      )
+    }
+
+    if (input.debt) {
+      plans.push(
+        input.debt.swapQuote
+          ? sdk.executionService.planSwapDebt({
+              account,
+              swapQuote: input.debt.swapQuote,
+              swapperMode: input.debt.swapperMode,
+            })
+          : sdk.executionService.planMigrateSameAssetDebt({
+              account,
+              oldLiabilityVault: input.debt.oldLiabilityVault,
+              newLiabilityVault: input.debt.newLiabilityVault,
+              liabilityAccount: input.debt.liabilityAccount,
+              liabilityAmount: input.debt.liabilityAmount,
+              oldLiabilityAsset: input.debt.oldLiabilityAsset,
+              newLiabilityAsset: input.debt.newLiabilityAsset,
+              sweepExcess: input.debt.sweepExcess,
+              transferRemainingSharesToOwner: input.debt.transferRemainingSharesToOwner,
+            }),
+      )
+    }
+
+    return sdk.executionService.mergePlans(plans)
+  }
+
   const planWithdrawOrRedeem = (input: PlanWithdrawOrRedeemInput): Promise<TransactionPlan> => {
     if (input.isMax) {
       if (input.shares === undefined) {
@@ -978,7 +1042,7 @@ export const useEulerTx = () => {
     return profAsync('sdk', 'prepareTransactionPlan', async () => {
       const owner = requireOwner()
       const cid = requireChainId()
-      const sdk = await getEulerSdk()
+      const sdk = await getEulerSdkForChain(cid)
       return sdk.executionService.prepareTransactionPlan({
         plan,
         chainId: cid,
@@ -995,7 +1059,7 @@ export const useEulerTx = () => {
   const estimateGasForPlan = async (plan: TransactionPlan): Promise<bigint> => {
     const owner = requireOwner()
     const cid = requireChainId()
-    const sdk = await getEulerSdk()
+    const sdk = await getEulerSdkForChain(cid)
     return sdk.executionService.estimateGasForTransactionPlan(cid, owner, plan)
   }
 
@@ -1011,7 +1075,7 @@ export const useEulerTx = () => {
     return profAsync('sdk', 'prefetchPluginData', async () => {
       const owner = requireOwner()
       const cid = requireChainId()
-      const sdk = await getEulerSdk()
+      const sdk = await getEulerSdkForChain(cid)
       return sdk.executionService.prefetchPluginDataForPlan(
         plan,
         options?.account ?? owner,
@@ -1022,7 +1086,7 @@ export const useEulerTx = () => {
 
   const simulatePreparedPlan = async (prepared: TransactionPlanPrepared, stateOverrideOptions?: SimulationStateOverrideOptions) => {
     return profAsync('sdk', 'simulatePreparedTransactionPlan', async () => {
-      const sdk = await getEulerSdk()
+      const sdk = await getEulerSdkForChain(prepared.chainId)
       return sdk.executionService.simulatePreparedTransactionPlan(prepared, {
         stateOverrides: true,
         stateOverrideOptions,
@@ -1177,6 +1241,7 @@ export const useEulerTx = () => {
     planRepayFromSource,
     planCollateralChange,
     planDebtChange,
+    planRefinancePosition,
     planWithdrawOrRedeem,
     simulatePlan,
     prepareTransactionPlan,

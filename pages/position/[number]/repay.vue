@@ -589,6 +589,7 @@ watch(formTab, () => {
       :fallback="`/position/${positionIndex}`"
     />
     <VaultForm
+      page-scroll
       back
       :back-fallback="`/position/${positionIndex}`"
       :loading="isLoading || isPositionsLoading"
@@ -848,24 +849,18 @@ watch(formTab, () => {
               />
             </VaultFormInfoBlock>
 
-            <div class="flex flex-col gap-8 laptop:col-start-1 laptop:row-start-2">
-              <VaultFormInfoButton
-                :pair="position"
-                :disabled="isLoading || isSubmitting"
-              >
-                Pair information
-              </VaultFormInfoButton>
-              <VaultFormSubmit
-                :disabled="reviewRepayDisabled"
-                :loading="isSubmitting || isPreparing"
-                :disabled-reason="disabledReasonInfo?.message"
-                :disabled-reason-variant="disabledReasonInfo?.variant"
-                :can-add-to-batch="canAddToBatch"
-                @add-to-batch="addToBatch"
-              >
-                {{ reviewRepayLabel }}
-              </VaultFormSubmit>
-            </div>
+            <FormSubmitFooter
+              :info-pair="position"
+              :info-disabled="isLoading || isSubmitting"
+              :submit-disabled="reviewRepayDisabled"
+              :submit-loading="isSubmitting || isPreparing"
+              :disabled-reason="disabledReasonInfo?.message"
+              :disabled-reason-variant="disabledReasonInfo?.variant"
+              :can-add-to-batch="canAddToBatch"
+              @add-to-batch="addToBatch"
+            >
+              {{ reviewRepayLabel }}
+            </FormSubmitFooter>
           </div>
         </template>
 
@@ -1038,24 +1033,18 @@ watch(formTab, () => {
               />
             </VaultFormInfoBlock>
 
-            <div class="flex flex-col gap-8 laptop:col-start-1 laptop:row-start-2">
-              <VaultFormInfoButton
-                :pair="position"
-                :disabled="isLoading || isSubmitting"
-              >
-                Pair information
-              </VaultFormInfoButton>
-              <VaultFormSubmit
-                :disabled="reviewRepayDisabled"
-                :loading="isSubmitting || isPreparing"
-                :disabled-reason="disabledReasonInfo?.message"
-                :disabled-reason-variant="disabledReasonInfo?.variant"
-                :can-add-to-batch="canAddToBatch"
-                @add-to-batch="addToBatch"
-              >
-                {{ reviewRepayLabel }}
-              </VaultFormSubmit>
-            </div>
+            <FormSubmitFooter
+              :info-pair="position"
+              :info-disabled="isLoading || isSubmitting"
+              :submit-disabled="reviewRepayDisabled"
+              :submit-loading="isSubmitting || isPreparing"
+              :disabled-reason="disabledReasonInfo?.message"
+              :disabled-reason-variant="disabledReasonInfo?.variant"
+              :can-add-to-batch="canAddToBatch"
+              @add-to-batch="addToBatch"
+            >
+              {{ reviewRepayLabel }}
+            </FormSubmitFooter>
           </div>
         </template>
 
@@ -1070,6 +1059,7 @@ watch(formTab, () => {
                 :asset="savings.sourceVault.value.asset"
                 :vault="savings.sourceVault.value"
                 :collateral-options="savings.savingsOptions.value"
+                collateral-modal-title="Select savings"
                 :selected-source="'vault'"
                 :selected-sub-account="savings.selectedSavingSubAccount.value"
                 :selected-vault-address="savings.sourceVault.value.address"
@@ -1223,24 +1213,18 @@ watch(formTab, () => {
               />
             </VaultFormInfoBlock>
 
-            <div class="flex flex-col gap-8 laptop:col-start-1 laptop:row-start-2">
-              <VaultFormInfoButton
-                :pair="position"
-                :disabled="isLoading || isSubmitting"
-              >
-                Pair information
-              </VaultFormInfoButton>
-              <VaultFormSubmit
-                :disabled="reviewRepayDisabled"
-                :loading="isSubmitting || isPreparing"
-                :disabled-reason="disabledReasonInfo?.message"
-                :disabled-reason-variant="disabledReasonInfo?.variant"
-                :can-add-to-batch="canAddToBatch"
-                @add-to-batch="addToBatch"
-              >
-                {{ reviewRepayLabel }}
-              </VaultFormSubmit>
-            </div>
+            <FormSubmitFooter
+              :info-pair="position"
+              :info-disabled="isLoading || isSubmitting"
+              :submit-disabled="reviewRepayDisabled"
+              :submit-loading="isSubmitting || isPreparing"
+              :disabled-reason="disabledReasonInfo?.message"
+              :disabled-reason-variant="disabledReasonInfo?.variant"
+              :can-add-to-batch="canAddToBatch"
+              @add-to-batch="addToBatch"
+            >
+              {{ reviewRepayLabel }}
+            </FormSubmitFooter>
           </div>
         </template>
       </template>

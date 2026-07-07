@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import type { EulerEarn, PortfolioSavingsPosition, VaultEntity } from '@eulerxyz/euler-v2-sdk'
-import { getSubAccountId as getSubAccountIndex } from '@eulerxyz/euler-v2-sdk'
+import { computeSupplyApyBreakdown, getSubAccountId as getSubAccountIndex } from '@eulerxyz/euler-v2-sdk'
 import { getAddress } from 'viem'
 import { formatAssetValue, getAssetUsdValue } from '~/utils/sdk-prices'
 import { isVaultBlockedByCountry } from '~/composables/useGeoBlock'
 import { isVaultDeprecated, getVaultNotice } from '~/utils/eulerLabelsUtils'
 
-import { VaultOverviewModal, VaultSupplyApyModal, UiModalPreviewTrigger } from '#components'
+import { VaultOverviewModal, VaultApyModal, UiModalPreviewTrigger } from '#components'
 import { useModal } from '~/components/ui/composables/useModal'
 import { formatNumber, formatCompactUsdValue, formatExactAmount } from '~/utils/string-utils'
 import { roundAndCompactTokens } from '~/utils/crypto-utils'
-import { getVaultIntrinsicApy, getVaultIntrinsicApyInfo } from '~/utils/vault-intrinsic-apy'
+import { getVaultIntrinsicApyInfo } from '~/utils/vault-intrinsic-apy'
 
 const { position } = defineProps<{ position: PortfolioSavingsPosition<VaultEntity> }>()
 const modal = useModal()
@@ -26,18 +26,20 @@ const subAccountIndex = computed(() => {
 const { getSupplyRewardCampaignsFromVault } = useRewardsApy()
 const { settings } = useUserSettings()
 const enableIntrinsicApy = computed(() => settings.value.enableIntrinsicApy)
-const { viewer, visibleTotal } = useApyVisibility()
+const { viewer, visibleTotal, visibleBreakdown } = useApyVisibility()
 
-const vault = computed(() => position.vault as EulerEarn)
+const { getVault: getRegistryVault, isVerifiedVault } = useVaultRegistry()
+const vault = computed(() =>
+  (getRegistryVault(position.vault!.address) as EulerEarn | undefined) ?? (position.vault as EulerEarn),
+)
 const positionKey = computed(() => `${position.subAccount.toLowerCase()}:${vault.value.address.toLowerCase()}`)
 const { modifiedKeys, removedKeys } = useTxBatch()
 const isSimulatedRemoved = computed(() => removedKeys.value.has(positionKey.value))
 const isSimulatedModified = computed(() => !isSimulatedRemoved.value && modifiedKeys.value.has(positionKey.value))
-const apyBreakdown = computed(() => position.getApyBreakdown({ viewer: viewer.value }))
+const apyBreakdown = computed(() => computeSupplyApyBreakdown(vault.value, viewer.value))
 const rewardsExist = computed(() =>
   settings.value.enableRewardsApy && (apyBreakdown.value?.rewards ?? 0) > 0,
 )
-const { isVerifiedVault } = useVaultRegistry()
 
 const product = useEulerProductOfVault(computed(() => vault.value.address))
 const isGeoBlocked = computed(() => isVaultBlockedByCountry(vault.value.address))
@@ -58,6 +60,7 @@ watchEffect(() => {
 })
 
 const supplyApyWithRewards = computed(() => visibleTotal(apyBreakdown.value) ?? 0)
+const visibleApyBreakdown = computed(() => visibleBreakdown(apyBreakdown.value))
 
 const hasPrice = ref(false)
 
@@ -70,14 +73,18 @@ watchEffect(() => {
   updateHasPrice()
 })
 
+// Source the breakdown rows and total from the same viewer-aware SDK breakdown
+// the headline uses (visibleApyBreakdown / supplyApyWithRewards), so the tooltip
+// total always matches the displayed figure instead of being recomputed.
 const supplyApyModalData = computed(() => ({
   props: {
-    lendingAPY: getVaultSupplyApy(vault.value),
-    intrinsicAPY: getVaultIntrinsicApy(vault.value, enableIntrinsicApy.value),
+    mode: 'supply',
+    lendingAPY: visibleApyBreakdown.value?.lending ?? 0,
+    intrinsicAPY: visibleApyBreakdown.value?.intrinsicApy ?? 0,
     intrinsicApyInfo: getVaultIntrinsicApyInfo(vault.value, enableIntrinsicApy.value),
     campaigns: getSupplyRewardCampaignsFromVault(vault.value),
+    totalSupplyAPY: supplyApyWithRewards.value,
     rewardVaultAddress: vault.value.address,
-    baseApyAverageLabel: '1h',
   },
 }))
 
@@ -182,11 +189,8 @@ const onClick = () => {
           <div class="flex flex-col items-end">
             <div class="text-content-tertiary text-p3 mb-4 flex items-center gap-4">
               Supply APY
-              <span class="inline-flex items-center rounded-8 px-8 py-2 bg-accent-100 text-accent-600 text-p5">
-                1h
-              </span>
               <UiModalPreviewTrigger
-                :component="VaultSupplyApyModal"
+                :component="VaultApyModal"
                 :modal-data="supplyApyModalData"
                 aria-label="Show supply APY breakdown"
               >
@@ -206,7 +210,7 @@ const onClick = () => {
             >
               <UiModalPreviewTrigger
                 v-if="rewardsExist"
-                :component="VaultSupplyApyModal"
+                :component="VaultApyModal"
                 :modal-data="supplyApyModalData"
                 aria-label="Show supply APY rewards breakdown"
               >

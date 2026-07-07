@@ -4,12 +4,12 @@ import { getAssetOraclePrice, getCollateralOraclePrice } from '~/utils/sdk-price
 import { getMaxMultiplier, getMaxRoe } from '~/utils/leverage'
 import { withVaultIntrinsicApy, getVaultIntrinsicApy, getVaultIntrinsicApyInfo } from '~/utils/vault-intrinsic-apy'
 import { useModal } from '~/components/ui/composables/useModal'
-import { VaultBorrowApyModal, VaultRampDownModal, VaultSupplyApyModal, UiModalPreviewTrigger } from '#components'
+import { VaultApyModal, VaultRampDownModal, UiModalPreviewTrigger } from '#components'
 import type { EVaultCollateral } from '@eulerxyz/euler-v2-sdk'
 import { formatNumber, formatSignificant } from '~/utils/string-utils'
 import { areTokenAddressesCorrelatedByTags } from '~/utils/token-categories'
 
-const { pair } = defineProps<{ pair: SecuritizeBorrowVaultPair }>()
+const { pair, defaultOpen = true } = defineProps<{ pair: SecuritizeBorrowVaultPair, defaultOpen?: boolean }>()
 const { getTokenCategoryTags } = useTokenList()
 
 const currentLiquidationLTV = computed(() => pair.ltv.currentLiquidationLTV)
@@ -72,6 +72,7 @@ const price = computed(() => {
 
 const supplyApyModalData = computed(() => ({
   props: {
+    mode: 'supply',
     lendingAPY: 0, // Securitize vaults don't have interest rates
     intrinsicAPY: intrinsicSupplyApy.value,
     intrinsicApyInfo: getVaultIntrinsicApyInfo(pair.collateral, enableIntrinsicApy.value),
@@ -82,6 +83,7 @@ const supplyApyModalData = computed(() => ({
 
 const borrowApyModalData = computed(() => ({
   props: {
+    mode: 'borrow',
     borrowingAPY: baseBorrowApy.value,
     intrinsicAPY: intrinsicBorrowApy.value,
     intrinsicApyInfo: getVaultIntrinsicApyInfo(pair.borrow, enableIntrinsicApy.value),
@@ -98,10 +100,11 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
 </script>
 
 <template>
-  <div class="bg-body rounded-16 flex flex-col gap-24 p-24">
-    <p class="text-h3 text-white">
-      Overview
-    </p>
+  <VaultOverviewAccordionSection
+    title="Overview"
+    :default-open="defaultOpen"
+    content-class="flex flex-col items-start gap-24"
+  >
     <div class="flex flex-col items-start gap-24">
       <VaultOverviewLabelValue
         label="Price"
@@ -111,7 +114,7 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
           <span class="text-content-primary">{{ priceInvert.displaySymbol }}</span>
           <button
             type="button"
-            class="ml-4 text-content-primary hover:text-white transition-colors inline-flex"
+            class="ml-4 text-content-primary hover:text-accent-600 transition-colors inline-flex"
             @click.stop="priceInvert.toggle"
           >
             <SvgIcon
@@ -129,7 +132,7 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
           <span class="flex items-center gap-4">
             Supply APY
             <UiModalPreviewTrigger
-              :component="VaultSupplyApyModal"
+              :component="VaultApyModal"
               :modal-data="supplyApyModalData"
               aria-label="Show supply APY breakdown"
             >
@@ -144,7 +147,7 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
         <span class="flex items-center gap-4">
           <UiModalPreviewTrigger
             v-if="hasSupplyRewards(pair.collateral.address)"
-            :component="VaultSupplyApyModal"
+            :component="VaultApyModal"
             :modal-data="supplyApyModalData"
             aria-label="Show supply APY rewards breakdown"
           >
@@ -162,7 +165,7 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
           <span class="flex items-center gap-4">
             Borrow APY
             <UiModalPreviewTrigger
-              :component="VaultBorrowApyModal"
+              :component="VaultApyModal"
               :modal-data="borrowApyModalData"
               aria-label="Show borrow APY breakdown"
             >
@@ -177,7 +180,7 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
         <span class="flex items-center gap-4">
           <UiModalPreviewTrigger
             v-if="hasBorrowRewards(pair.borrow.address, pair.collateral.address)"
-            :component="VaultBorrowApyModal"
+            :component="VaultApyModal"
             :modal-data="borrowApyModalData"
             aria-label="Show borrow APY rewards breakdown"
           >
@@ -232,5 +235,5 @@ const onRampDownInfoIconClick = (event: MouseEvent, pair: EVaultCollateral) => {
         </span>
       </VaultOverviewLabelValue>
     </div>
-  </div>
+  </VaultOverviewAccordionSection>
 </template>

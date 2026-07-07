@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isEVault, type EVault, type SecuritizeCollateralVault } from '@eulerxyz/euler-v2-sdk'
 import {
   type MatrixViewId,
   type AttributeMatrixData,
@@ -8,17 +9,23 @@ import {
   type VaultUsdCacheEntry,
   type VaultApyCacheEntry,
   buildAttributeRowCells,
+  filterAttributeRowsByBadDebtAvailability,
   isVaultType,
 } from '~/utils/discoveryCalculations'
+import type { VaultBadDebtCacheEntry } from '~/utils/vault-bad-debt'
 import { getEntitiesByVault } from '~/utils/eulerLabelsUtils'
 import { getEulerLabelEntityLogo } from '~/entities/euler/labels'
 import { VaultHooksInfoModal } from '#components'
+import { getCollateralExposureGroups, getCollateralExposurePairs } from '~/utils/vault/collateral-exposure'
+import { resolveVaultExposureDisplay, type ExposureValueState, type VaultExposureDisplay } from '~/utils/vault/exposure-display'
 
 const props = defineProps<{
   data: AttributeMatrixData
   view: MatrixViewId
   usdCache: Map<string, VaultUsdCacheEntry>
   apyCache: Map<string, VaultApyCacheEntry>
+  badDebtCache: Map<string, VaultBadDebtCacheEntry>
+  showBadDebtColumn: boolean
   selectedHeader: { address: string, axis: 'row' | 'column' } | null
 }>()
 
@@ -27,6 +34,14 @@ defineEmits<{
 }>()
 
 const { isVaultGovernorVerified } = useVaults()
+const { get: registryGet } = useVaultRegistry()
+const {
+  load: loadOpenInterest,
+  getOpenInterestForVault,
+  hasError: hasOpenInterestError,
+  isLoaded: isOpenInterestLoaded,
+  isOpenInterestEnabled,
+} = useCollateralOpenInterest()
 
 // Each AttributeRow renders as a *table column*; each vault renders as a *table row*.
 interface AttributeColumn {
@@ -35,10 +50,11 @@ interface AttributeColumn {
 }
 
 const attributeColumns = computed<AttributeColumn[]>(() =>
-  props.data.rows.map(attribute => ({
-    attribute,
-    cells: buildAttributeRowCells(attribute, props.data.columns, props.usdCache, props.apyCache),
-  })),
+  filterAttributeRowsByBadDebtAvailability(props.data.rows, props.showBadDebtColumn)
+    .map(attribute => ({
+      attribute,
+      cells: buildAttributeRowCells(attribute, props.data.columns, props.usdCache, props.apyCache, props.badDebtCache, props.showBadDebtColumn),
+    })),
 )
 
 const getHooksModalData = (vault: AttributeMatrixColumn) => ({
@@ -51,6 +67,69 @@ const canShowHooksModal = (vault: AttributeMatrixColumn, cell: AttributeCell) =>
   cell.hookable && isVaultType(vault.vault)
 
 const entitiesFor = (vault: AttributeMatrixColumn) => getEntitiesByVault(vault.vault)
+const hasLiveExposureData = computed(() =>
+  isOpenInterestEnabled.value && isOpenInterestLoaded.value && !hasOpenInterestError.value,
+)
+const isOpenInterestLoading = computed(() =>
+  isOpenInterestEnabled.value && !hasOpenInterestError.value && !isOpenInterestLoaded.value,
+)
+const exposureValueState = computed<ExposureValueState>(() => {
+  if (isOpenInterestLoading.value) return 'loading'
+  if (hasLiveExposureData.value) return 'ready'
+  return 'unavailable'
+})
+
+const exposureByVault = computed(() => {
+  const result = new Map<string, VaultExposureDisplay>()
+  if (props.view !== 'stats') return result
+
+  for (const column of props.data.columns) {
+    if (!isEVault(column.vault)) continue
+    const columnVault = column.vault
+
+    // Distinguish "USD not loaded yet" (loading) from "priced out" (unavailable)
+    // from "priced" (ready): the cache omits an entry until its async load
+    // resolves, and stores supplyHasPrice=false for a vault with no oracle
+    // price. Collapsing these made a priced-out vault render as "-" and a
+    // still-loading vault flash "Unavailable".
+    const entry = props.usdCache.get(column.address)
+    const totalSupplyState: ExposureValueState = !entry
+      ? 'loading'
+      : entry.supplyHasPrice ? 'ready' : 'unavailable'
+    const totalExposureUsd = entry?.supplyHasPrice ? entry.supplyUsd : 0
+
+    result.set(column.address, resolveVaultExposureDisplay({
+      openInterestEnabled: isOpenInterestEnabled.value,
+      openInterestLoaded: isOpenInterestLoaded.value,
+      hasOpenInterestError: hasOpenInterestError.value,
+      getCollateralGroups: () => getCollateralExposureGroups(
+        getCollateralExposurePairs(
+          columnVault,
+          addr => registryGet(addr)?.vault as EVault | SecuritizeCollateralVault | undefined,
+        ),
+        getOpenInterestForVault(column.address),
+      ),
+      totalExposureUsd,
+      totalSupplyState,
+      utilization: columnVault.utilization,
+      acceptedCollateralCount: columnVault.collaterals.length,
+    }))
+  }
+  return result
+})
+
+const getVaultExposureItems = (vault: AttributeMatrixColumn) =>
+  exposureByVault.value.get(vault.address)?.items ?? []
+
+const getVaultExposureValueState = (vault: AttributeMatrixColumn): ExposureValueState =>
+  exposureByVault.value.get(vault.address)?.valueState ?? exposureValueState.value
+
+watchEffect(() => {
+  if (props.view !== 'stats') return
+  if (!isOpenInterestEnabled.value) return
+  if (!props.data.columns.some(column => isEVault(column.vault))) return
+  void loadOpenInterest()
+})
 
 // Hover state — used to highlight the matching vault row label and attribute
 // column header so users can scan from a cell back to its labels.
@@ -63,8 +142,13 @@ const isVaultRowHighlighted = (vaultAddr: string): boolean =>
 const isAttributeColumnHighlighted = (attributeId: string): boolean =>
   hoveredCell.value?.attributeId === attributeId
 
-const cellDataValue = (cell: AttributeCell): string | number =>
-  props.view === 'stats' ? cell.display : (cell.numeric ?? cell.display)
+const cellDataValue = (cell: AttributeCell, vault: AttributeMatrixColumn): string | number => {
+  if (cell.kind === 'exposure') {
+    if (getVaultExposureValueState(vault) !== 'ready') return getVaultExposureValueState(vault)
+    return getVaultExposureItems(vault).map(item => item.label ?? item.asset.symbol).join(',')
+  }
+  return props.view === 'stats' ? cell.display : (cell.numeric ?? cell.display)
+}
 </script>
 
 <template>
@@ -158,7 +242,7 @@ const cellDataValue = (cell: AttributeCell): string | number =>
               :data-key="`${vault.address}:${col.attribute.id}`"
               :data-vault-address="vault.address"
               :data-field="col.attribute.id"
-              :data-value="cellDataValue(col.cells[vaultIdx])"
+              :data-value="cellDataValue(col.cells[vaultIdx], vault)"
               :class="(isVaultRowHighlighted(vault.address) || isAttributeColumnHighlighted(col.attribute.id)) ? '!bg-white/[0.06]' : ''"
               @mouseenter="hoveredCell = { vaultAddr: vault.address, attributeId: col.attribute.id }"
               @mouseleave="hoveredCell = null"
@@ -237,6 +321,17 @@ const cellDataValue = (cell: AttributeCell): string | number =>
                   v-else
                   class="text-p5 text-content-secondary"
                 >{{ col.cells[vaultIdx].display }}</span>
+              </template>
+
+              <!-- exposure: Morpho-style asset stack + full preview list -->
+              <template v-else-if="col.cells[vaultIdx].kind === 'exposure'">
+                <VaultExposureSummary
+                  :items="getVaultExposureItems(vault)"
+                  :value-state="getVaultExposureValueState(vault)"
+                  :max-visible="4"
+                  avatar-size="16"
+                  placement="top"
+                />
               </template>
 
               <!-- text (default) -->
