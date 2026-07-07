@@ -25,6 +25,8 @@ export const SANCTIONED_COUNTRIES: readonly string[] = [
   'VE', // Venezuela
   'YE', // Yemen
   'ZW', // Zimbabwe
+  'CA', // Canada
+  'RO', // Romania
 ]
 
 // EU member states (27 countries)
