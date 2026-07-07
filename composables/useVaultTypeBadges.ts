@@ -31,7 +31,9 @@ export const useVaultTypeBadges = (vault: Ref<VaultTypeBadgeVault>) => {
   })
 
   let skipVerification = false
-  try { skipVerification = !!useRuntimeConfig().public.configDisableGovernorVerification }
+  try {
+    skipVerification = !!useRuntimeConfig().public.configDisableGovernorVerification
+  }
   catch { /* outside Nuxt context (tests) */ }
 
   const governanceType = computed<VaultGovernanceBadge>(() => {

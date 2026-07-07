@@ -481,7 +481,7 @@ const submit = async () => {
           operationType: needsSwap.value ? 'swap-supply' : 'supply',
           vaultAddress,
           assetAddress: asset.value.address,
-          quoteProvider: needsSwap.value ? swapRoutedVia.value ?? undefined : undefined,
+          quoteProvider: needsSwap.value ? _swapRoutedVia.value ?? undefined : undefined,
         }, e)
         plan.value = null
       }
@@ -503,7 +503,7 @@ const submit = async () => {
             operationType: needsSwap.value ? 'swap-supply' : 'supply',
             vaultAddress,
             assetAddress: asset.value.address,
-            quoteProvider: needsSwap.value ? swapRoutedVia.value ?? undefined : undefined,
+            quoteProvider: needsSwap.value ? _swapRoutedVia.value ?? undefined : undefined,
           }, e)
           simulationError.value = await getTxErrorMessage(e)
           return
@@ -615,7 +615,7 @@ const send = async () => {
       operationType: needsSwap.value ? 'swap-supply' : 'supply',
       vaultAddress,
       assetAddress: asset.value?.address,
-      quoteProvider: needsSwap.value ? swapRoutedVia.value ?? undefined : undefined,
+      quoteProvider: needsSwap.value ? _swapRoutedVia.value ?? undefined : undefined,
     }, e)
   }
   finally {
@@ -1054,7 +1054,7 @@ watch(amount, async () => {
                   :output-exact-display="swapOutputExactDisplay"
                   :price-impact="swapPriceImpact"
                   :slippage="swapSlippage"
-                  :routed-via="swapRoutedVia"
+                  :routed-via="_swapRoutedVia"
                   @open-slippage-settings="openSlippageSettings"
                 />
               </VaultFormInfoBlock>

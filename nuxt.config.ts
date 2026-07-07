@@ -157,6 +157,8 @@ export default defineNuxtConfig({
       configEnableMultiply: '',
       configEnablePoweredByEuler: '',
       configEnableAppTitle: '',
+      // Migration legacy app URL (optional)
+      configMigrationLegacyAppUrl: '',
       // Skip on-chain governor verification for single-curator deployments.
       configDisableGovernorVerification: '',
 
