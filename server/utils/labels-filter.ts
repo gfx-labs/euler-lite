@@ -10,7 +10,7 @@
  * unchanged since they are either empty or additive.
  */
 
-import type { LabelFile } from '~/server/api/labels/[file].get'
+import type { LabelFile } from '~/server/api/internal/labels/[file].get'
 
 // ── Allowlists ──────────────────────────────────────────────────────
 

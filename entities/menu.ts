@@ -43,7 +43,7 @@ const allMenuItems: MenuItem[] = [
   },
 ]
 
-export const getMenuItems = (enableEarnPage: boolean, enableLendPage: boolean, enableExplorePage: boolean, enableMultiply = true) => {
+export const getMenuItems = (enableEarnPage: boolean, enableLendPage: boolean, enableExplorePage: boolean, enableMultiply = true): MenuItem[] => {
   return allMenuItems
     .filter((item) => {
       if (item.name === 'explore' && !enableExplorePage) return false
@@ -55,7 +55,7 @@ export const getMenuItems = (enableEarnPage: boolean, enableLendPage: boolean, e
       // Hide the "Multiply" sublabel on the Borrow item when multiply is disabled
       if (item.name === 'borrow' && !enableMultiply) {
         const { sublabel: _sublabel, ...rest } = item
-        return rest
+        return rest as MenuItem
       }
       return item
     })

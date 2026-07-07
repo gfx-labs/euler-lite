@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { VaultAsset } from '~/types/asset'
-import type { TransactionPlan, EulerEarn } from '@eulerxyz/euler-v2-sdk'
+import { computeSupplyApyBreakdown, type TransactionPlan, type EulerEarn } from '@eulerxyz/euler-v2-sdk'
 import { useEulerProductOfVault } from '~/composables/useEulerLabels'
-import { getVaultIntrinsicApy, getVaultIntrinsicApyInfo } from '~/utils/vault-intrinsic-apy'
+import { getVaultIntrinsicApyInfo } from '~/utils/vault-intrinsic-apy'
 import { isVaultBlockedByCountry } from '~/composables/useGeoBlock'
 import VaultFormInfoBlock from '~/components/entities/vault/form/VaultFormInfoBlock.vue'
 import VaultFormSubmit from '~/components/entities/vault/form/VaultFormSubmit.vue'
@@ -12,7 +12,7 @@ import type { DisabledReasonInfo } from '~/components/entities/vault/form/types'
 import { useModal } from '~/components/ui/composables/useModal'
 import { useToast } from '~/components/ui/composables/useToast'
 import type { Address } from 'viem'
-import { VaultUnverifiedDisclaimerModal, OperationReviewModal, VaultSupplyApyModal } from '#components'
+import { VaultUnverifiedDisclaimerModal, OperationReviewModal, VaultApyModal } from '#components'
 
 const router = useRouter()
 const route = useRoute()
@@ -22,7 +22,7 @@ const { planDeposit, executePlan } = useEulerTx()
 const { addEntry: addBatchEntry } = useTxBatch()
 const { redirectAfterAdd } = useBatchRedirect()
 const { account: planAccount } = usePlanAccount()
-const { updateEarnVault } = useVaults()
+const { getEarnVault, updateEarnVault } = useVaults()
 const { isReady: isLabelsReady } = useEulerLabels()
 const { isConnected, address } = useWagmi()
 const { isSpyMode } = useSpyMode()
@@ -41,7 +41,8 @@ useOperationGuard([vaultAddress])
 const { name } = useEulerProductOfVault(vaultAddress)
 const { settings } = useUserSettings()
 const enableIntrinsicApy = computed(() => settings.value.enableIntrinsicApy)
-const { getSupplyRewardApy, hasSupplyRewards, getSupplyRewardCampaigns } = useRewardsApy()
+const { hasSupplyRewards, getSupplyRewardCampaigns } = useRewardsApy()
+const { viewer, visibleTotal, visibleBreakdown } = useApyVisibility()
 
 const isLoading = ref(false)
 const isSubmitting = ref(false)
@@ -56,6 +57,27 @@ const earnVaultMarketLabel = computed(() => unref(name) || vault.value?.shares.n
 // Wallet balance from the central (layer-aware) wallet entity — reactive, no
 // direct balanceOf.
 const balance = computed(() => asset.value?.address ? getBalance(asset.value.address as Address) : 0n)
+const supplyRewardCampaigns = computed(() => getSupplyRewardCampaigns(vaultAddress))
+const hasRewards = computed(() => settings.value.enableRewardsApy && hasSupplyRewards(vaultAddress))
+const supplyApyBreakdown = computed(() => vault.value ? computeSupplyApyBreakdown(vault.value, viewer.value) : undefined)
+const visibleApyBreakdown = computed(() => visibleBreakdown(supplyApyBreakdown.value))
+const supplyApyTotal = computed(() => visibleTotal(supplyApyBreakdown.value) ?? 0)
+
+const applyLoadedVault = (loadedVault: EulerEarn) => {
+  vault.value = loadedVault
+  asset.value = loadedVault.asset
+  estimateSupplyAPY.value = supplyApyTotal.value
+}
+
+const refreshEarnVault = async (address: string, silent = false) => {
+  try {
+    applyLoadedVault(await updateEarnVault(address))
+  }
+  catch (e) {
+    if (!silent) throw e
+    logWarn('[earn] failed to refresh vault', e)
+  }
+}
 
 // Non-blocking to avoid Suspense + pageTransition crash on direct navigation
 ;(async () => {
@@ -66,8 +88,7 @@ const balance = computed(() => asset.value?.address ? getBalance(asset.value.add
     if (!isLabelsReady.value) {
       await until(isLabelsReady).toBe(true)
     }
-    vault.value = await updateEarnVault(vaultAddress)
-    asset.value = vault.value?.asset
+    applyLoadedVault(await getEarnVault(vaultAddress))
 
     if (!useVaultRegistry().isVerifiedVault(vault.value.address)) {
       modal.open(VaultUnverifiedDisclaimerModal, {
@@ -79,6 +100,8 @@ const balance = computed(() => asset.value?.address ? getBalance(asset.value.add
         },
       })
     }
+
+    void refreshEarnVault(vault.value.address, true)
   }
   catch (e) {
     showError('Unable to load Vault')
@@ -104,13 +127,9 @@ const disabledReasonInfo = computed((): DisabledReasonInfo | undefined => {
   if (errorText.value) return { message: errorText.value, variant: 'error' }
   return undefined
 })
-const supplyRewardCampaigns = computed(() => getSupplyRewardCampaigns(vaultAddress))
-const totalRewardsAPY = computed(() => getSupplyRewardApy(vaultAddress))
-const hasRewards = computed(() => hasSupplyRewards(vaultAddress))
-const intrinsicApy = computed(() => getVaultIntrinsicApy(vault.value, enableIntrinsicApy.value))
 const supplyAPYDisplay = computed(() => {
   if (!vault.value) return '0.00'
-  return formatNumber(getVaultSupplyApy(vault.value) + totalRewardsAPY.value)
+  return formatNumber(supplyApyTotal.value)
 })
 const estimateSupplyAPYDisplay = computed(() => {
   return formatNumber(estimateSupplyAPY.value)
@@ -207,9 +226,7 @@ const send = async () => {
 const updateEstimates = async () => {
   if (!vault.value) return
   try {
-    vault.value = await updateEarnVault(vault.value.address)
-    if (!asset.value?.address) return
-    estimateSupplyAPY.value = getVaultSupplyApy(vault.value) + totalRewardsAPY.value
+    await refreshEarnVault(vault.value.address)
   }
   catch (e) {
     logWarn('earn-supply/estimates', e)
@@ -220,17 +237,15 @@ const updateEstimates = async () => {
 }
 const supplyApyModalData = computed(() => ({
   props: {
-    lendingAPY: getVaultSupplyApy(vault.value),
-    intrinsicAPY: intrinsicApy.value,
+    mode: 'supply',
+    lendingAPY: visibleApyBreakdown.value?.lending ?? 0,
+    intrinsicAPY: visibleApyBreakdown.value?.intrinsicApy ?? 0,
     intrinsicApyInfo: getVaultIntrinsicApyInfo(vault.value, enableIntrinsicApy.value),
-    campaigns: supplyRewardCampaigns.value,
+    campaigns: settings.value.enableRewardsApy ? supplyRewardCampaigns.value : [],
+    totalSupplyAPY: supplyApyTotal.value,
     rewardVaultAddress: vaultAddress,
-    baseApyAverageLabel: '1h',
   },
 }))
-
-// Initialize estimateSupplyAPY after vault is loaded
-estimateSupplyAPY.value = getVaultSupplyApy(vault.value) + totalRewardsAPY.value
 
 watch(amount, () => {
   clearSimulationError()
@@ -292,11 +307,8 @@ watch(amount, () => {
             >
               <p class="text-h3 text-content-tertiary flex items-center gap-4">
                 Supply APY
-                <span class="inline-flex items-center rounded-8 px-8 py-2 bg-accent-100 text-accent-600 text-p5">
-                  1h
-                </span>
                 <UiModalPreviewTrigger
-                  :component="VaultSupplyApyModal"
+                  :component="VaultApyModal"
                   :modal-data="supplyApyModalData"
                   aria-label="Show supply APY breakdown"
                 >
@@ -313,7 +325,7 @@ watch(amount, () => {
                 />
                 <UiModalPreviewTrigger
                   v-if="hasRewards"
-                  :component="VaultSupplyApyModal"
+                  :component="VaultApyModal"
                   :modal-data="supplyApyModalData"
                   aria-label="Show supply APY rewards breakdown"
                 >

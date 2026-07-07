@@ -6,10 +6,11 @@
  * The config is embedded as a <script> tag in the HTML head, making it
  * accessible to the client synchronously via window.__CHAIN_CONFIG__.
  */
-import { parseDeprecatedChains } from '../../utils/parseDeprecatedChains'
+import { parseChainIds } from '../../utils/parseChainIds'
 import { getChainEnvIssues, getConfiguredChainIds, getEnabledChainIds } from '~/utils/chain-env'
 import { getUnknownChainIds } from '~/entities/chainRegistry'
 import { logger } from '~/server/utils/logger'
+import { parseEVaultFetchChunkChainIds } from '~/utils/eVaultFetchChunkConfig'
 
 export default defineNitroPlugin((nitroApp) => {
   const configuredChainIds = getConfiguredChainIds()
@@ -37,7 +38,9 @@ export default defineNitroPlugin((nitroApp) => {
   const enabledChainIds = getEnabledChainIds()
 
   const enabledSet = new Set(enabledChainIds)
-  const deprecatedChainIds = parseDeprecatedChains(process.env.DEPRECATED_CHAINS, enabledSet)
+  const deprecatedChainIds = parseChainIds(process.env.DEPRECATED_CHAINS, enabledSet)
+  const onchainSdkChainIds = parseChainIds(process.env.ONCHAIN_SDK_CHAINS, enabledSet)
+  const eVaultFetchChunkChainIds = parseEVaultFetchChunkChainIds(process.env, enabledSet)
 
   // Build subgraph URI map from SUBGRAPH_URL_<chainId> or legacy
   // NUXT_PUBLIC_SUBGRAPH_URI_<chainId> env vars. The client needs this
@@ -49,7 +52,7 @@ export default defineNitroPlugin((nitroApp) => {
     if (url) subgraphUris[String(chainId)] = url
   }
 
-  const scriptTag = `<script>window.__CHAIN_CONFIG__=${JSON.stringify({ enabledChainIds, deprecatedChainIds, subgraphUris, unsupportedChainIds: unknownChainIds, chainEnvIssues })}</script>`
+  const scriptTag = `<script>window.__CHAIN_CONFIG__=${JSON.stringify({ enabledChainIds, deprecatedChainIds, onchainSdkChainIds, eVaultFetchChunkChainIds, subgraphUris, unsupportedChainIds: unknownChainIds, chainEnvIssues })}</script>`
 
   nitroApp.hooks.hook('render:html', (html) => {
     html.head.push(scriptTag)

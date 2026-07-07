@@ -140,7 +140,7 @@ describe('isAssetBlockedByCountry — address-keyed rules', () => {
   })
 
   it('does not block when the user country is not in the block list', () => {
-    setCountry('CA')
+    setCountry('JP')
     assetBlocks[USDC.toLowerCase()] = ['DE', 'FR']
     expect(isAssetBlockedByCountry(USDC)).toBe(false)
   })

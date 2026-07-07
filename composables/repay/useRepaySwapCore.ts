@@ -54,9 +54,7 @@ export const useRepaySwapCore = (options: UseRepaySwapCoreOptions) => {
     getQuoteAccounts,
     onQuoteReceived,
   } = options
-  const { address } = useWagmi()
-  const { isSpyMode, spyAddress } = useSpyMode()
-  const effectiveAddress = computed(() => isSpyMode.value ? spyAddress.value : address.value)
+  const { effectiveAddress } = useEffectiveAddress()
   const { chainId } = useEulerAddresses()
   const shouldIncludeCowSwap = () =>
     typeof options.includeCowSwap === 'function'
@@ -205,7 +203,7 @@ export const useRepaySwapCore = (options: UseRepaySwapCoreOptions) => {
     amount.value = ''
     direction.value = SwapperMode.TARGET_DEBT
     const currentDebt = getCurrentDebt()
-    let amountNano = 0n
+    let amountNano: bigint
     try {
       amountNano = valueToNano(debtAmount.value || '0', borrowVault.value?.asset.decimals)
     }
@@ -485,7 +483,7 @@ export const useRepaySwapCore = (options: UseRepaySwapCoreOptions) => {
       debtPercent.value = 0
       return
     }
-    let amountNano = 0n
+    let amountNano: bigint
     try {
       amountNano = valueToNano(debtAmount.value || '0', borrowVault.value.asset.decimals)
     }

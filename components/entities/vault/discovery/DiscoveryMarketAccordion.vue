@@ -3,6 +3,7 @@ import { isEVault, type SecuritizeCollateralVault, type EVault } from '@eulerxyz
 import type { AnyBorrowVaultPair } from '~/types/borrow-pair'
 import { formatCompactUsdValue } from '~/utils/string-utils'
 import { formatAssetValue } from '~/utils/sdk-prices'
+import { logWarn } from '~/utils/errorHandling'
 import {
   getVaultAddress,
   getMiniDiagram,
@@ -23,6 +24,7 @@ import {
   type VaultUsdCacheEntry,
   type VaultApyCacheEntry,
 } from '~/utils/discoveryCalculations'
+import type { VaultBadDebtCacheEntry } from '~/utils/vault-bad-debt'
 import type { MarketGroup } from '~/entities/lend-discovery'
 import { maxUint256 } from 'viem'
 
@@ -34,6 +36,7 @@ const props = defineProps<{
 const { isMarketDataResolved } = useVaults()
 const route = useRoute()
 const { chainId } = useEulerAddresses()
+const { badDebtByChain, isBadDebtEnabled, isBadDebtLoaded, loadBadDebtForChain } = useVaultBadDebt()
 const shareLinkQuery = computed(() => {
   const network = route.query.network
 
@@ -125,26 +128,49 @@ const loadVaultUsdValues = async (market: MarketGroup, { force = false }: { forc
       const supplyCapHasPrice = supplyCapRaw > 0n && supplyCapRaw < maxUint256
       const borrowCapHasPrice = borrowCapRaw > 0n && borrowCapRaw < maxUint256
 
-      const [supplyPrice, borrowPrice, liquidityPrice, supplyCapPrice, borrowCapPrice] = await Promise.all([
-        formatAssetValue(totalAssets, vault, 'off-chain'),
-        formatAssetValue(borrow, vault, 'off-chain'),
-        formatAssetValue(liquidity, vault, 'off-chain'),
-        supplyCapHasPrice ? formatAssetValue(supplyCapRaw, vault, 'off-chain') : null,
-        borrowCapHasPrice ? formatAssetValue(borrowCapRaw, vault, 'off-chain') : null,
-      ])
+      try {
+        const [supplyPrice, borrowPrice, liquidityPrice, supplyCapPrice, borrowCapPrice] = await Promise.all([
+          formatAssetValue(totalAssets, vault, 'off-chain'),
+          formatAssetValue(borrow, vault, 'off-chain'),
+          formatAssetValue(liquidity, vault, 'off-chain'),
+          supplyCapHasPrice ? formatAssetValue(supplyCapRaw, vault, 'off-chain') : null,
+          borrowCapHasPrice ? formatAssetValue(borrowCapRaw, vault, 'off-chain') : null,
+        ])
 
-      marketEntries.set(addr, {
-        supply: formatUsdOrDisplay(supplyPrice),
-        supplyUsd: supplyPrice.hasPrice ? supplyPrice.usdValue : 0,
-        borrow: formatUsdOrDisplay(borrowPrice),
-        borrowUsd: borrowPrice.hasPrice ? borrowPrice.usdValue : 0,
-        liquidity: formatUsdOrDisplay(liquidityPrice),
-        liquidityUsd: liquidityPrice.hasPrice ? liquidityPrice.usdValue : 0,
-        supplyCap: formatCapDisplay(supplyCapRaw, supplyCapPrice ? formatUsdOrDisplay(supplyCapPrice) : null).display,
-        supplyCapUsd: supplyCapPrice?.hasPrice ? supplyCapPrice.usdValue : undefined,
-        borrowCap: formatCapDisplay(borrowCapRaw, borrowCapPrice ? formatUsdOrDisplay(borrowCapPrice) : null).display,
-        borrowCapUsd: borrowCapPrice?.hasPrice ? borrowCapPrice.usdValue : undefined,
-      })
+        marketEntries.set(addr, {
+          supply: formatUsdOrDisplay(supplyPrice),
+          supplyUsd: supplyPrice.hasPrice ? supplyPrice.usdValue : 0,
+          supplyHasPrice: supplyPrice.hasPrice,
+          borrow: formatUsdOrDisplay(borrowPrice),
+          borrowUsd: borrowPrice.hasPrice ? borrowPrice.usdValue : 0,
+          liquidity: formatUsdOrDisplay(liquidityPrice),
+          liquidityUsd: liquidityPrice.hasPrice ? liquidityPrice.usdValue : 0,
+          supplyCap: formatCapDisplay(supplyCapRaw, supplyCapPrice ? formatUsdOrDisplay(supplyCapPrice) : null).display,
+          supplyCapUsd: supplyCapPrice?.hasPrice ? supplyCapPrice.usdValue : undefined,
+          borrowCap: formatCapDisplay(borrowCapRaw, borrowCapPrice ? formatUsdOrDisplay(borrowCapPrice) : null).display,
+          borrowCapUsd: borrowCapPrice?.hasPrice ? borrowCapPrice.usdValue : undefined,
+        })
+      }
+      catch (e) {
+        // A rejected price fetch must not blank the whole market: leaving the
+        // entry absent reads as a perpetual "loading" exposure cell. Record it
+        // as priced-out (supplyHasPrice: false) so exposure degrades to the
+        // qualitative/unavailable state instead of spinning forever.
+        logWarn('DiscoveryMarketAccordion/loadVaultUsdValues', e)
+        marketEntries.set(addr, {
+          supply: '-',
+          supplyUsd: 0,
+          supplyHasPrice: false,
+          borrow: '-',
+          borrowUsd: 0,
+          liquidity: '-',
+          liquidityUsd: 0,
+          supplyCap: '-',
+          supplyCapUsd: undefined,
+          borrowCap: '-',
+          borrowCapUsd: undefined,
+        })
+      }
     }),
   )
 
@@ -160,11 +186,15 @@ const loadExpandedVaultUsdValues = async () => {
 const onToggle = (market: MarketGroup) => {
   const wasExpanded = isExpanded(market.id)
   toggleExpand(market.id)
-  if (!wasExpanded) loadVaultUsdValues(market)
+  if (!wasExpanded) {
+    loadVaultUsdValues(market)
+    if (isBadDebtEnabled.value) void loadBadDebtForChain()
+  }
 }
 
-watch([() => props.markets, isMarketDataResolved], () => {
+watch([() => props.markets, isMarketDataResolved, chainId], () => {
   void loadExpandedVaultUsdValues()
+  if (isBadDebtEnabled.value && expandedMarkets.value.size > 0) void loadBadDebtForChain()
 })
 
 // -- Matrix view selector (single dropdown spans Stats, Configuration,
@@ -183,7 +213,7 @@ const getMatrixVariant = (marketId: string): MatrixVariant => {
 
 const getDotMetric = (marketId: string): DotMetric => {
   const view = getMatrixView(marketId)
-  if (isAttributeMatrixView(view)) return 'net-apy' // unused for attribute matrices
+  if (isAttributeMatrixView(view)) return 'net-apy' // unused for non-pair matrices
   return view
 }
 
@@ -246,6 +276,10 @@ const vaultApyCache = computed<Map<string, VaultApyCacheEntry>>(() => {
     enableRewardsApy: enableRewardsApy.value,
   })
 })
+
+const vaultBadDebtCache = computed<Map<string, VaultBadDebtCacheEntry>>(() =>
+  badDebtByChain.value.get(chainId.value) ?? new Map(),
+)
 
 // -- Cell selection state (matrix view) --
 
@@ -435,6 +469,7 @@ onMounted(() => {
       loadVaultUsdValues(market)
     }
   }
+  if (isBadDebtEnabled.value && expandedMarkets.value.size > 0) void loadBadDebtForChain()
 })
 </script>
 
@@ -658,6 +693,8 @@ onMounted(() => {
               :view="getMatrixView(market.id)"
               :usd-cache="vaultUsdCache"
               :apy-cache="vaultApyCache"
+              :bad-debt-cache="vaultBadDebtCache"
+              :show-bad-debt-column="isBadDebtEnabled && isBadDebtLoaded"
               :selected-header="selectedMatrixHeader?.marketId === market.id ? { address: selectedMatrixHeader.address, axis: selectedMatrixHeader.axis } : null"
               @select-header="(addr: string, axis: 'row' | 'column') => toggleMatrixHeader(market.id, addr, axis)"
             />
@@ -709,9 +746,29 @@ onMounted(() => {
                     </div>
                   </template>
 
-                  <!-- Cell selection: single lend + single borrow card -->
+                  <!-- Cell selection -->
                   <template v-else>
-                    <div class="flex flex-col gap-12">
+                    <!-- Oracle view: dedicated oracle adapters section for the
+                         selected collateral/liability pair (same component as the
+                         borrow page's Oracles block). -->
+                    <template v-if="getMatrixView(market.id) === 'oracle'">
+                      <template
+                        v-for="pair in [getSelectedBorrowPair(market)]"
+                        :key="'oracle-' + (pair ? `${pair.collateral.address}-${pair.borrow.address}` : '')"
+                      >
+                        <VaultOverviewBlockOracleAdapters
+                          v-if="pair"
+                          :vault="pair.borrow"
+                          :collateral-vaults="[pair.collateral]"
+                        />
+                      </template>
+                    </template>
+
+                    <!-- Other metrics: single lend + single borrow card -->
+                    <div
+                      v-else
+                      class="flex flex-col gap-12"
+                    >
                       <template
                         v-for="lendVault in [getSelectedLendVault(market)]"
                         :key="'lend-' + (lendVault ? getVaultAddress(lendVault) : '')"

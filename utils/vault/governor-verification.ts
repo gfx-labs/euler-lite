@@ -65,6 +65,7 @@ export const isVaultGovernorVerified = (
   // in an on-chain Euler perspective (single-curator deployments).
   const declaredKeys = labels.getDeclaredEntityKeys(vault.address)
   if (!vault.verified && (!declaredKeys || declaredKeys.length === 0)) return false
+  if (!declaredKeys || declaredKeys.length === 0) return false
 
   const governor = vault.governorAdmin ?? vault.governor
   if (!governor) return false
@@ -123,6 +124,7 @@ export const resolveGoverningEntityKeys = (
   const declaredKeys = labels.getDeclaredEntityKeys(vault.address)
   if (!declaredKeys || declaredKeys.length === 0) {
     if (!vault.verified) return []
+    return []
   }
   const governor = vault.governorAdmin ?? vault.governor
   return governor ? findAllDeclaredEntitiesFor(getAddress(governor), declaredKeys, labels) : []

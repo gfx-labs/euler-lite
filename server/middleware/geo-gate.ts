@@ -2,6 +2,7 @@ import { createError, getRequestURL } from 'h3'
 import { SANCTIONED_COUNTRIES } from '~/entities/country-constants'
 import { isInternalRequest } from '~/server/utils/internal-headers'
 import { logger } from '~/server/utils/logger'
+import { safePathTemplate } from '~/server/utils/observability'
 
 export default defineEventHandler((event) => {
   // Allow disabling the app-level geo-gate entirely when geo-blocking
@@ -48,7 +49,7 @@ export default defineEventHandler((event) => {
   // In dev (DOPPLER_ENVIRONMENT=dev) without DEV_GEO_COUNTRY set, allow through.
   if (!country && process.env.DOPPLER_ENVIRONMENT !== 'dev') {
     logger.warn(
-      { ctx: 'geo-gate', cfCountry: cfCountry || 'absent', path: url.pathname },
+      { ctx: 'geo-gate', cfCountry: cfCountry || 'absent', pathTemplate: safePathTemplate(url.pathname) },
       'blocked: country undetermined',
     )
     throw createError({
@@ -63,7 +64,7 @@ export default defineEventHandler((event) => {
   // Log VPN/proxy usage for monitoring (do not block -- too many false positives)
   if (isVpn === 'true' || isProxyOrVpn === 'true') {
     logger.warn(
-      { ctx: 'geo-gate', country, isVpn, isProxyOrVpn, path: url.pathname },
+      { ctx: 'geo-gate', country, isVpn, isProxyOrVpn, pathTemplate: safePathTemplate(url.pathname) },
       'VPN/proxy detected',
     )
   }
@@ -71,7 +72,7 @@ export default defineEventHandler((event) => {
   // Block sanctioned countries
   if (country && SANCTIONED_COUNTRIES.includes(country)) {
     logger.warn(
-      { ctx: 'geo-gate', country, path: url.pathname },
+      { ctx: 'geo-gate', country, pathTemplate: safePathTemplate(url.pathname) },
       'blocked sanctioned country',
     )
     throw createError({

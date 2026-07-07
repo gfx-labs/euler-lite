@@ -80,9 +80,7 @@ export const useWalletSwapRepay = (options: UseWalletSwapRepayOptions) => {
   const { primeSlotHintsFor, buildStateOverrideOptions } = useStateOverrideOptions()
   const buildRepayStateOverrideOptions = () => buildStateOverrideOptions({ noBalanceOverride: true })
   const { chainId } = useEulerAddresses()
-  const { isConnected, address } = useWagmi()
-  const { isSpyMode, spyAddress } = useSpyMode()
-  const effectiveAddress = computed(() => isSpyMode.value ? spyAddress.value : address.value)
+  const { isConnected, address, isSpyMode, effectiveAddress } = useEffectiveAddress()
   const { account: planAccount } = usePlanAccount()
   const { getBalance } = useWallets()
   const { finalizeTxAndRedirect } = useTxFinalization()
@@ -571,7 +569,7 @@ export const useWalletSwapRepay = (options: UseWalletSwapRepayOptions) => {
     quotes.reset()
     resetDerivedState()
     const currentDebt = getCurrentDebt()
-    let amountNano = 0n
+    let amountNano: bigint
     try {
       amountNano = valueToNano(debtAmount.value || '0', borrowVault.value?.asset.decimals)
     }

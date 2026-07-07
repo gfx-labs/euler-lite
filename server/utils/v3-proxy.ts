@@ -13,6 +13,9 @@ const GET_ONLY_PATHS = new Set([
   '/v3/apys/rewards',
   '/v3/earn/vaults',
   '/v3/evk/vaults',
+  '/v3/evk/vaults/bad-debt',
+  '/v3/evk/vaults/open-interest',
+  '/v3/evk/vaults/open-interest/by-collateral',
   '/v3/prices',
   '/v3/rewards/breakdown',
   '/v3/tokens',
@@ -21,6 +24,8 @@ const GET_ONLY_PATHS = new Set([
 const GET_ONLY_PATH_PATTERNS = [
   /^\/v3\/accounts\/[^/]+\/positions$/,
   /^\/v3\/earn\/vaults\/[^/]+\/[^/]+$/,
+  /^\/v3\/earn\/vaults\/[^/]+\/[^/]+\/totals$/,
+  /^\/v3\/evk\/vaults\/[^/]+\/[^/]+\/totals$/,
 ]
 
 const POST_ONLY_PATHS = new Set([

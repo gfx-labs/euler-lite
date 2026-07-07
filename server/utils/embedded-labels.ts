@@ -7,7 +7,7 @@
  *
  * To update: edit the JSON files in server/labels/{chainId}/.
  */
-import type { LabelFile } from '~/server/api/labels/[file].get'
+import type { LabelFile } from '~/server/api/internal/labels/[file].get'
 
 // Import JSON files statically so Nitro bundles them
 import products56 from '~/server/labels/56/products.json'

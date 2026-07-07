@@ -108,7 +108,7 @@ const loadTokenList = async (forceRefresh = false) => {
     isLoading.value = true
     isLoaded.value = false
 
-    const res = await axios.get('/api/token-list', { params: { chainId } })
+    const res = await axios.get('/api/internal/token-list', { params: { chainId } })
     if (guard.isStale(gen)) return
 
     const tokens: TokenListEntry[] = res.data?.tokens || []
@@ -158,8 +158,10 @@ const getTokenByAddress = (address: string): TokenListEntry | undefined => {
   }
 }
 
-const getTokenCategoryTags = (address: string): string[] =>
-  normalizeTokenCategoryTags(getTokenByAddress(address)?.tags)
+const getTokenCategoryTags = (address: string): string[] => {
+  const token = getTokenByAddress(address)
+  return normalizeTokenCategoryTags(token?.tags)
+}
 
 const getAllTokens = (): TokenListEntry[] => {
   return [...tokenMap.value.values()]

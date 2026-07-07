@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { EVault } from '@eulerxyz/euler-v2-sdk'
 import { getUtilisationWarning, getBorrowCapWarning, getCollateralSupplyCapWarning } from '~/composables/useVaultWarnings'
 import { formatAssetValue } from '~/utils/sdk-prices'
 import { getMaxMultiplier, getMaxRoe } from '~/utils/leverage'
@@ -9,7 +8,7 @@ import { useEulerProductOfVault } from '~/composables/useEulerLabels'
 import { isVaultGovernanceLimited, isVaultRecentlyAdded, isVaultKeyring, isVaultCyclicalNote, getUniqueEntitiesByVaults } from '~/utils/eulerLabelsUtils'
 import { getEulerLabelEntityLogo } from '~/entities/euler/labels'
 import { isAnyVaultBlockedByCountry, isVaultRestrictedByCountry } from '~/composables/useGeoBlock'
-import { VaultBorrowApyModal, VaultMaxRoeModal, VaultNetApyPairModal, VaultSupplyApyModal, UiModalPreviewTrigger } from '#components'
+import { VaultApyModal, VaultMaxRoeModal, VaultNetApyPairModal, UiModalPreviewTrigger } from '#components'
 import { isSecuritizeBorrowPair, type AnyBorrowVaultPair } from '~/types/borrow-pair'
 import { getAddress } from 'viem'
 import { formatNumber, compactNumber, formatCompactUsdValue } from '~/utils/string-utils'
@@ -184,6 +183,7 @@ watchEffect(async () => {
 
 const borrowApyModalData = computed(() => ({
   props: {
+    mode: 'borrow',
     borrowingAPY: getVaultBorrowApy(pair.borrow),
     intrinsicAPY: getVaultIntrinsicApy(pair.borrow, enableIntrinsicApy.value),
     intrinsicApyInfo: getVaultIntrinsicApyInfo(pair.borrow, enableIntrinsicApy.value),
@@ -192,20 +192,16 @@ const borrowApyModalData = computed(() => ({
   },
 }))
 
-const supplyApyModalData = computed(() => {
-  const baseSupply = 'interestRateInfo' in pair.collateral
-    ? getVaultSupplyApy(pair.collateral as EVault)
-    : 0
-  return {
-    props: {
-      lendingAPY: baseSupply,
-      intrinsicAPY: getVaultIntrinsicApy(pair.collateral, enableIntrinsicApy.value),
-      intrinsicApyInfo: getVaultIntrinsicApyInfo(pair.collateral, enableIntrinsicApy.value),
-      campaigns: getSupplyRewardCampaigns(pair.collateral.address),
-      rewardVaultAddress: pair.collateral.address,
-    },
-  }
-})
+const supplyApyModalData = computed(() => ({
+  props: {
+    mode: 'supply',
+    lendingAPY: getVaultSupplyApy(pair.collateral),
+    intrinsicAPY: getVaultIntrinsicApy(pair.collateral, enableIntrinsicApy.value),
+    intrinsicApyInfo: getVaultIntrinsicApyInfo(pair.collateral, enableIntrinsicApy.value),
+    campaigns: getSupplyRewardCampaigns(pair.collateral.address),
+    rewardVaultAddress: pair.collateral.address,
+  },
+}))
 
 const netApyModalData = computed(() => ({
   props: {
@@ -339,7 +335,7 @@ const linkPath = computed(() => ({
           <div class="text-content-tertiary text-p3 mb-4 text-right flex items-center justify-end gap-4 mobile:text-left mobile:justify-start">
             Borrow APY
             <UiModalPreviewTrigger
-              :component="VaultBorrowApyModal"
+              :component="VaultApyModal"
               :modal-data="borrowApyModalData"
               aria-label="Show borrow APY breakdown"
             >
@@ -359,7 +355,7 @@ const linkPath = computed(() => ({
           >
             <UiModalPreviewTrigger
               v-if="hasBorrowApyRewards"
-              :component="VaultBorrowApyModal"
+              :component="VaultApyModal"
               :modal-data="borrowApyModalData"
               aria-label="Show borrow APY rewards breakdown"
             >
@@ -502,7 +498,7 @@ const linkPath = computed(() => ({
           <div class="text-content-tertiary text-p3 mb-4 flex items-center justify-end gap-4">
             Supply APY
             <UiModalPreviewTrigger
-              :component="VaultSupplyApyModal"
+              :component="VaultApyModal"
               :modal-data="supplyApyModalData"
               aria-label="Show supply APY breakdown"
             >
@@ -526,7 +522,7 @@ const linkPath = computed(() => ({
             />
             <UiModalPreviewTrigger
               v-if="hasSupplyRewards(pair.collateral.address)"
-              :component="VaultSupplyApyModal"
+              :component="VaultApyModal"
               :modal-data="supplyApyModalData"
               aria-label="Show supply APY rewards breakdown"
             >
@@ -722,7 +718,7 @@ const linkPath = computed(() => ({
           <div class="text-content-tertiary text-p3 flex items-center gap-4">
             Supply APY
             <UiModalPreviewTrigger
-              :component="VaultSupplyApyModal"
+              :component="VaultApyModal"
               :modal-data="supplyApyModalData"
               aria-label="Show supply APY breakdown"
             >
@@ -738,7 +734,7 @@ const linkPath = computed(() => ({
           <VaultPoints :vault="pair.collateral" />
           <UiModalPreviewTrigger
             v-if="hasSupplyRewards(pair.collateral.address)"
-            :component="VaultSupplyApyModal"
+            :component="VaultApyModal"
             :modal-data="supplyApyModalData"
             aria-label="Show supply APY rewards breakdown"
           >
