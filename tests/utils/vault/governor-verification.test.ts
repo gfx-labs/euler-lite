@@ -96,13 +96,13 @@ describe('isVaultGovernorVerified', () => {
     expect(isVaultGovernorVerified(vault, labels)).toBe(true)
   })
 
-  it('returns false when vault is not verified', () => {
+  it('returns true when vault is not verified but has declared keys (single-curator)', () => {
     const vault = makeVault({ verified: false })
     const labels = buildLabels({
       declaredKeys: { [VAULT_ADDR]: ['euler'] },
       entityAddresses: { euler: [GOV_A] },
     })
-    expect(isVaultGovernorVerified(vault, labels)).toBe(false)
+    expect(isVaultGovernorVerified(vault, labels)).toBe(true)
   })
 
   it('returns false when vault is not in any product', () => {
@@ -257,13 +257,13 @@ describe('resolveGoverningEntityKeys', () => {
     expect(resolveGoverningEntityKeys(vault, buildLabels())).toEqual([])
   })
 
-  it('returns [] when vault is not verified', () => {
+  it('returns entity keys when vault is not verified but has declared keys (single-curator)', () => {
     const vault = makeVault({ verified: false })
     const labels = buildLabels({
       declaredKeys: { [VAULT_ADDR]: ['euler'] },
       entityAddresses: { euler: [GOV_A] },
     })
-    expect(resolveGoverningEntityKeys(vault, labels)).toEqual([])
+    expect(resolveGoverningEntityKeys(vault, labels)).toEqual(['euler'])
   })
 
   it('returns [] when no product is declared', () => {

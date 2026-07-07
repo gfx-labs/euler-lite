@@ -79,7 +79,7 @@ describe('geo-gate log hygiene', () => {
     process.env.DOPPLER_ENVIRONMENT = 'prd'
 
     runHandler(makeEvent(`https://app.example/api/internal/proxy/merkl/users/${ADDRESS}/rewards`, {
-      'cf-ipcountry': 'US',
+      'cf-ipcountry': 'JP',
       'x-is-vpn': 'true',
     }))
 
