@@ -397,6 +397,7 @@ Before deploying:
 - Ensure Node.js version is 24+ (24.14.1 recommended)
 - Clear and reinstall: `rm -rf node_modules && npm ci`
 
+
 ### Wallet Connection Issues
 
 - Verify `APPKIT_PROJECT_ID` is correct (or `NUXT_PUBLIC_APP_KIT_PROJECT_ID` for Doppler)
