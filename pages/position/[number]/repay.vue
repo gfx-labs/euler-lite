@@ -449,6 +449,11 @@ const { guardWithPriceImpact: guardWithSavingsPriceImpact } = usePriceImpactGate
 
 // --- Form tabs ---
 const formTabs = computed(() => {
+  // Single-curator deployments only support wallet repay. The collateral and
+  // savings composables are kept intact so upstream merges stay clean.
+  if (useRuntimeConfig().public.configDisableGovernorVerification) {
+    return [{ label: 'From wallet', value: 'wallet' }]
+  }
   const tabs = [
     { label: 'From wallet', value: 'wallet' },
     { label: 'From collateral', value: 'collateral' },
@@ -594,7 +599,7 @@ watch(formTab, () => {
       :back-fallback="`/position/${positionIndex}`"
       :loading="isLoading || isPositionsLoading"
       title="Repay position"
-      description="Reduce your debt using tokens from your wallet, collateral, or savings."
+      :description="formTabs.length > 1 ? 'Reduce your debt using tokens from your wallet, collateral, or savings.' : 'Reduce your debt using tokens from your wallet.'"
       @submit.prevent="onSubmitForm"
     >
       <div v-if="!isConnected && !isSpyMode">
@@ -614,6 +619,7 @@ watch(formTab, () => {
         />
 
         <UiTabs
+          v-if="formTabs.length > 1"
           v-model="formTab"
           class="mb-12"
           rounded
