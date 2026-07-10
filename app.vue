@@ -48,7 +48,8 @@ watch(theme, (newTheme) => {
 
 const envConfig = useEnvConfig()
 
-const pageTitle = envConfig.appOgTitle || envConfig.appTitle
+const pageTitle = envConfig.appPageTitle || envConfig.appTitle
+const ogTitle = envConfig.appOgTitle || envConfig.appTitle
 
 useHead({
   title: pageTitle,
@@ -57,10 +58,10 @@ useHead({
   },
   meta: [
     { name: 'description', content: envConfig.appDescription },
-    { property: 'og:title', content: pageTitle },
+    { property: 'og:title', content: ogTitle },
     { property: 'og:description', content: envConfig.appDescription },
     { property: 'og:site_name', content: envConfig.appTitle },
-    { name: 'twitter:title', content: pageTitle },
+    { name: 'twitter:title', content: ogTitle },
     { name: 'twitter:description', content: envConfig.appDescription },
     // Crawlers (X, Slack, Discord) read these from the server-rendered HTML,
     // which is patched by server/plugins/app-config.ts. These entries keep

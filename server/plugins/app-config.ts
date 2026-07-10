@@ -50,6 +50,7 @@ function env(key: string, ...fallbackKeys: string[]): string {
 function readAppConfig() {
   return {
     appTitle: env('APP_TITLE', 'NUXT_PUBLIC_CONFIG_APP_TITLE') || DEFAULTS.appTitle,
+    appPageTitle: env('APP_PAGE_TITLE', 'NUXT_PUBLIC_CONFIG_APP_PAGE_TITLE'),
     appOgTitle: env('APP_OG_TITLE', 'NUXT_PUBLIC_CONFIG_APP_OG_TITLE'),
     appDescription: env('APP_DESCRIPTION', 'NUXT_PUBLIC_CONFIG_APP_DESCRIPTION') || DEFAULTS.appDescription,
     logoUrl: env('LOGO_URL', 'NUXT_PUBLIC_CONFIG_LOGO_URL'),
@@ -71,7 +72,8 @@ function readAppConfig() {
 function patchMeta(html: { head: string[] }, appConfig: ReturnType<typeof readAppConfig>) {
   const appTitle = escapeHtml(appConfig.appTitle)
   const appDescription = escapeHtml(appConfig.appDescription)
-  const pageTitle = appConfig.appOgTitle ? escapeHtml(appConfig.appOgTitle) : appTitle
+  const pageTitle = appConfig.appPageTitle ? escapeHtml(appConfig.appPageTitle) : appTitle
+  const ogTitle = appConfig.appOgTitle ? escapeHtml(appConfig.appOgTitle) : appTitle
 
   html.head = html.head.map((chunk) => {
     let patched = chunk
@@ -82,11 +84,11 @@ function patchMeta(html: { head: string[] }, appConfig: ReturnType<typeof readAp
     // Replace content="…" on relevant meta tags
     patched = patched.replace(
       /(<meta\s+property="og:title"\s+content=")[^"]*(")/,
-      `$1${pageTitle}$2`,
+      `$1${ogTitle}$2`,
     )
     patched = patched.replace(
       /(<meta\s+name="twitter:title"\s+content=")[^"]*(")/,
-      `$1${pageTitle}$2`,
+      `$1${ogTitle}$2`,
     )
     patched = patched.replace(
       /(<meta\s+property="og:site_name"\s+content=")[^"]*(")/,
