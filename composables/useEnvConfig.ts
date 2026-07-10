@@ -20,6 +20,7 @@ import {
 
 interface EnvConfig {
   appTitle: string
+  appHeaderTitle: string
   appOgTitle: string
   appDescription: string
   logoUrl: string
@@ -40,6 +41,7 @@ interface EnvConfig {
 
 const DEFAULTS: EnvConfig = {
   appTitle: 'Euler Lite',
+  appHeaderTitle: 'Euler Lite',
   appOgTitle: '',
   appDescription: 'Lightweight interface for Euler Finance lending and borrowing.',
   logoUrl: '',
@@ -66,6 +68,7 @@ function scanEnv(): EnvConfig {
   const v3UpstreamConfigured = !!readV3ApiUrl()
   return {
     appTitle: env('APP_TITLE', 'NUXT_PUBLIC_CONFIG_APP_TITLE') || DEFAULTS.appTitle,
+    appHeaderTitle: env('APP_HEADER_TITLE', 'NUXT_PUBLIC_CONFIG_APP_HEADER_TITLE') || DEFAULTS.appHeaderTitle,
     appOgTitle: env('APP_OG_TITLE', 'NUXT_PUBLIC_CONFIG_APP_OG_TITLE') || DEFAULTS.appOgTitle,
     appDescription: env('APP_DESCRIPTION', 'NUXT_PUBLIC_CONFIG_APP_DESCRIPTION') || DEFAULTS.appDescription,
     logoUrl: env('LOGO_URL', 'NUXT_PUBLIC_CONFIG_LOGO_URL') || DEFAULTS.logoUrl,
@@ -96,6 +99,7 @@ function fromRuntimeConfig(): EnvConfig {
 
   return {
     appTitle: str(rc.configAppTitle) || DEFAULTS.appTitle,
+    appHeaderTitle: str(rc.configAppHeaderTitle) || DEFAULTS.appHeaderTitle,
     appOgTitle: str(rc.configAppOgTitle) || DEFAULTS.appOgTitle,
     appDescription: str(rc.configAppDescription) || DEFAULTS.appDescription,
     logoUrl: str(rc.configLogoUrl) || DEFAULTS.logoUrl,

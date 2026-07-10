@@ -56,7 +56,7 @@ useHead({
   meta: [
     { name: 'description', content: envConfig.appDescription },
     { property: 'og:description', content: envConfig.appDescription },
-    { property: 'og:site_name', content: envConfig.appTitle },
+    { property: 'og:site_name', content: envConfig.appHeaderTitle },
     ...(envConfig.appOgTitle
       ? [
           { property: 'og:title', content: envConfig.appOgTitle },

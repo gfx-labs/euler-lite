@@ -16,6 +16,7 @@ import {
 
 const DEFAULTS = {
   appTitle: 'Euler Lite',
+  appHeaderTitle: 'Euler Lite',
   appDescription: 'Lightweight interface for Euler Finance lending and borrowing.',
 }
 
@@ -50,6 +51,7 @@ function env(key: string, ...fallbackKeys: string[]): string {
 function readAppConfig() {
   return {
     appTitle: env('APP_TITLE', 'NUXT_PUBLIC_CONFIG_APP_TITLE') || DEFAULTS.appTitle,
+    appHeaderTitle: env('APP_HEADER_TITLE', 'NUXT_PUBLIC_CONFIG_APP_HEADER_TITLE') || DEFAULTS.appHeaderTitle,
     appOgTitle: env('APP_OG_TITLE', 'NUXT_PUBLIC_CONFIG_APP_OG_TITLE'),
     appDescription: env('APP_DESCRIPTION', 'NUXT_PUBLIC_CONFIG_APP_DESCRIPTION') || DEFAULTS.appDescription,
     logoUrl: env('LOGO_URL', 'NUXT_PUBLIC_CONFIG_LOGO_URL'),
@@ -70,6 +72,7 @@ function readAppConfig() {
 
 function patchMeta(html: { head: string[] }, appConfig: ReturnType<typeof readAppConfig>) {
   const appTitle = escapeHtml(appConfig.appTitle)
+  const appHeaderTitle = escapeHtml(appConfig.appHeaderTitle)
   const appDescription = escapeHtml(appConfig.appDescription)
   const ogTitle = escapeHtml(appConfig.appOgTitle)
 
@@ -92,7 +95,7 @@ function patchMeta(html: { head: string[] }, appConfig: ReturnType<typeof readAp
     }
     patched = patched.replace(
       /(<meta\s+property="og:site_name"\s+content=")[^"]*(")/,
-      `$1${appTitle}$2`,
+      `$1${appHeaderTitle}$2`,
     )
     patched = patched.replace(
       /(<meta\s+name="description"\s+content=")[^"]*(")/,

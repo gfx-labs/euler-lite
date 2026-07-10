@@ -202,6 +202,10 @@ resource "google_cloud_run_v2_service" "euler_lite" {
       # App branding
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_TITLE"
+        value = "Poppie - Borrow against your stock portfolio in seconds"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_APP_HEADER_TITLE"
         value = "Poppie"
       }
       env {
@@ -387,6 +391,10 @@ resource "google_cloud_run_v2_service" "euler_lite_dev" {
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_TITLE"
+        value = "Poppie (Dev) - Borrow against your stock portfolio in seconds"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_APP_HEADER_TITLE"
         value = "Poppie (Dev)"
       }
       env {
