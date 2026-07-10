@@ -205,8 +205,12 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "Poppie"
       }
       env {
+        name  = "NUXT_PUBLIC_CONFIG_APP_TAGLINE"
+        value = "Unlock liquidity from your stock portfolio"
+      }
+      env {
         name  = "NUXT_PUBLIC_CONFIG_APP_DESCRIPTION"
-        value = "Poppie Finance is a Euler curator that focuses on RWAs."
+        value = "Poppie Finance is a Euler curator focused on real-world assets. Unlock liquidity from your stock portfolio by lending and borrowing tokenized equities."
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_ENABLE_APP_TITLE"
@@ -386,8 +390,12 @@ resource "google_cloud_run_v2_service" "euler_lite_dev" {
         value = "Poppie (Dev)"
       }
       env {
+        name  = "NUXT_PUBLIC_CONFIG_APP_TAGLINE"
+        value = "Unlock liquidity from your stock portfolio"
+      }
+      env {
         name  = "NUXT_PUBLIC_CONFIG_APP_DESCRIPTION"
-        value = "Poppie Finance is a Euler curator that focuses on RWAs."
+        value = "Poppie Finance is a Euler curator focused on real-world assets. Unlock liquidity from your stock portfolio by lending and borrowing tokenized equities."
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_ENABLE_APP_TITLE"

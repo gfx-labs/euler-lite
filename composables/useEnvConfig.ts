@@ -20,6 +20,7 @@ import {
 
 interface EnvConfig {
   appTitle: string
+  appTagline: string
   appDescription: string
   logoUrl: string
   socialImageUrl: string
@@ -39,6 +40,7 @@ interface EnvConfig {
 
 const DEFAULTS: EnvConfig = {
   appTitle: 'Euler Lite',
+  appTagline: '',
   appDescription: 'Lightweight interface for Euler Finance lending and borrowing.',
   logoUrl: '',
   socialImageUrl: '',
@@ -64,6 +66,7 @@ function scanEnv(): EnvConfig {
   const v3UpstreamConfigured = !!readV3ApiUrl()
   return {
     appTitle: env('APP_TITLE', 'NUXT_PUBLIC_CONFIG_APP_TITLE') || DEFAULTS.appTitle,
+    appTagline: env('APP_TAGLINE', 'NUXT_PUBLIC_CONFIG_APP_TAGLINE') || DEFAULTS.appTagline,
     appDescription: env('APP_DESCRIPTION', 'NUXT_PUBLIC_CONFIG_APP_DESCRIPTION') || DEFAULTS.appDescription,
     logoUrl: env('LOGO_URL', 'NUXT_PUBLIC_CONFIG_LOGO_URL') || DEFAULTS.logoUrl,
     socialImageUrl: env('SOCIAL_IMAGE_URL', 'NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL') || DEFAULTS.socialImageUrl,
@@ -93,6 +96,7 @@ function fromRuntimeConfig(): EnvConfig {
 
   return {
     appTitle: str(rc.configAppTitle) || DEFAULTS.appTitle,
+    appTagline: str(rc.configAppTagline) || DEFAULTS.appTagline,
     appDescription: str(rc.configAppDescription) || DEFAULTS.appDescription,
     logoUrl: str(rc.configLogoUrl) || DEFAULTS.logoUrl,
     socialImageUrl: str(rc.configSocialImageUrl) || DEFAULTS.socialImageUrl,

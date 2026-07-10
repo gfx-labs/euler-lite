@@ -80,6 +80,10 @@ export default defineNuxtConfig({
           property: 'og:type',
           content: 'website',
         },
+        {
+          property: 'og:site_name',
+          content: 'Euler Lite',
+        },
         // og:image / twitter:image are injected at SSR by
         // server/plugins/app-config.ts from NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL.
         // Not declared here so forks without that env var get no (broken) tag.
@@ -138,6 +142,7 @@ export default defineNuxtConfig({
       configTelegramUrl: '',
       configGithubUrl: '',
       configAppTitle: 'Euler Lite',
+      configAppTagline: '',
       configAppDescription: 'Lightweight interface for Euler Finance lending and borrowing.',
       // Absolute URL to an image used for social share previews (og:image /
       // twitter:image). Empty default so forks don't inherit our branding.
