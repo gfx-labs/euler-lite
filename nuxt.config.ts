@@ -142,6 +142,7 @@ export default defineNuxtConfig({
       configTelegramUrl: '',
       configGithubUrl: '',
       configAppTitle: 'Euler Lite',
+      configAppHeaderTitle: '',
       configAppOgTitle: '',
       configAppDescription: 'Lightweight interface for Euler Finance lending and borrowing.',
       // Absolute URL to an image used for social share previews (og:image /

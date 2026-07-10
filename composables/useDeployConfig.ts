@@ -27,7 +27,7 @@ export const useDeployConfig = () => {
     githubUrl: rc.configGithubUrl,
 
     // Branding (from useEnvConfig, not runtimeConfig)
-    appTitle: envConfig.appTitle,
+    appTitle: envConfig.appHeaderTitle,
     appDescription: envConfig.appDescription,
     logoUrl: envConfig.logoUrl,
     socialImageUrl: envConfig.socialImageUrl,

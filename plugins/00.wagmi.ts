@@ -35,7 +35,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   ]
 
   const metadata = {
-    name: envConfig.appTitle,
+    name: envConfig.appHeaderTitle,
     description: envConfig.appDescription,
     url: normalizedAppUrl,
     icons: normalizedAppUrl ? [`${normalizedAppUrl}/manifest-img.png`] : [],
