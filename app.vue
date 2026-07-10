@@ -48,9 +48,7 @@ watch(theme, (newTheme) => {
 
 const envConfig = useEnvConfig()
 
-const pageTitle = envConfig.appTagline
-  ? `${envConfig.appTitle} — ${envConfig.appTagline}`
-  : envConfig.appTitle
+const pageTitle = envConfig.appOgTitle || envConfig.appTitle
 
 useHead({
   title: pageTitle,

@@ -142,7 +142,7 @@ export default defineNuxtConfig({
       configTelegramUrl: '',
       configGithubUrl: '',
       configAppTitle: 'Euler Lite',
-      configAppTagline: '',
+      configAppOgTitle: '',
       configAppDescription: 'Lightweight interface for Euler Finance lending and borrowing.',
       // Absolute URL to an image used for social share previews (og:image /
       // twitter:image). Empty default so forks don't inherit our branding.
