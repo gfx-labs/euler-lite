@@ -206,7 +206,7 @@ resource "google_cloud_run_v2_service" "euler_lite" {
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_OG_TITLE"
-        value = "Poppie - Unlock liquidity from your stock portfolio"
+        value = "Poppie - Borrow against your stock portfolio in seconds"
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_DESCRIPTION"
@@ -391,7 +391,7 @@ resource "google_cloud_run_v2_service" "euler_lite_dev" {
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_OG_TITLE"
-        value = "Poppie (Dev) - Unlock liquidity from your stock portfolio"
+        value = "Poppie (Dev) - Borrow against your stock portfolio in seconds"
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_APP_DESCRIPTION"
