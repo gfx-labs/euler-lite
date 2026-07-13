@@ -55,7 +55,6 @@ useHead({
   },
   meta: [
     { name: 'description', content: envConfig.appDescription },
-    { property: 'og:description', content: envConfig.appDescription },
     { property: 'og:site_name', content: envConfig.appHeaderTitle },
     ...(envConfig.appOgTitle
       ? [
@@ -63,7 +62,12 @@ useHead({
           { name: 'twitter:title', content: envConfig.appOgTitle },
         ]
       : []),
-    { name: 'twitter:description', content: envConfig.appDescription },
+    ...(envConfig.appOgDescription
+      ? [
+          { property: 'og:description', content: envConfig.appOgDescription },
+          { name: 'twitter:description', content: envConfig.appOgDescription },
+        ]
+      : []),
     // Crawlers (X, Slack, Discord) read these from the server-rendered HTML,
     // which is patched by server/plugins/app-config.ts. These entries keep
     // the SPA in sync after hydration when the env var changes at runtime.
