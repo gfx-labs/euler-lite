@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrate Poppie - Poppie Docs</title>
+  <meta name="description" content="Offer stock-backed loans inside your exchange. What a Poppie integration looks like, what we provide, and how to book a call.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html">How It Works</a>
+      <a href="/landing/docs/governance.html">Governance</a>
+      <a href="/landing/docs/faq.html">FAQ</a>
+      <h3>For Exchanges</h3>
+      <a href="/landing/docs/integrate.html" class="active">Integrate Poppie</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Integrate Poppie</h1>
+      <p class="docs-subtitle">Offer stock-backed loans inside your exchange. Your users borrow against the tokenized stocks they already hold with you, and our team helps with the integration work.</p>
+
+      <h2>Who This Is For</h2>
+      <p>Exchanges and platforms that list Ondo tokenized stocks. If your users hold tokenized equities on your platform, the only thing they can do with them today is watch the price or sell. An integration with Poppie gives them a third option: borrow against their holdings without selling them, without leaving your platform.</p>
+      <p>For the exchange, every borrow is activity that used to be a sell, or worse, a withdrawal. Lending against assets you already list opens a new revenue stream and gives users one more reason to keep their assets with you.</p>
+
+      <h2>What an Integration Looks Like</h2>
+      <ul>
+        <li><strong>Your users deposit tokenized stocks.</strong> Ondo tokenized equities like AAPL, NVDA, and SPY are posted as collateral. 37 assets are supported today, scaling to 500+ by end of year.</li>
+        <li><strong>They borrow USDT instantly.</strong> Loans settle in seconds at competitive rates. No credit checks, no paperwork, no waiting periods.</li>
+        <li><strong>They keep their exposure.</strong> Collateral stays deposited with full price exposure. Loans can be repaid anytime to withdraw, and the whole flow happens inside your product.</li>
+      </ul>
+
+      <h2>What Poppie Provides</h2>
+      <ul>
+        <li><strong>Live infrastructure.</strong> Poppie is in production on BNB Smart Chain with permissionless lending markets on Euler V2, battle-tested and audited lending infrastructure.</li>
+        <li><strong>Real-time pricing.</strong> Chainlink oracles tuned to equity market hours provide accurate valuations for every supported asset.</li>
+        <li><strong>Risk-tiered markets.</strong> Conservative LTV ratios by asset class, transparent onchain parameters, and auditable protocol configuration.</li>
+        <li><strong>Integration support.</strong> The Poppie team helps with custom integration work for every exchange partner, working directly with your engineers to fit your product.</li>
+      </ul>
+
+      <h2>How to Get Started</h2>
+      <p><a href="https://calendar.app.google/Ah9ALnRtKQ8sQytF8" target="_blank" rel="noopener noreferrer">Book a call</a> and walk us through your platform and the tokenized assets you list. We'll show you what a Poppie integration looks like for your users, then build it with you and launch.</p>
+
+      <div class="callout callout-tip">
+        <p><strong>Ready to talk?</strong> <a href="https://calendar.app.google/Ah9ALnRtKQ8sQytF8" target="_blank" rel="noopener noreferrer">Book a call with the Poppie team</a>.</p>
+      </div>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/faq.html">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">FAQ</span>
+        </a>
+        <div></div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+        <a href="/terms-of-service">Terms</a>
+        <a href="/privacy-policy">Privacy</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>
