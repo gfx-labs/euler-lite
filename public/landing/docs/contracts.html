@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contract Addresses - Poppie Docs</title>
+  <meta name="description" content="Poppie production smart-contract addresses on BNB Smart Chain (chainId 56): vaults, oracles, governance, and Euler V2 core infrastructure.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
+  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/docs/docs.css">
+  <style>
+    /* Contract address cells: allow long hashes to wrap instead of overflowing */
+    .docs-content table.contract-table { table-layout: fixed; }
+    .docs-content table.contract-table th:nth-child(1),
+    .docs-content table.contract-table td:nth-child(1) { width: 42%; }
+    .docs-content table.contract-table th:nth-child(2),
+    .docs-content table.contract-table td:nth-child(2) { width: 58%; }
+    .docs-content table.contract-table code {
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+        <span>Poppie</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-sm">Launch App</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <h3>Getting Started</h3>
+      <a href="/landing/docs/">Overview</a>
+      <a href="/landing/docs/why-poppie.html">Why Poppie</a>
+      <h3>Using Poppie</h3>
+      <a href="/landing/docs/how-to-use.html">How to Use Poppie</a>
+      <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a>
+      <h3>Under the Hood</h3>
+      <a href="/landing/docs/how-it-works.html">How It Works</a>
+      <a href="/landing/docs/governance.html">Governance</a>
+      <a href="/landing/docs/contracts.html" class="active">Contract Addresses</a>
+      <a href="/landing/docs/faq.html">FAQ</a>
+      <h3>For Exchanges</h3>
+      <a href="/landing/docs/integrate.html">Integrate Poppie</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Contract Addresses</h1>
+      <p class="docs-subtitle">Every Poppie contract is deployed on BNB Smart Chain (BSC) mainnet and is publicly verifiable. Click any address to view it on BscScan.</p>
+
+      <table>
+        <tbody>
+          <tr><td>Network</td><td>BNB Smart Chain (BSC) mainnet &mdash; chainId <strong>56</strong></td></tr>
+          <tr><td>Version</td><td>V2 (production)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-info">
+        <p>The onchain values are always the source of truth. If an address listed here ever falls out of date, trust the deployed contracts over this page.</p>
+      </div>
+
+      <h2>Poppie Contracts</h2>
+      <p>The core contracts that make up the Poppie deployment: the borrowable USDT vault, the oracle stack that prices tokenized equities, the interest rate model, and the oracle router.</p>
+      <table class="contract-table">
+        <thead><tr><th>Contract</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>USDT Vault (borrowable)</td><td><a href="https://bscscan.com/address/0xf4940CdE23c164f8CA8D536f3567337349b3208F" target="_blank"><code>0xf4940CdE23c164f8CA8D536f3567337349b3208F</code></a></td></tr>
+          <tr><td>PoppieEulerOracle</td><td><a href="https://bscscan.com/address/0xAE83F1A1Ea8a4e7CbcaC3551B88E22Baea25f26D" target="_blank"><code>0xAE83F1A1Ea8a4e7CbcaC3551B88E22Baea25f26D</code></a></td></tr>
+          <tr><td>PoppieEulerAdapter (singleton)</td><td><a href="https://bscscan.com/address/0x92dad5eEE3245c2aD9766225Ff15beDf650646ea" target="_blank"><code>0x92dad5eEE3245c2aD9766225Ff15beDf650646ea</code></a></td></tr>
+          <tr><td>FixedRateOracle (USDT/USD 1:1)</td><td><a href="https://bscscan.com/address/0xdcf64f98da3e473296d462d3232ea2f2d12b4ac3" target="_blank"><code>0xdcf64f98da3e473296d462d3232ea2f2d12b4ac3</code></a></td></tr>
+          <tr><td>Oracle Router (EulerRouter)</td><td><a href="https://bscscan.com/address/0x1e58F7C4D6C484337544a9FCE4AFB705181D9a94" target="_blank"><code>0x1e58F7C4D6C484337544a9FCE4AFB705181D9a94</code></a></td></tr>
+          <tr><td>Kink IRM (interest rate model)</td><td><a href="https://bscscan.com/address/0x9b67027a536D930CAE59eBF0202220496946CBaC" target="_blank"><code>0x9b67027a536D930CAE59eBF0202220496946CBaC</code></a></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Governance &amp; Roles</h2>
+      <p>The addresses that hold privileged roles. All parameter changes route through the timelock. See <a href="/landing/docs/governance.html">Governance</a> for details on the timelock delay and how changes are applied.</p>
+      <table class="contract-table">
+        <thead><tr><th>Role</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>Governor (GovernorAccessControlEmergency)</td><td><a href="https://bscscan.com/address/0x1Fd3aFC21f378eE279646e6C1a59EF57896646B9" target="_blank"><code>0x1Fd3aFC21f378eE279646e6C1a59EF57896646B9</code></a></td></tr>
+          <tr><td>Wildcard Timelock</td><td><a href="https://bscscan.com/address/0x290fdc7b01408f9166d1ed2002c50954a661d270" target="_blank"><code>0x290fdc7b01408f9166d1ed2002c50954a661d270</code></a></td></tr>
+          <tr><td>Keeper (price pusher)</td><td><a href="https://bscscan.com/address/0xEA2b72Ed98470Dd7403E2F3da375aD2a77b1c00A" target="_blank"><code>0xEA2b72Ed98470Dd7403E2F3da375aD2a77b1c00A</code></a></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Collateral Escrow Vaults</h2>
+      <p>Each supported tokenized equity has its own escrow vault used as collateral. All 36 vaults are deployed on BSC. See <a href="/landing/docs/supported-assets.html">Assets &amp; Market Hours</a> for the underlying companies and trading sessions.</p>
+      <table class="contract-table">
+        <thead><tr><th>Symbol</th><th>Escrow Vault</th></tr></thead>
+        <tbody>
+          <tr><td><code>NVDAon</code></td><td><a href="https://bscscan.com/address/0xfe294c3A13a8D9FC57EC5223082B42A976523597" target="_blank"><code>0xfe294c3A13a8D9FC57EC5223082B42A976523597</code></a></td></tr>
+          <tr><td><code>TSLAon</code></td><td><a href="https://bscscan.com/address/0x50D328fa0f29c14DE93c7b860181e776CFba40a0" target="_blank"><code>0x50D328fa0f29c14DE93c7b860181e776CFba40a0</code></a></td></tr>
+          <tr><td><code>GOOGLon</code></td><td><a href="https://bscscan.com/address/0x521F53a39221eC3B8bbFE70A7994D88300a18941" target="_blank"><code>0x521F53a39221eC3B8bbFE70A7994D88300a18941</code></a></td></tr>
+          <tr><td><code>CRCLon</code></td><td><a href="https://bscscan.com/address/0xF49769835092E7Ad707B3bfD4A93DBA953bb2Ef4" target="_blank"><code>0xF49769835092E7Ad707B3bfD4A93DBA953bb2Ef4</code></a></td></tr>
+          <tr><td><code>QQQon</code></td><td><a href="https://bscscan.com/address/0x85d07dF9120F913aE35ba5dC486273957a175f89" target="_blank"><code>0x85d07dF9120F913aE35ba5dC486273957a175f89</code></a></td></tr>
+          <tr><td><code>MSFTon</code></td><td><a href="https://bscscan.com/address/0xaF6c8B20bC6b6f1f411FAa77458d813883e648Cb" target="_blank"><code>0xaF6c8B20bC6b6f1f411FAa77458d813883e648Cb</code></a></td></tr>
+          <tr><td><code>INTCon</code></td><td><a href="https://bscscan.com/address/0x0b126aF75849d6A517cc98c6f6346Ab41629Ad87" target="_blank"><code>0x0b126aF75849d6A517cc98c6f6346Ab41629Ad87</code></a></td></tr>
+          <tr><td><code>MUon</code></td><td><a href="https://bscscan.com/address/0xDA58a3DE061b4DaE35837CD2E2BF07E6eb500E93" target="_blank"><code>0xDA58a3DE061b4DaE35837CD2E2BF07E6eb500E93</code></a></td></tr>
+          <tr><td><code>AAPLon</code></td><td><a href="https://bscscan.com/address/0x054fDd4e7035bC19B1b621F5C3227875F33e8838" target="_blank"><code>0x054fDd4e7035bC19B1b621F5C3227875F33e8838</code></a></td></tr>
+          <tr><td><code>SPYon</code></td><td><a href="https://bscscan.com/address/0x7acf37bAFb423C4a393291F0dAa1742ddACaA1a1" target="_blank"><code>0x7acf37bAFb423C4a393291F0dAa1742ddACaA1a1</code></a></td></tr>
+          <tr><td><code>AMZNon</code></td><td><a href="https://bscscan.com/address/0x0112b1e8119FE8a890Db902941161A5a7aD5EE8f" target="_blank"><code>0x0112b1e8119FE8a890Db902941161A5a7aD5EE8f</code></a></td></tr>
+          <tr><td><code>SNDKon</code></td><td><a href="https://bscscan.com/address/0x8eb40369C7Ca9407355b183F8a950265366D214b" target="_blank"><code>0x8eb40369C7Ca9407355b183F8a950265366D214b</code></a></td></tr>
+          <tr><td><code>METAon</code></td><td><a href="https://bscscan.com/address/0xEFd2a440A5ADd5fcAEb02f962243cB45028681a5" target="_blank"><code>0xEFd2a440A5ADd5fcAEb02f962243cB45028681a5</code></a></td></tr>
+          <tr><td><code>AMDon</code></td><td><a href="https://bscscan.com/address/0x201481916ade56A08D7a6329c1997072b6eEc3E6" target="_blank"><code>0x201481916ade56A08D7a6329c1997072b6eEc3E6</code></a></td></tr>
+          <tr><td><code>COINon</code></td><td><a href="https://bscscan.com/address/0xBe6A59ABE1E25320383F2CB36Db57121fCC44d6C" target="_blank"><code>0xBe6A59ABE1E25320383F2CB36Db57121fCC44d6C</code></a></td></tr>
+          <tr><td><code>NFLXon</code></td><td><a href="https://bscscan.com/address/0xD30DC5317fD5F0035f2cea0DE66CBca48063Cc11" target="_blank"><code>0xD30DC5317fD5F0035f2cea0DE66CBca48063Cc11</code></a></td></tr>
+          <tr><td><code>MSTRon</code></td><td><a href="https://bscscan.com/address/0xCf6259EF100aA10f0541971B01b45EcE4849738b" target="_blank"><code>0xCf6259EF100aA10f0541971B01b45EcE4849738b</code></a></td></tr>
+          <tr><td><code>TSMon</code></td><td><a href="https://bscscan.com/address/0xF06054ef3E5C8A91Ae843ea9600d640F1d6c8117" target="_blank"><code>0xF06054ef3E5C8A91Ae843ea9600d640F1d6c8117</code></a></td></tr>
+          <tr><td><code>ORCLon</code></td><td><a href="https://bscscan.com/address/0xdBF4439423e3780a01c2B2df7eAdc3fFF78BBacf" target="_blank"><code>0xdBF4439423e3780a01c2B2df7eAdc3fFF78BBacf</code></a></td></tr>
+          <tr><td><code>RKLBon</code></td><td><a href="https://bscscan.com/address/0xa98e00201149520d7b5b81f28610bc27aC2999AB" target="_blank"><code>0xa98e00201149520d7b5b81f28610bc27aC2999AB</code></a></td></tr>
+          <tr><td><code>BABAon</code></td><td><a href="https://bscscan.com/address/0xaA32B358A9Da7f20B99C8ba28E979FE4E8C7D482" target="_blank"><code>0xaA32B358A9Da7f20B99C8ba28E979FE4E8C7D482</code></a></td></tr>
+          <tr><td><code>SPCXon</code></td><td><a href="https://bscscan.com/address/0x349cff23269D22A1621B9d9D8a6e587Dca8482c5" target="_blank"><code>0x349cff23269D22A1621B9d9D8a6e587Dca8482c5</code></a></td></tr>
+          <tr><td><code>SLVon</code></td><td><a href="https://bscscan.com/address/0x8f68128438c1101550bF478BBE8F8c80749Eb794" target="_blank"><code>0x8f68128438c1101550bF478BBE8F8c80749Eb794</code></a></td></tr>
+          <tr><td><code>BMNRon</code></td><td><a href="https://bscscan.com/address/0xD5A1e0C890354710ef46E6cdd43951CB93Dc62E2" target="_blank"><code>0xD5A1e0C890354710ef46E6cdd43951CB93Dc62E2</code></a></td></tr>
+          <tr><td><code>IONQon</code></td><td><a href="https://bscscan.com/address/0x107EAb9ec507EC5e71a8496da10eE8a724De4063" target="_blank"><code>0x107EAb9ec507EC5e71a8496da10eE8a724De4063</code></a></td></tr>
+          <tr><td><code>HOODon</code></td><td><a href="https://bscscan.com/address/0x645BADD5D188d5AFBb199a4aFD63e8980719Fcc4" target="_blank"><code>0x645BADD5D188d5AFBb199a4aFD63e8980719Fcc4</code></a></td></tr>
+          <tr><td><code>NBISon</code></td><td><a href="https://bscscan.com/address/0x16970910f7BAe824BE6685E5e967C8756F2DB40A" target="_blank"><code>0x16970910f7BAe824BE6685E5e967C8756F2DB40A</code></a></td></tr>
+          <tr><td><code>PLTRon</code></td><td><a href="https://bscscan.com/address/0x356E756C738544173047cFf6DbA096bda236C654" target="_blank"><code>0x356E756C738544173047cFf6DbA096bda236C654</code></a></td></tr>
+          <tr><td><code>STRCon</code></td><td><a href="https://bscscan.com/address/0x16f48e26BEF1448e2c68833173e96d0eB17d59F6" target="_blank"><code>0x16f48e26BEF1448e2c68833173e96d0eB17d59F6</code></a></td></tr>
+          <tr><td><code>IAUon</code></td><td><a href="https://bscscan.com/address/0x0D715a431aaB5398B9c5E0425311d228Ffdf7A1C" target="_blank"><code>0x0D715a431aaB5398B9c5E0425311d228Ffdf7A1C</code></a></td></tr>
+          <tr><td><code>ASMLon</code></td><td><a href="https://bscscan.com/address/0x2446C3caa98945E74ED5E908662a5251073Cf7BD" target="_blank"><code>0x2446C3caa98945E74ED5E908662a5251073Cf7BD</code></a></td></tr>
+          <tr><td><code>AMCon</code></td><td><a href="https://bscscan.com/address/0x49d79a89A571eCF01E6EB74B6bca33087662Ee58" target="_blank"><code>0x49d79a89A571eCF01E6EB74B6bca33087662Ee58</code></a></td></tr>
+          <tr><td><code>CRWVon</code></td><td><a href="https://bscscan.com/address/0x63d14aCE50335B60A16C42D585e981d1a2411af2" target="_blank"><code>0x63d14aCE50335B60A16C42D585e981d1a2411af2</code></a></td></tr>
+          <tr><td><code>OKLOon</code></td><td><a href="https://bscscan.com/address/0x746856EC1b57C4a6A8FFE011e4171b5064f0eF1c" target="_blank"><code>0x746856EC1b57C4a6A8FFE011e4171b5064f0eF1c</code></a></td></tr>
+          <tr><td><code>EWYon</code></td><td><a href="https://bscscan.com/address/0x7C772E97Ef88B551df3241883bc14D4330228ff9" target="_blank"><code>0x7C772E97Ef88B551df3241883bc14D4330228ff9</code></a></td></tr>
+          <tr><td><code>USOon</code></td><td><a href="https://bscscan.com/address/0x81a936b64dbbc62903D870763dD8c735b5b6af5C" target="_blank"><code>0x81a936b64dbbc62903D870763dD8c735b5b6af5C</code></a></td></tr>
+          <tr><td><code>TLTon</code></td><td><a href="https://bscscan.com/address/0x4D49A899a79c771586956b1BBf57Db734A8436B1" target="_blank"><code>0x4D49A899a79c771586956b1BBf57Db734A8436B1</code></a></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Euler V2 Core Infrastructure</h2>
+      <p>These are shared Euler protocol contracts (not Poppie-specific) that the Poppie deployment builds on. Euler V2's core contracts have undergone multiple independent audits.</p>
+      <table class="contract-table">
+        <thead><tr><th>Contract</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>EVC</td><td><a href="https://bscscan.com/address/0xb2E5a73CeE08593d1a076a2AE7A6e02925a640ea" target="_blank"><code>0xb2E5a73CeE08593d1a076a2AE7A6e02925a640ea</code></a></td></tr>
+          <tr><td>eVaultFactory</td><td><a href="https://bscscan.com/address/0x7F53E2755eB3c43824E162F7F6F087832B9C9Df6" target="_blank"><code>0x7F53E2755eB3c43824E162F7F6F087832B9C9Df6</code></a></td></tr>
+          <tr><td>eVaultImplementation</td><td><a href="https://bscscan.com/address/0xB236413f1A8Fd4C5D5545ecAaC5e64fF686afe4e" target="_blank"><code>0xB236413f1A8Fd4C5D5545ecAaC5e64fF686afe4e</code></a></td></tr>
+          <tr><td>protocolConfig</td><td><a href="https://bscscan.com/address/0xF524F75ad063919B86d6c5D9242847A44337BFCe" target="_blank"><code>0xF524F75ad063919B86d6c5D9242847A44337BFCe</code></a></td></tr>
+          <tr><td>permit2</td><td><a href="https://bscscan.com/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank"><code>0x000000000022D473030F116dDEE9F6B43aC78BA3</code></a></td></tr>
+          <tr><td>sequenceRegistry</td><td><a href="https://bscscan.com/address/0x7fD287B3AE3Bf2F6C9871a44b6d9de208B0ABBE5" target="_blank"><code>0x7fD287B3AE3Bf2F6C9871a44b6d9de208B0ABBE5</code></a></td></tr>
+          <tr><td>balanceTracker</td><td><a href="https://bscscan.com/address/0x2D13C46FE6c8B6c9ad3C5A78eD51b26733caE350" target="_blank"><code>0x2D13C46FE6c8B6c9ad3C5A78eD51b26733caE350</code></a></td></tr>
+          <tr><td>oracleRouterFactory</td><td><a href="https://bscscan.com/address/0xbe83f65e5e898D482FfAEA251B62647c411576F1" target="_blank"><code>0xbe83f65e5e898D482FfAEA251B62647c411576F1</code></a></td></tr>
+          <tr><td>oracleAdapterRegistry</td><td><a href="https://bscscan.com/address/0xd6238D3b8bEEd1C7f424eBF6fc1CcD7fe1b31665" target="_blank"><code>0xd6238D3b8bEEd1C7f424eBF6fc1CcD7fe1b31665</code></a></td></tr>
+          <tr><td>irmRegistry</td><td><a href="https://bscscan.com/address/0x69e47D24dE839423A94afcD01b88C1683BA4D1D0" target="_blank"><code>0x69e47D24dE839423A94afcD01b88C1683BA4D1D0</code></a></td></tr>
+          <tr><td>kinkIRMFactory</td><td><a href="https://bscscan.com/address/0x40739156B75b477f5b4f2D671655492B535B59d2" target="_blank"><code>0x40739156B75b477f5b4f2D671655492B535B59d2</code></a></td></tr>
+          <tr><td>governorFactory</td><td><a href="https://bscscan.com/address/0x71620376630597FA901112821455814a31d39685" target="_blank"><code>0x71620376630597FA901112821455814a31d39685</code></a></td></tr>
+          <tr><td>swapper</td><td><a href="https://bscscan.com/address/0x8e39500a6672D701616ED4943a5Cc5C79Ab38643" target="_blank"><code>0x8e39500a6672D701616ED4943a5Cc5C79Ab38643</code></a></td></tr>
+          <tr><td>swapVerifier</td><td><a href="https://bscscan.com/address/0xc0126DE6e1615479b357e2Fef6d423FB2FBEe502" target="_blank"><code>0xc0126DE6e1615479b357e2Fef6d423FB2FBEe502</code></a></td></tr>
+          <tr><td>accountLens</td><td><a href="https://bscscan.com/address/0x9578D17d2e1AA70EA6f9eC8A39967bfD1c6F6217" target="_blank"><code>0x9578D17d2e1AA70EA6f9eC8A39967bfD1c6F6217</code></a></td></tr>
+          <tr><td>vaultLens</td><td><a href="https://bscscan.com/address/0x10b088EaE2260e1Ddedc5a3Af95a6B85CfbBd384" target="_blank"><code>0x10b088EaE2260e1Ddedc5a3Af95a6B85CfbBd384</code></a></td></tr>
+          <tr><td>oracleLens</td><td><a href="https://bscscan.com/address/0x7408034385689733f09072ff4c976C14b0211477" target="_blank"><code>0x7408034385689733f09072ff4c976C14b0211477</code></a></td></tr>
+          <tr><td>irmLens</td><td><a href="https://bscscan.com/address/0x0c34F8F5CCE64Ae0A437c2112F2940eD48D7923D" target="_blank"><code>0x0c34F8F5CCE64Ae0A437c2112F2940eD48D7923D</code></a></td></tr>
+          <tr><td>utilsLens</td><td><a href="https://bscscan.com/address/0xfe4e3622c632F98aaF21a08c8b83e02D994c08D4" target="_blank"><code>0xfe4e3622c632F98aaF21a08c8b83e02D994c08D4</code></a></td></tr>
+        </tbody>
+      </table>
+
+      <div class="docs-nav">
+        <a href="/landing/docs/governance.html">
+          <span class="docs-nav-label">Previous</span>
+          <span class="docs-nav-title">Governance</span>
+        </a>
+        <a href="/landing/docs/faq.html" class="docs-nav-next">
+          <span class="docs-nav-label">Next</span>
+          <span class="docs-nav-title">FAQ</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
+        <span>Poppie</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/landing/docs/">Docs</a>
+        <a href="/lend">App</a>
+        <a href="/terms-of-service">Terms</a>
+        <a href="/privacy-policy">Privacy</a>
+      </div>
+      <p class="footer-disclaimer">Poppie is experimental software. Use at your own risk. Not financial advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-btn');
+    const links = document.querySelector('.nav-links');
+    btn?.addEventListener('click', () => links?.classList.toggle('open'));
+  </script>
+</body>
+</html>
