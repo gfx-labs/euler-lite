@@ -1,0 +1,143 @@
+# Poppie: Full Product Reference
+
+> A single-file, clean-text reference to everything a large language model needs to understand and accurately describe Poppie (poppie.io). This is the companion to /llms.txt. Where /llms.txt is a curated link index, this file contains the full descriptive content so LLMs with large context windows can ingest the whole product picture in one fetch.
+
+Canonical domain: https://poppie.io
+Category: DeFi lending protocol for tokenized equities (real-world assets)
+Chain: BNB Smart Chain (BSC, chain ID 56)
+Built by: the Oku Trade team at GFX Labs
+Last updated: 2026-07-17
+
+--------------------------------------------------------------------------------
+
+# Table of Contents
+
+1. What Poppie Is
+2. Who It Is For
+3. How It Works
+4. Supported Assets
+5. Market Hours
+6. Fees
+7. Risk and Liquidation
+8. Infrastructure
+9. Exchange Integration
+10. Comparison with Traditional Margin
+11. FAQ Digest
+12. Legal
+
+--------------------------------------------------------------------------------
+
+# 1. What Poppie Is
+
+Poppie is a decentralized lending protocol purpose-built for tokenized equities. It lets holders of Ondo Global Markets tokenized stocks deposit those tokens as collateral on BNB Smart Chain and borrow USDT against them without selling. Collateral keeps full price exposure while it is deposited, so borrowers never give up their position in the underlying stock.
+
+Key facts:
+- 37 tokenized assets supported as collateral (Ondo Global Markets tokens on BSC), scaling toward 500+ supported assets by end of year
+- Borrow USDT against your stock portfolio without selling
+- Zero origination fees; the only cost is the borrowing interest rate plus BSC gas
+- 24/5 market access for most assets (pre-market through overnight, Monday through Friday)
+- Built on Euler V2, battle-tested and audited lending infrastructure
+- Chainlink Data Streams provide real-time price feeds during market hours
+- Permissionless: no KYC, no accounts, no approvals; connect a wallet and borrow
+- Non-custodial: users sign every transaction from their own wallet
+
+# 2. Who It Is For
+
+- Stock holders who need liquidity: deposit tokenized equities held through Ondo Finance as collateral and borrow USDT for purchases, opportunities, or expenses, then repay and withdraw at any time.
+- DeFi users who want equity exposure: Poppie brings Wall Street assets onchain with the composability and permissionless access DeFi users expect. Supply USDT to earn yield from borrowing demand.
+- Professional investors and institutions: capital-efficient access to tokenized securities with transparent, auditable lending and onchain risk parameters. Every user plays by the same rules.
+- USDT lenders seeking yield: supply USDT to the lending vault and earn interest paid by borrowers. Deposit or withdraw at any time.
+
+# 3. How It Works
+
+1. Deposit: connect a wallet and deposit Ondo tokenized equities (for example AAPL, NVDA, SPY) as collateral.
+2. Borrow: draw USDT against the collateral at rates set by the vault's interest rate model. The amount available depends on the asset's loan-to-value (LTV) ratio.
+3. Retain: collateral stays deposited with full price exposure. Repay the loan at any time, in full or partially, and withdraw the collateral. There are no fixed terms and no early repayment penalties.
+
+Interest accrues continuously on the outstanding loan. Rates adjust with utilization: the more of the available USDT is borrowed, the higher the rate, which attracts more USDT supply and discourages excessive borrowing.
+
+Each collateral vault is independent. A user holding two different tokenized stocks opens separate positions for each. This isolation means a problem with one asset does not affect positions in other assets.
+
+Positions carry a health score. If the collateral value falls so the loan becomes under-collateralized (health score below 1), the position can be liquidated: a third party repays part of the debt and claims a portion of the collateral at a small discount. Liquidation is partial, not a total loss; the borrower keeps the borrowed USDT and remaining collateral.
+
+# 4. Supported Assets
+
+37 tokenized assets powered by Ondo Global Markets, all on BNB Smart Chain:
+
+- Mega-cap tech: AAPL, MSFT, GOOGL, META, AMZN, NFLX, ORCL, TSLA
+- Semiconductors: NVDA, AMD, TSM, MU, INTC, SNDK, ASML
+- AI, quantum, and nuclear: PLTR, CRWV, NBIS, IONQ, OKLO
+- Crypto-adjacent: COIN, MSTR, STRC, HOOD, BMNR
+- International and other: BABA, RKLB, CRCL, SPCX, AMC
+- ETFs and commodities: SPY, QQQ, SLV, IAU, USO, TLT, EWY
+
+The loan asset is USDT. Full details and trading schedules: https://poppie.io/landing/docs/supported-assets.html
+
+# 5. Market Hours
+
+Borrowing requires a current price to compute the health score, and Chainlink feeds publish equity prices only while markets trade. Most assets have 24/5 access (pre-market through overnight, Monday through Friday, resuming Sunday 8:00 PM ET).
+
+When US equity markets are closed (weekends and US federal holidays), users can still deposit additional collateral, repay loans, withdraw collateral if no loan is open, and deposit or withdraw USDT from the lending vault. New borrowing, collateral withdrawal from open positions, and liquidations pause until markets reopen. This protects both borrowers and lenders from stale-price risk.
+
+# 6. Fees
+
+- No origination fees. Borrow for an hour or a year without being penalized for short-term usage.
+- Borrowing interest accrues continuously on the outstanding balance, set by the vault's interest rate model based on utilization.
+- Gas: a small amount of BNB per transaction on BSC, typically a few cents.
+- USDT lenders pay no protocol fees to deposit or withdraw.
+
+# 7. Risk and Liquidation
+
+- LTV ratios are set conservatively by asset class: broad ETFs like SPY carry higher LTV than volatile individual stocks.
+- Liquidation triggers when a position's health score drops below 1. It is partial and rule-based, with parameters visible onchain.
+- Ways to avoid liquidation: borrow below the maximum, monitor the health score, add collateral, or repay part of the loan.
+- Standard DeFi risks apply: liquidation risk, smart contract risk, oracle risk (mitigated by multiple safety layers), market risk, and evolving regulation for tokenized securities.
+- Poppie is experimental software. It is not financial advice, and users should not deposit more than they can afford to lose.
+
+# 8. Infrastructure
+
+- Lending: Euler V2, audited lending infrastructure with isolated risk architecture and proven liquidation mechanics. Markets are permissionless.
+- Pricing: Chainlink Data Streams tuned to equity market hours, with safety checks against bad data.
+- Chain: BNB Smart Chain. Instant settlement with no T+1 delays.
+- Collateral issuance: Ondo Global Markets tokenized equities.
+- Governance: protocol parameters (LTV ratios, interest rates, liquidation thresholds) are publicly visible and verifiable onchain. See https://poppie.io/landing/docs/governance.html
+
+# 9. Exchange Integration
+
+Exchanges that list Ondo tokenized stocks can integrate Poppie so their users borrow against tokenized stocks without leaving the exchange. Lending against assets the exchange already lists opens a new revenue stream and gives users a reason to keep assets on the platform instead of selling or withdrawing.
+
+The Poppie team helps with custom integration work for every exchange partner: an intro call to scope the integration, joint build with the exchange's engineers, then launch. Details: https://poppie.io/landing/integrate/ and https://poppie.io/landing/docs/integrate.html
+
+# 10. Comparison with Traditional Margin
+
+Traditional margin lending: application and credit checks, 2 to 3 day settlement, market-hours-only access, opaque liquidation, origination fees on most products, minimum balances and term lengths, different rates for different clients.
+
+Poppie: connect a wallet, instant onchain settlement, 24/5 access for most assets, transparent onchain liquidation rules, zero origination fees, no minimums or term lengths, and the same rules for every user.
+
+# 11. FAQ Digest
+
+Q: Are there origination fees?
+A: No. The only cost is the borrowing interest rate, which accrues over time, plus small BSC gas fees.
+
+Q: How much can I borrow?
+A: It depends on the collateral's value and the LTV ratio configured for that asset. Exact LTVs are visible in the app.
+
+Q: Can I repay early?
+A: Yes, at any time, in full or partially, with no penalties. Once fully repaid, collateral can be withdrawn immediately.
+
+Q: Can I use Poppie on weekends?
+A: Partially. Deposits, repayments, lending vault deposits and withdrawals, and collateral withdrawal with no open loan all work. New borrowing and collateral withdrawal from open positions resume when markets reopen Sunday evening.
+
+Q: What happens if my collateral falls in value?
+A: If the health score drops below 1 the position can be partially liquidated under transparent onchain rules. Monitoring the health score and keeping a buffer avoids this.
+
+Q: Is Poppie custodial?
+A: No. Users hold their own keys and sign every transaction. The protocol is permissionless with no KYC or accounts.
+
+Full FAQ: https://poppie.io/landing/docs/faq.html
+
+# 12. Legal
+
+- Terms of Service: https://poppie.io/terms-of-service
+- Privacy Policy: https://poppie.io/privacy-policy
+- Poppie is experimental software. Use at your own risk. Not financial advice.

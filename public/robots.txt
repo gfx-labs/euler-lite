@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://poppie.io/sitemap.xml
