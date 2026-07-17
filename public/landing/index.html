@@ -15,497 +15,453 @@
   <meta name="twitter:title" content="Poppie - Borrow USDT against blue-chip stocks and ETFs">
   <meta name="twitter:description" content="Poppie lets you borrow USDT against tokenized stocks without selling. Built on Euler V2, live on BNB Chain.">
   <meta name="twitter:image" content="https://poppie.io/og-image.png">
+  <link rel="canonical" href="https://poppie.io/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/landing/poppielogo-dark.png">
-  <link rel="stylesheet" href="/landing/style.css">
+  <link rel="stylesheet" href="/landing/home.css?v=20">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://poppie.io/#org", "name": "Poppie", "url": "https://poppie.io/", "logo": "https://poppie.io/landing/poppielogo-dark.png", "sameAs": ["https://x.com/poppiefinance"]}, {"@type": "WebSite", "name": "Poppie", "url": "https://poppie.io/", "publisher": {"@id": "https://poppie.io/#org"}}]}</script>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="/" class="logo">
-        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="28" height="28">
+  <section class="hero" id="top">
+    <canvas class="liquidity-field" aria-hidden="true"></canvas>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Poppie home">
+        <img src="/landing/poppielogo-dark.png" alt="">
         <span>Poppie</span>
       </a>
-      <div class="nav-links">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="#how-it-works">How It Works</a>
         <a href="#features">Features</a>
         <a href="#assets">Assets</a>
         <a href="/landing/docs/">Docs</a>
         <a href="/landing/integrate/">Integrate Poppie</a>
-        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-primary btn-sm">Launch App</a>
+      </nav>
+      <div class="header-actions">
+        <a class="button button-primary" href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56">Launch App <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-label="Open menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+        </button>
       </div>
-      <button class="mobile-menu-btn" aria-label="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
-    <div class="hero-orb hero-orb-3"></div>
-    <div class="hero-logos">
-      <div class="hero-logo hero-logo-lg hl-nvda"><img src="/landing/logos/nvda.svg" alt="NVIDIA"></div>
-      <div class="hero-logo hl-tsla"><img src="/landing/logos/tsla.svg" alt="Tesla"></div>
-      <div class="hero-logo hl-aapl"><img src="/landing/logos/aapl.svg" alt="Apple"></div>
-      <div class="hero-logo hero-logo-lg hl-coin"><img src="/landing/logos/coin.svg" alt="Coinbase"></div>
-      <div class="hero-logo hl-meta"><img src="/landing/logos/meta.svg" alt="Meta"></div>
-      <div class="hero-logo hl-amzn"><img src="/landing/logos/amzn.svg" alt="Amazon"></div>
-      <div class="hero-logo hl-nflx"><img src="/landing/logos/nflx.svg" alt="Netflix"></div>
-      <div class="hero-logo hl-googl"><img src="/landing/logos/googl.svg" alt="Google"></div>
-    </div>
-    <div class="container hero-content">
-      <div class="hero-badge">Built on Euler V2 &middot; BSC</div>
-      <h1>Unlock liquidity from<br>your stock portfolio</h1>
-      <p class="hero-sub">
-        Hold your stock exposure while accessing capital. Deposit tokenized equities as collateral,
-        borrow USDT instantly, and never sell a single share.
-      </p>
-      <div class="hero-actions">
-        <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-primary btn-lg">Launch App</a>
-        <a href="#how-it-works" class="btn btn-outline btn-lg">Learn More</a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-value">37</span>
-          <span class="stat-label">Assets Supported</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-value">$0</span>
-          <span class="stat-label">Origination Fees</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-value">24/5</span>
-          <span class="stat-label">Market Access</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOGOS BAR -->
-  <section class="logos-bar">
-    <div class="container">
-      <p class="logos-label">Supported assets include</p>
-      <div class="logos-scroll">
-        <div class="logos-track">
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/nvda.svg" alt="">NVDA</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/tsla.svg" alt="">TSLA</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/aapl.svg" alt="">AAPL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/msft.svg" alt="">MSFT</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/googl.svg" alt="">GOOGL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/amzn.svg" alt="">AMZN</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/meta.svg" alt="">META</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/nflx.svg" alt="">NFLX</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/spy.png" alt="">SPY</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/qqq.svg" alt="">QQQ</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/amd.svg" alt="">AMD</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/coin.svg" alt="">COIN</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/mstr.svg" alt="">MSTR</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/tsm.svg" alt="">TSM</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/orcl.svg" alt="">ORCL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/intc.svg" alt="">INTC</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/mu.svg" alt="">MU</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/sndk.svg" alt="">SNDK</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/crcl.svg" alt="">CRCL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/baba.svg" alt="">BABA</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/rklb.svg" alt="">RKLB</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/pltr.png" alt="">PLTR</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/hood.png" alt="">HOOD</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/asml.png" alt="">ASML</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/crwv.png" alt="">CRWV</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/ionq.png" alt="">IONQ</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/oklo.png" alt="">OKLO</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/nbis.png" alt="">NBIS</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/bmnr.png" alt="">BMNR</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/strc.png" alt="">STRC</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/amc.png" alt="">AMC</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/spcx.png" alt="">SPCX</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/slv.png" alt="">SLV</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/iau.png" alt="">IAU</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/uso.png" alt="">USO</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/tlt.png" alt="">TLT</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/ewy.png" alt="">EWY</span>
-          <!-- duplicated for infinite scroll -->
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/nvda.svg" alt="">NVDA</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/tsla.svg" alt="">TSLA</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/aapl.svg" alt="">AAPL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/msft.svg" alt="">MSFT</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/googl.svg" alt="">GOOGL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/amzn.svg" alt="">AMZN</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/meta.svg" alt="">META</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/nflx.svg" alt="">NFLX</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/spy.png" alt="">SPY</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/qqq.svg" alt="">QQQ</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/amd.svg" alt="">AMD</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/coin.svg" alt="">COIN</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/mstr.svg" alt="">MSTR</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/tsm.svg" alt="">TSM</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/orcl.svg" alt="">ORCL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/intc.svg" alt="">INTC</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/mu.svg" alt="">MU</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/sndk.svg" alt="">SNDK</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/crcl.svg" alt="">CRCL</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/baba.svg" alt="">BABA</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/rklb.svg" alt="">RKLB</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/pltr.png" alt="">PLTR</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/hood.png" alt="">HOOD</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/asml.png" alt="">ASML</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/crwv.png" alt="">CRWV</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/ionq.png" alt="">IONQ</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/oklo.png" alt="">OKLO</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/nbis.png" alt="">NBIS</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/bmnr.png" alt="">BMNR</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/strc.png" alt="">STRC</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/amc.png" alt="">AMC</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/spcx.png" alt="">SPCX</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/slv.png" alt="">SLV</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/iau.png" alt="">IAU</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/uso.png" alt="">USO</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/tlt.png" alt="">TLT</span>
-          <span class="asset-pill"><img class="pill-logo" src="/landing/logos/ewy.png" alt="">EWY</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHAT IS POPPIE -->
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">What is Poppie?</span>
-        <h2>DeFi lending for<br>real-world assets</h2>
-        <p class="section-desc">
-          Poppie is a decentralized lending protocol purpose-built for tokenized equities.
-          It connects your stock portfolio to the world of DeFi, letting you borrow USDT
-          against blue-chip stocks, ETFs, and more &mdash; all on BNB Smart Chain.
+    </header>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1><span>Unlock liquidity from</span><em>your stock portfolio</em></h1>
+        <p class="hero-description">
+          Hold your stock exposure while accessing capital. Deposit tokenized equities as collateral,
+          borrow USDT instantly, and never sell a single share.
         </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56">Launch App <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
+          <a class="button button-white" href="#how-it-works">Learn More <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
+        </div>
+        <dl class="hero-facts" aria-label="Poppie highlights">
+          <div><dt>37</dt><dd>Assets Supported</dd></div>
+          <div><dt>$0</dt><dd>Origination Fees</dd></div>
+          <div><dt>24/5</dt><dd>Market Access</dd></div>
+        </dl>
       </div>
-      <div class="cards-grid">
-        <div class="card">
-          <div class="card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          </div>
-          <h3>For Stock Holders</h3>
-          <p>You own tokenized equities through Ondo Finance and want to put them to work without selling. Deposit as collateral, borrow what you need.</p>
+      <div class="hero-system" aria-label="Tokenized stocks flow into Poppie collateral and create USDT liquidity">
+        <div class="asset-orbit">
+          <span class="orbit-token" style="--orbit-delay: 0s"><img src="/landing/logos/nvda.svg" alt="NVIDIA"></span>
+          <span class="orbit-token" style="--orbit-delay: -5.33s"><img src="/landing/logos/tsla.svg" alt="Tesla"></span>
+          <span class="orbit-token" style="--orbit-delay: -10.66s"><img src="/landing/logos/aapl.svg" alt="Apple"></span>
+          <span class="orbit-token" style="--orbit-delay: -15.99s"><img src="/landing/logos/coin.svg" alt="Coinbase"></span>
+          <span class="orbit-token" style="--orbit-delay: -21.32s"><img src="/landing/logos/meta.svg" alt="Meta"></span>
+          <span class="orbit-token" style="--orbit-delay: -26.65s"><img src="/landing/logos/amzn.svg" alt="Amazon"></span>
         </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          </div>
-          <h3>For DeFi Users</h3>
-          <p>You know DeFi but want exposure to traditional markets. Poppie brings Wall Street assets onchain with the composability you expect.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <h3>For Institutions</h3>
-          <p>Need capital-efficient access to tokenized securities? Poppie offers transparent, auditable lending with onchain risk parameters.</p>
-        </div>
+        <div class="orbit-sparks" aria-hidden="true"><i class="spark-1"></i><i class="spark-2"></i><i class="spark-3"></i><i class="spark-4"></i></div>
+        <div class="liquidity-core"><img src="/landing/logos/usdt.svg" alt="USDT"></div>
+      </div>
+    </div>
+    <div class="hero-bottomline"><span>BUILT ON EULER V2</span><i></i><span>BNB SMART CHAIN</span><i></i><span>CHAINLINK ORACLES</span></div>
+  </section>
+
+  <section class="asset-transition" aria-label="Supported tokenized assets">
+    <div class="market-ticker">
+      <div>
+        <span><img src="/landing/logos/ondo/nvda.png" alt="">NVDA</span>
+        <span><img src="/landing/logos/ondo/tsla.png" alt="">TSLA</span>
+        <span><img src="/landing/logos/ondo/aapl.png" alt="">AAPL</span>
+        <span><img src="/landing/logos/ondo/msft.png" alt="">MSFT</span>
+        <span><img src="/landing/logos/ondo/googl.png" alt="">GOOGL</span>
+        <span><img src="/landing/logos/ondo/amzn.png" alt="">AMZN</span>
+        <span><img src="/landing/logos/ondo/meta.png" alt="">META</span>
+        <span><img src="/landing/logos/ondo/nflx.png" alt="">NFLX</span>
+        <span><img src="/landing/logos/ondo/spy.png" alt="">SPY</span>
+        <span><img src="/landing/logos/ondo/qqq.png" alt="">QQQ</span>
+        <span><img src="/landing/logos/ondo/amd.png" alt="">AMD</span>
+        <span><img src="/landing/logos/ondo/coin.png" alt="">COIN</span>
+        <span><img src="/landing/logos/ondo/mstr.png" alt="">MSTR</span>
+        <span><img src="/landing/logos/ondo/tsm.png" alt="">TSM</span>
+        <span><img src="/landing/logos/ondo/orcl.png" alt="">ORCL</span>
+        <span><img src="/landing/logos/ondo/intc.png" alt="">INTC</span>
+        <span><img src="/landing/logos/ondo/mu.png" alt="">MU</span>
+        <span><img src="/landing/logos/ondo/sndk.png" alt="">SNDK</span>
+        <span><img src="/landing/logos/ondo/nvda.png" alt="">NVDA</span>
+        <span><img src="/landing/logos/ondo/tsla.png" alt="">TSLA</span>
+        <span><img src="/landing/logos/ondo/aapl.png" alt="">AAPL</span>
+        <span><img src="/landing/logos/ondo/msft.png" alt="">MSFT</span>
+        <span><img src="/landing/logos/ondo/googl.png" alt="">GOOGL</span>
+        <span><img src="/landing/logos/ondo/amzn.png" alt="">AMZN</span>
+        <span><img src="/landing/logos/ondo/meta.png" alt="">META</span>
+        <span><img src="/landing/logos/ondo/nflx.png" alt="">NFLX</span>
+        <span><img src="/landing/logos/ondo/spy.png" alt="">SPY</span>
+        <span><img src="/landing/logos/ondo/qqq.png" alt="">QQQ</span>
+        <span><img src="/landing/logos/ondo/amd.png" alt="">AMD</span>
+        <span><img src="/landing/logos/ondo/coin.png" alt="">COIN</span>
+        <span><img src="/landing/logos/ondo/mstr.png" alt="">MSTR</span>
+        <span><img src="/landing/logos/ondo/tsm.png" alt="">TSM</span>
+        <span><img src="/landing/logos/ondo/orcl.png" alt="">ORCL</span>
+        <span><img src="/landing/logos/ondo/intc.png" alt="">INTC</span>
+        <span><img src="/landing/logos/ondo/mu.png" alt="">MU</span>
+        <span><img src="/landing/logos/ondo/sndk.png" alt="">SNDK</span>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="section section-alt" id="how-it-works">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">How It Works</span>
-        <h2>Three steps to liquidity</h2>
+  <main>
+    <section class="infrastructure" id="about">
+      <div class="infrastructure-frame">
+        <div class="infrastructure-copy">
+          <p class="eyebrow">What is Poppie?</p>
+          <h2>Liquidity for<br>your stocks</h2>
+          <p>
+            Poppie is a decentralized lending protocol purpose-built for tokenized equities.
+            It connects your stock portfolio to the world of DeFi, letting you borrow USDT
+            against blue-chip stocks, ETFs, and more, all on BNB Smart Chain.
+          </p>
+          <a class="button button-white" href="/landing/docs/">Read the Docs <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
+        </div>
+        <div class="infrastructure-list" aria-label="Who Poppie is for">
+          <article>
+            <small>01</small>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
+            <div><h3>For Stock Holders</h3><p>You own tokenized equities through Ondo Finance and want to put them to work without selling. Deposit as collateral, borrow what you need.</p></div>
+          </article>
+          <article>
+            <small>02</small>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+            <div><h3>For DeFi Users</h3><p>You know DeFi but want exposure to traditional markets. Poppie brings Wall Street assets onchain with the composability you expect.</p></div>
+          </article>
+          <article>
+            <small>03</small>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <div><h3>For Institutions</h3><p>Need capital-efficient access to tokenized securities? Poppie offers transparent, auditable lending with onchain risk parameters.</p></div>
+          </article>
+        </div>
       </div>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h3>Deposit your tokenized stocks</h3>
-            <p>Connect your wallet and deposit Ondo-tokenized equities like AAPL, NVDA, SPY, or any of 37 supported assets as collateral.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h3>Borrow USDT instantly</h3>
-            <p>Borrow stablecoins against your collateral at competitive rates. No credit checks, no paperwork, no waiting periods.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h3>Keep your exposure</h3>
-            <p>Your stocks stay deposited and maintain full price exposure. Repay your loan anytime to withdraw. You never miss a rally.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FEATURES -->
-  <section class="section" id="features">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Features</span>
-        <h2>Why Poppie?</h2>
+    <section class="mechanism seam-logo" id="how-it-works">
+      <div class="section-head mechanism-head">
+        <div><p class="eyebrow">How It Works</p><h2>Three steps to liquidity</h2></div>
       </div>
-      <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg>
-          </div>
-          <h4>37 Assets</h4>
+      <div class="mechanism-rail">
+        <article class="mechanism-step">
+          <span class="step-index">01</span>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H20v14H6.5A2.5 2.5 0 0 1 4 16.5v-9Z"/><path d="M16 12h4"/></svg></span>
+          <div><h3>Deposit your tokenized stocks</h3><p>Connect your wallet and deposit Ondo-tokenized equities like AAPL, NVDA, SPY, or any of 37 supported assets as collateral.</p></div>
+        </article>
+        <article class="mechanism-step">
+          <span class="step-index">02</span>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.4 6 11a6 6 0 1 1-12 0c0-4.6 6-11 6-11Z"/><path d="M9.2 16.3c.5 1.1 1.4 1.7 2.8 1.7"/></svg></span>
+          <div><h3>Borrow USDT instantly</h3><p>Borrow stablecoins against your collateral at competitive rates. No credit checks, no paperwork, no waiting periods.</p></div>
+        </article>
+        <article class="mechanism-step">
+          <span class="step-index">03</span>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg></span>
+          <div><h3>Keep your exposure</h3><p>Your stocks stay deposited and maintain full price exposure. Repay your loan anytime to withdraw. You never miss a rally.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="mechanism features-band" id="features">
+      <div class="section-head mechanism-head">
+        <div><p class="eyebrow">Features</p><h2>Why Poppie?</h2></div>
+      </div>
+      <div class="card-grid">
+        <article>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg></span>
+          <h3>37 Assets</h3>
           <p>From mega-cap tech to international ADRs to broad ETFs. The widest tokenized equity lending market available.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="4" height="8" rx="1"/><rect x="9" y="6" width="4" height="13" rx="1"/><rect x="15" y="2" width="4" height="17" rx="1"/></svg>
-          </div>
-          <h4>Real-Time Oracles</h4>
+        </article>
+        <article>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="4" height="8" rx="1"/><rect x="9" y="6" width="4" height="13" rx="1"/><rect x="15" y="2" width="4" height="17" rx="1"/></svg></span>
+          <h3>Real-Time Oracles</h3>
           <p>Chainlink price feeds updated during market hours. Accurate valuations for every asset in the protocol.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h4>Battle-Tested</h4>
+        </article>
+        <article>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+          <h3>Battle-Tested</h3>
           <p>Built on Euler V2, the most proven lending protocol in DeFi. Billions secured, years of track record.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <h4>Risk-Tiered</h4>
+        </article>
+        <article>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <h3>Risk-Tiered</h3>
           <p>Conservative LTV ratios based on asset class. Mega-caps get higher borrowing power, mid-caps less. Sensible defaults.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 6 10-12h-9l1-6z"/></svg>
-          </div>
-          <h4>Instant Settlement</h4>
+        </article>
+        <article>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 6 10-12h-9l1-6z"/></svg></span>
+          <h3>Instant Settlement</h3>
           <p>No T+1 waiting. Deposit, borrow, and withdraw in seconds. Blockchain-native speed for traditional assets.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C5FA0" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          </div>
-          <h4>Permissionless</h4>
+        </article>
+        <article>
+          <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+          <h3>Permissionless</h3>
           <p>No KYC, no accounts, no approvals. Connect a wallet with Ondo tokens and start borrowing. That's it.</p>
-        </div>
+        </article>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ASSETS -->
-  <section class="section section-alt" id="assets">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Supported Assets</span>
+    <section class="markets" id="assets">
+      <div class="markets-intro">
+        <p class="eyebrow">Supported Assets</p>
         <h2>From AAPL to QQQ</h2>
-        <p class="section-desc">37 tokenized assets powered by Ondo Finance, spanning mega-cap tech, semiconductors, AI &amp; quantum, ETFs, commodities, and more.</p>
+        <p>37 tokenized assets powered by Ondo Finance, spanning mega-cap tech, semiconductors, AI &amp; quantum, ETFs, commodities, and more.</p>
       </div>
-      <div class="asset-categories">
-        <div class="asset-cat">
-          <h4>
-            <span class="cat-dot" style="background:#5C5FA0"></span>
-            Mega-Cap Tech
-          </h4>
-          <div class="cat-logos">
-            <span class="cat-logo-pill"><img src="/landing/logos/aapl.svg" alt="">AAPL</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/msft.svg" alt="">MSFT</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/googl.svg" alt="">GOOGL</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/meta.svg" alt="">META</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/amzn.svg" alt="">AMZN</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/nflx.svg" alt="">NFLX</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/orcl.svg" alt="">ORCL</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/tsla.svg" alt="">TSLA</span>
+      <div class="market-groups">
+        <article class="market-group">
+          <span class="group-index">01</span>
+          <div><h3>Mega-Cap Tech</h3></div>
+          <div class="group-assets">
+            <span><img src="/landing/logos/ondo/aapl.png" alt="">AAPL</span>
+            <span><img src="/landing/logos/ondo/msft.png" alt="">MSFT</span>
+            <span><img src="/landing/logos/ondo/googl.png" alt="">GOOGL</span>
+            <span><img src="/landing/logos/ondo/meta.png" alt="">META</span>
+            <span><img src="/landing/logos/ondo/amzn.png" alt="">AMZN</span>
+            <span><img src="/landing/logos/ondo/nflx.png" alt="">NFLX</span>
+            <span><img src="/landing/logos/ondo/orcl.png" alt="">ORCL</span>
+            <span><img src="/landing/logos/ondo/tsla.png" alt="">TSLA</span>
           </div>
-        </div>
-        <div class="asset-cat">
-          <h4>
-            <span class="cat-dot" style="background:#7E5FC6"></span>
-            Semiconductors
-          </h4>
-          <div class="cat-logos">
-            <span class="cat-logo-pill"><img src="/landing/logos/nvda.svg" alt="">NVDA</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/amd.svg" alt="">AMD</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/tsm.svg" alt="">TSM</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/mu.svg" alt="">MU</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/intc.svg" alt="">INTC</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/sndk.svg" alt="">SNDK</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/asml.png" alt="">ASML</span>
+        </article>
+        <article class="market-group">
+          <span class="group-index">02</span>
+          <div><h3>Semiconductors</h3></div>
+          <div class="group-assets">
+            <span><img src="/landing/logos/ondo/nvda.png" alt="">NVDA</span>
+            <span><img src="/landing/logos/ondo/amd.png" alt="">AMD</span>
+            <span><img src="/landing/logos/ondo/tsm.png" alt="">TSM</span>
+            <span><img src="/landing/logos/ondo/mu.png" alt="">MU</span>
+            <span><img src="/landing/logos/ondo/intc.png" alt="">INTC</span>
+            <span><img src="/landing/logos/ondo/sndk.png" alt="">SNDK</span>
+            <span><img src="/landing/logos/ondo/asml.png" alt="">ASML</span>
           </div>
-        </div>
-        <div class="asset-cat">
-          <h4>
-            <span class="cat-dot" style="background:#9B59B6"></span>
-            AI, Quantum &amp; Nuclear
-          </h4>
-          <div class="cat-logos">
-            <span class="cat-logo-pill"><img src="/landing/logos/pltr.png" alt="">PLTR</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/crwv.png" alt="">CRWV</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/nbis.png" alt="">NBIS</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/ionq.png" alt="">IONQ</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/oklo.png" alt="">OKLO</span>
+        </article>
+        <article class="market-group">
+          <span class="group-index">03</span>
+          <div><h3>AI, Quantum &amp; Nuclear</h3></div>
+          <div class="group-assets">
+            <span><img src="/landing/logos/ondo/pltr.png" alt="">PLTR</span>
+            <span><img src="/landing/logos/ondo/crwv.png" alt="">CRWV</span>
+            <span><img src="/landing/logos/ondo/nbis.png" alt="">NBIS</span>
+            <span><img src="/landing/logos/ondo/ionq.png" alt="">IONQ</span>
+            <span><img src="/landing/logos/ondo/oklo.png" alt="">OKLO</span>
           </div>
-        </div>
-        <div class="asset-cat">
-          <h4>
-            <span class="cat-dot" style="background:#2ECC71"></span>
-            Crypto-Adjacent
-          </h4>
-          <div class="cat-logos">
-            <span class="cat-logo-pill"><img src="/landing/logos/coin.svg" alt="">COIN</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/mstr.svg" alt="">MSTR</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/strc.png" alt="">STRC</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/hood.png" alt="">HOOD</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/bmnr.png" alt="">BMNR</span>
+        </article>
+        <article class="market-group">
+          <span class="group-index">04</span>
+          <div><h3>Crypto-Adjacent</h3></div>
+          <div class="group-assets">
+            <span><img src="/landing/logos/ondo/coin.png" alt="">COIN</span>
+            <span><img src="/landing/logos/ondo/mstr.png" alt="">MSTR</span>
+            <span><img src="/landing/logos/ondo/strc.png" alt="">STRC</span>
+            <span><img src="/landing/logos/ondo/hood.png" alt="">HOOD</span>
+            <span><img src="/landing/logos/ondo/bmnr.png" alt="">BMNR</span>
           </div>
-        </div>
-        <div class="asset-cat">
-          <h4>
-            <span class="cat-dot" style="background:#E67E22"></span>
-            International &amp; Other
-          </h4>
-          <div class="cat-logos">
-            <span class="cat-logo-pill"><img src="/landing/logos/baba.svg" alt="">BABA</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/rklb.svg" alt="">RKLB</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/crcl.svg" alt="">CRCL</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/spcx.png" alt="">SPCX</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/amc.png" alt="">AMC</span>
+        </article>
+        <article class="market-group">
+          <span class="group-index">05</span>
+          <div><h3>International &amp; Other</h3></div>
+          <div class="group-assets">
+            <span><img src="/landing/logos/ondo/baba.png" alt="">BABA</span>
+            <span><img src="/landing/logos/ondo/rklb.png" alt="">RKLB</span>
+            <span><img src="/landing/logos/ondo/crcl.png" alt="">CRCL</span>
+            <span><img src="/landing/logos/ondo/spcx.png" alt="">SPCX</span>
+            <span><img src="/landing/logos/ondo/amc.png" alt="">AMC</span>
           </div>
-        </div>
-        <div class="asset-cat">
-          <h4>
-            <span class="cat-dot" style="background:#3498DB"></span>
-            ETFs &amp; Commodities
-          </h4>
-          <div class="cat-logos">
-            <span class="cat-logo-pill"><img src="/landing/logos/spy.png" alt="">SPY</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/qqq.svg" alt="">QQQ</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/slv.png" alt="">SLV</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/iau.png" alt="">IAU</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/uso.png" alt="">USO</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/tlt.png" alt="">TLT</span>
-            <span class="cat-logo-pill"><img src="/landing/logos/ewy.png" alt="">EWY</span>
+        </article>
+        <article class="market-group">
+          <span class="group-index">06</span>
+          <div><h3>ETFs &amp; Commodities</h3></div>
+          <div class="group-assets">
+            <span><img src="/landing/logos/ondo/spy.png" alt="">SPY</span>
+            <span><img src="/landing/logos/ondo/qqq.png" alt="">QQQ</span>
+            <span><img src="/landing/logos/ondo/slv.png" alt="">SLV</span>
+            <span><img src="/landing/logos/ondo/iau.png" alt="">IAU</span>
+            <span><img src="/landing/logos/ondo/uso.png" alt="">USO</span>
+            <span><img src="/landing/logos/ondo/tlt.png" alt="">TLT</span>
+            <span><img src="/landing/logos/ondo/ewy.png" alt="">EWY</span>
           </div>
-        </div>
+        </article>
       </div>
-      <div class="asset-cta">
-        <a href="/lend" class="btn btn-outline">View All Markets</a>
+      <div class="market-action">
+        <a class="button button-white" href="/lend">View All Markets <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- WHY WE BUILT IT -->
-  <section class="section" id="why">
-    <div class="container">
-      <div class="why-layout">
-        <div class="why-text">
-          <span class="section-tag">Why We Built Poppie</span>
-          <h2>Your stocks shouldn't be dead capital</h2>
-          <p>
-            Millions of people hold tokenized securities but can't do anything with them besides watch the price.
-            Traditional brokerages offer margin loans, but they're slow, opaque, and gated behind paperwork.
-          </p>
-          <p>
-            We built Poppie because DeFi lending already solved this for crypto assets &mdash; Aave, Compound, and others
-            let you borrow against ETH and stablecoins instantly. But there was nothing purpose-built for the
-            growing world of tokenized real-world assets.
-          </p>
-          <p>
-            Poppie bridges that gap. Same battle-tested Euler V2 infrastructure. Same instant, permissionless experience.
-            But designed from the ground up for equities &mdash; with risk tiers that make sense for stocks, oracle feeds
-            tuned to market hours, and a curated set of 37 assets you actually want to hold.
-          </p>
+    <section class="control" id="why">
+      <div class="control-head">
+        <p class="eyebrow">Why We Built Poppie</p>
+        <h2>Your stocks shouldn't be dead capital</h2>
+      </div>
+      <div class="control-copy">
+        <p>
+          Millions of people hold tokenized securities but can't do anything with them besides watch the price.
+          Traditional brokerages offer margin loans, but they're slow, opaque, and gated behind paperwork.
+        </p>
+        <p>
+          We built Poppie because DeFi lending already solved this for crypto assets. Aave, Compound, and others
+          let you borrow against ETH and stablecoins instantly. But there was nothing purpose-built for the
+          growing world of tokenized real-world assets.
+        </p>
+        <p>
+          Poppie bridges that gap. Same battle-tested Euler V2 infrastructure. Same instant, permissionless experience.
+          But designed from the ground up for equities, with risk tiers that make sense for stocks, oracle feeds
+          tuned to market hours, and a curated set of 37 assets you actually want to hold.
+        </p>
+        <a class="button button-white" href="/landing/integrate/">Integrate Poppie <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
+      </div>
+      <div class="contrast-ledger" aria-label="Traditional lending compared with Poppie">
+        <i class="contrast-beam" aria-hidden="true"></i>
+        <div class="contrast-row contrast-old">
+          <span>The old way</span>
+          <p>Paperwork</p>
+          <p>Sales calls</p>
+          <p>High minimums</p>
+          <p>Fixed terms</p>
+          <p>Opaque fees</p>
         </div>
-        <div class="why-card">
-          <div class="why-card-inner">
-            <div class="why-compare">
-              <div class="compare-col compare-old">
-                <h5>The old way</h5>
-                <ul>
-                   <li>Paperwork</li>
-                   <li>Sales calls</li>
-                   <li>High minimums</li>
-                   <li>Fixed terms</li>
-                   <li>Opaque fees</li>
-                 </ul>
-               </div>
-               <div class="compare-col compare-new">
-                 <h5>The Poppie way</h5>
-                <ul>
-                   <li>A few taps</li>
-                   <li>No paperwork</li>
-                   <li>No origination fees</li>
-                   <li>Borrow anytime</li>
-                   <li>Transparent rules</li>
-                 </ul>
-              </div>
-            </div>
-          </div>
+        <div class="contrast-row contrast-new">
+          <span>The Poppie way</span>
+          <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>A few taps</p>
+          <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>No paperwork</p>
+          <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>No origination fees</p>
+          <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Borrow anytime</p>
+          <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Transparent rules</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- CTA -->
-  <section class="cta-section">
-    <div class="container cta-content">
-      <h2>Ready to unlock your portfolio?</h2>
+  <section class="closing">
+    <div class="closing-handoff" aria-hidden="true"><span></span></div>
+    <div class="closing-field" aria-hidden="true">
+      <span class="closing-asset closing-asset-1"><img src="/landing/logos/nvda.svg" alt=""></span>
+      <span class="closing-asset closing-asset-2"><img src="/landing/logos/aapl.svg" alt=""></span>
+      <span class="closing-asset closing-asset-3"><img src="/landing/logos/spy.png" alt=""></span>
+      <span class="closing-asset closing-asset-4"><img src="/landing/logos/qqq.svg" alt=""></span>
+    </div>
+    <div class="closing-content">
+      <h2>Ready to unlock<br>your portfolio?</h2>
       <p>Deposit tokenized stocks. Borrow USDT. Keep your exposure.</p>
-      <a href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56" class="btn btn-primary btn-lg">Launch App</a>
+      <div class="closing-actions">
+        <a class="button button-primary" href="/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56">Launch App <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg></a>
+        <a class="button button-white" href="/landing/docs/">Read the Docs</a>
+      </div>
     </div>
+    <footer class="footer">
+      <div class="footer-top">
+        <a class="brand" href="/"><img src="/landing/poppielogo-dark.png" alt=""><span>Poppie</span></a>
+        <nav aria-label="Footer navigation">
+          <a href="/lend">App</a>
+          <a href="/lend">Markets</a>
+          <a href="/landing/docs/">Docs</a>
+          <a href="/landing/integrate/">Integrate</a>
+          <a href="/terms-of-service">Terms</a>
+          <a href="/privacy-policy">Privacy</a>
+          <a href="https://x.com/poppiefinance" target="_blank" rel="noopener noreferrer" aria-label="Poppie on X">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2434 2.25H21.5527L14.3246 10.5094L22.8277 21.75H16.1715L10.9543 14.9344L4.9918 21.75H1.67773L9.40742 12.9141L1.25586 2.25H8.08086L12.7918 8.47969L18.2434 2.25ZM17.0809 19.7719H18.9137L7.08242 4.125H5.11367L17.0809 19.7719Z"/></svg>
+          </a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Poppie</span>
+        <span>Poppie is experimental software. Use at your own risk. Not financial advice.</span>
+      </div>
+    </footer>
   </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="/landing/poppielogo-dark.png" alt="Poppie" width="24" height="24">
-        <span>Poppie</span>
-      </div>
-      <div class="footer-links">
-        <a href="/lend">App</a>
-        <a href="/lend">Markets</a>
-        <a href="/landing/docs/">Docs</a>
-        <a href="/landing/integrate/">Integrate</a>
-        <a href="/terms-of-service">Terms</a>
-        <a href="/privacy-policy">Privacy</a>
-        <a href="https://x.com/poppiefinance" class="footer-social" target="_blank" rel="noopener noreferrer" aria-label="Poppie on X">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-            <path d="M18.2434 2.25H21.5527L14.3246 10.5094L22.8277 21.75H16.1715L10.9543 14.9344L4.9918 21.75H1.67773L9.40742 12.9141L1.25586 2.25H8.08086L12.7918 8.47969L18.2434 2.25ZM17.0809 19.7719H18.9137L7.08242 4.125H5.11367L17.0809 19.7719Z" />
-          </svg>
-        </a>
-      </div>
-      <p class="footer-disclaimer">
-        Poppie is experimental software. Use at your own risk. Not financial advice.
-      </p>
-    </div>
-  </footer>
 
   <script>
-    // Mobile menu toggle
-    const btn = document.querySelector('.mobile-menu-btn');
-    const links = document.querySelector('.nav-links');
-    btn?.addEventListener('click', () => links?.classList.toggle('open'));
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          links?.classList.remove('open');
-        }
-      });
+    const btn = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('.nav');
+    btn?.addEventListener('click', () => {
+      const open = nav.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     });
+    nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+      nav.classList.remove('is-open');
+      btn?.setAttribute('aria-expanded', 'false');
+    }));
+
+    const canvas = document.querySelector('.liquidity-field');
+    const context = canvas?.getContext('2d');
+    if (canvas && context) {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let animationFrame = 0;
+      let visible = true;
+      let time = 0;
+
+      const resize = () => {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 1.75);
+        canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+        canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      };
+
+      const draw = () => {
+        const { width, height } = canvas.getBoundingClientRect();
+        context.clearRect(0, 0, width, height);
+        if (!width || !height) return;
+
+        const styles = getComputedStyle(document.documentElement);
+        const haloRgb = styles.getPropertyValue('--canvas-halo').trim();
+        const sparkRgb = styles.getPropertyValue('--canvas-spark').trim();
+        const centerX = width * 0.58;
+        const centerY = height * 0.49;
+        const nodeRadius = Math.min(width, height) * 0.105;
+
+        const halo = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, nodeRadius * 3.8);
+        halo.addColorStop(0, `rgba(${haloRgb}, 0.16)`);
+        halo.addColorStop(0.46, `rgba(${haloRgb}, 0.07)`);
+        halo.addColorStop(1, `rgba(${haloRgb}, 0)`);
+        context.fillStyle = halo;
+        context.fillRect(0, 0, width, height);
+
+        for (let index = 0; index < 7; index++) {
+          const angle = index * 1.73 + (reducedMotion.matches ? 0 : time * 0.00006);
+          const distance = Math.min(width, height) * (0.18 + (index % 3) * 0.055);
+          const x = centerX + Math.cos(angle) * distance;
+          const y = centerY + Math.sin(angle * 1.17) * distance * 0.56;
+          context.fillStyle = `rgba(${sparkRgb}, ${0.16 + (index % 3) * 0.08})`;
+          context.beginPath();
+          context.arc(x, y, index % 2 ? 1.1 : 1.6, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        if (!reducedMotion.matches && visible) {
+          time += 16;
+          animationFrame = requestAnimationFrame(draw);
+        }
+      };
+
+      const observer = new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible && !reducedMotion.matches) {
+          cancelAnimationFrame(animationFrame);
+          draw();
+        }
+      }, { threshold: 0.08 });
+
+      resize();
+      draw();
+      observer.observe(canvas);
+      window.addEventListener('resize', () => { resize(); draw(); }, { passive: true });
+      reducedMotion.addEventListener('change', () => { cancelAnimationFrame(animationFrame); draw(); });
+    }
   </script>
 </body>
 </html>
