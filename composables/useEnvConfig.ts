@@ -17,6 +17,11 @@ import {
   V3_API_PROXY_URL,
   type VaultDataSource,
 } from '~/utils/api-url-env'
+import {
+  buildAnnouncementConfig,
+  EMPTY_ANNOUNCEMENT_CONFIG,
+  type AnnouncementConfig,
+} from '~/utils/announcement-config'
 
 interface EnvConfig {
   appTitle: string
@@ -38,6 +43,7 @@ interface EnvConfig {
    *  rewards). Mirrors `SERVER_VAULT_CACHE_SOURCE` on the snapshot side. */
   browserVaultSource: VaultDataSource
   swapApiUrl: string
+  announcement: AnnouncementConfig
 }
 
 const DEFAULTS: EnvConfig = {
@@ -55,6 +61,7 @@ const DEFAULTS: EnvConfig = {
   enableV3Backend: false,
   browserVaultSource: DEFAULT_VAULT_DATA_SOURCE,
   swapApiUrl: '',
+  announcement: EMPTY_ANNOUNCEMENT_CONFIG,
 }
 
 let cached: EnvConfig | null = null
@@ -83,6 +90,12 @@ function scanEnv(): EnvConfig {
     enableV3Backend: v3UpstreamConfigured,
     browserVaultSource: readBrowserVaultSource(),
     swapApiUrl: env('SWAP_API_URL', 'NUXT_PUBLIC_SWAP_API_URL') || DEFAULTS.swapApiUrl,
+    announcement: buildAnnouncementConfig({
+      title: env('CONFIG_ANNOUNCEMENT_TITLE', 'NUXT_PUBLIC_CONFIG_ANNOUNCEMENT_TITLE'),
+      body: env('CONFIG_ANNOUNCEMENT_BODY', 'NUXT_PUBLIC_CONFIG_ANNOUNCEMENT_BODY'),
+      items: env('CONFIG_ANNOUNCEMENT_ITEMS', 'NUXT_PUBLIC_CONFIG_ANNOUNCEMENT_ITEMS'),
+      url: env('CONFIG_ANNOUNCEMENT_URL', 'NUXT_PUBLIC_CONFIG_ANNOUNCEMENT_URL'),
+    }),
   }
 }
 
@@ -115,6 +128,12 @@ function fromRuntimeConfig(): EnvConfig {
     enableV3Backend: isTruthy(rc.enableV3Backend),
     browserVaultSource: parseSource(rc.browserVaultSource),
     swapApiUrl: str(rc.swapApiUrl) || DEFAULTS.swapApiUrl,
+    announcement: buildAnnouncementConfig({
+      title: rc.configAnnouncementTitle,
+      body: rc.configAnnouncementBody,
+      items: rc.configAnnouncementItems,
+      url: rc.configAnnouncementUrl,
+    }),
   }
 }
 
