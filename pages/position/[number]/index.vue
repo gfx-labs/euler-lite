@@ -32,6 +32,7 @@ const { viewer, visibleBreakdown } = useApyVisibility()
 const { enableMultiply } = useDeployConfig()
 const { settings } = useUserSettings()
 const enableIntrinsicApy = computed(() => settings.value.enableIntrinsicApy)
+const enableExternalMigrations = computed(() => settings.value.enableAdvancedMode)
 const { getSupplyRewardApy, getBorrowRewardApy, hasSupplyRewards, hasBorrowRewards, getSupplyRewardCampaigns, getBorrowRewardCampaigns } = useRewardsApy()
 const { getTokenCategoryTags } = useTokenList()
 const { planTransfer, executePlan } = useEulerTx()
@@ -43,6 +44,12 @@ const {
 } = useTransactionPlanSimulation()
 
 const positionIndex = usePositionIndex()
+const getCurrentRoutePositionIndex = () => {
+  const raw = _route.params.number
+  if (typeof raw === 'string') return raw
+  if (Array.isArray(raw) && raw[0]) return raw[0]
+  return positionIndex
+}
 const buildRefinanceRoute = (collateralAddress?: string) => {
   const query: Record<string, string> = {}
   if (collateralAddress) query.collateral = collateralAddress
@@ -63,7 +70,7 @@ const isPreparing = ref(false)
 const collateralItems = ref<PositionCollateral[]>([])
 const isCollateralsLoading = ref(false)
 const disableCollateralErrorVault = ref<string | null>(null)
-const { activeLayerData, entries: batchEntries, modifiedBalanceKeys, modifiedDebtKeys } = useTxBatch()
+const { activeLayerData, modifiedBalanceKeys, modifiedDebtKeys, isSimulating } = useTxBatch()
 let loadSequence = 0
 
 const { isReady: isVaultsReady } = useVaults()
@@ -75,6 +82,14 @@ const borrowVault = computed<EVault | undefined>(() => position.value ? position
 const collateralVault = computed<EVault | SecuritizeCollateralVault | undefined>(() => position.value ? position.value.collateralVault as EVault | SecuritizeCollateralVault | undefined : undefined)
 const positionCollateralAddresses = computed(() => position.value ? position.value.collateralVaults : [])
 const primaryCollateralAddress = computed(() => collateralVault.value ? getAddress(collateralVault.value.address) : '')
+const buildMigrationRoute = computed(() => {
+  const query: Record<string, string> = {}
+  const network = _route.query.network
+  if (typeof network === 'string') query.network = network
+  else if (Array.isArray(network) && network[0]) query.network = network[0]
+  if (primaryCollateralAddress.value) query.collateral = primaryCollateralAddress.value
+  return { path: `/position/${positionIndex}/migrate`, query }
+})
 const collateralCount = computed(() => positionCollateralAddresses.value.length || collateralItems.value.length)
 const collateralSymbolLabel = computed(() => {
   if (!position.value) {
@@ -97,27 +112,9 @@ const batchPositionKey = (vaultAddress: string) => {
   if (!position.value) return ''
   return `${position.value.subAccount.toLowerCase()}:${getAddress(vaultAddress).toLowerCase()}`
 }
-const isSamePositionBatchEntry = (entrySubAccount?: string) => {
-  if (!position.value || !entrySubAccount) return false
-  try {
-    return getAddress(entrySubAccount).toLowerCase() === getAddress(position.value.subAccount).toLowerCase()
-  }
-  catch {
-    return false
-  }
-}
-const isDebtChangingBatchEntry = (entry: { subAccount?: string, multiply?: boolean, review?: Record<string, unknown> }) => {
-  if (!isSamePositionBatchEntry(entry.subAccount)) return false
-  if (entry.multiply === true) return true
-  const type = entry.review?.type
-  if (type === 'borrow' || type === 'repay') return true
-  if (type === 'refinance') return entry.review?.debtChanged === true
-  return false
-}
-const hasDebtChangingBatchEntry = computed(() => batchEntries.value.some(isDebtChangingBatchEntry))
 const isBorrowSimulatedModified = computed(() =>
   borrowVault.value
-    ? hasDebtChangingBatchEntry.value && modifiedDebtKeys.value.has(batchPositionKey(borrowVault.value.address))
+    ? modifiedDebtKeys.value.has(batchPositionKey(borrowVault.value.address))
     : false,
 )
 const isCollateralSimulatedModified = (vault: EVault | SecuritizeCollateralVault) =>
@@ -183,6 +180,17 @@ const isPairFullyRestricted = computed(() => {
   return !!borrowVault.value && !!collateralVault.value
     && isVaultRestrictedByCountry(borrowVault.value.address)
     && isVaultRestrictedByCountry(collateralVault.value.address)
+})
+const migrationDisabledReason = computed(() => {
+  if (!enableExternalMigrations.value) return 'Enable advanced mode in settings'
+  if (hasNoBorrow.value) return 'This position has no debt to migrate out'
+  if (isPositionGeoBlocked.value || isPairFullyRestricted.value) return 'This position is not available in your region'
+  if (hasQueryFailure.value) return 'Position data is incomplete'
+  if (!collateralVault.value || isSecuritizeCollateralVault(collateralVault.value)) return 'Migration requires standard Euler collateral'
+  // buildMigrationRoute only carries the primary collateral, so a multi-collateral
+  // position can't be represented as a single whole-position migration.
+  if (collateralCount.value > 1) return 'Multi-collateral positions can\'t be migrated yet'
+  return ''
 })
 
 const borrowVaultNotice = computed(() => {
@@ -776,7 +784,7 @@ const load = async () => {
   try {
     await until(isPositionsLoaded).toBe(true)
     if (sequence !== loadSequence) return
-    position.value = getPositionBySubAccountIndex(+positionIndex)
+    position.value = getPositionBySubAccountIndex(+getCurrentRoutePositionIndex())
     if (position.value) {
       const initialCollateralVault = collateralVault.value
       collateralItems.value = initialCollateralVault
@@ -800,6 +808,37 @@ const load = async () => {
     console.warn(e)
   }
 }
+// A simulated-only position (e.g. a freshly-added multiply) stops existing the
+// moment simulation is disabled or the batch changes. Rather than stranding the
+// user on a "Position not found" screen, send them back to the portfolio once a
+// position they were viewing disappears — but only after the account and any
+// in-flight resimulation have settled, so we don't redirect on a transient gap.
+// A position that never existed (e.g. a bad URL) keeps the "not found" screen.
+//
+// Keyed to the live route param, not a plain boolean: the page component is
+// reused across /position/:number changes (no NuxtPage key), so a boolean would
+// persist and wrongly redirect an invalid index instead of showing "not found".
+const shownPositionIndex = ref<string | null>(null)
+watch(
+  [position, isPositionsLoading, isSimulating, isConnected, isSpyMode, () => _route.params.number],
+  () => {
+    const currentIndex = String(_route.params.number ?? '')
+    if (position.value) {
+      shownPositionIndex.value = currentIndex
+      return
+    }
+    if (
+      shownPositionIndex.value !== currentIndex
+      || !isPositionsLoaded.value
+      || isPositionsLoading.value
+      || isSimulating.value
+      || !(isConnected.value || isSpyMode.value)
+    ) return
+    shownPositionIndex.value = null
+    router.replace({ path: '/portfolio', query: { network: _route.query.network } })
+  },
+  { immediate: true },
+)
 const borrowApyModalData = computed(() => {
   if (!borrowVault.value) return {}
   return {
@@ -849,7 +888,7 @@ const openRampDownModal = () => {
     props: rampCollateralEdge.value,
   })
 }
-watch([isConnected, isSpyMode, address, activeLayerData], () => {
+watch([isConnected, isSpyMode, address, activeLayerData, () => _route.params.number], () => {
   load()
 }, { immediate: true })
 </script>
@@ -1568,6 +1607,16 @@ watch([isConnected, isSpyMode, address, activeLayerData], () => {
       </div>
 
       <div class="mt-auto flex flex-col gap-8">
+        <UiButton
+          v-if="enableExternalMigrations"
+          size="large"
+          variant="primary"
+          :disabled="!!migrationDisabledReason"
+          :to="migrationDisabledReason ? undefined : buildMigrationRoute"
+          :title="migrationDisabledReason || undefined"
+        >
+          Migrate from Euler
+        </UiButton>
         <UiButton
           size="large"
           variant="primary-stroke"

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# ── Build stage 
+# ── Build stage
 FROM node:24.14.1 AS builder
 
 WORKDIR /usr/src/app
@@ -17,9 +17,6 @@ ENV NODE_OPTIONS=--max-old-space-size=4096
 
 RUN npm run build
 
-# Download Doppler CLI (binary only, no package manager install)
-RUN (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sh -s -- --no-package-manager --no-install
-
 # ── Production stage (distroless: no shell, no tools, non-root) ──
 FROM gcr.io/distroless/nodejs24-debian12:nonroot AS production
 
@@ -35,9 +32,9 @@ ENV NETWORK=${NETWORK}
 
 WORKDIR /usr/src/app
 
-# Copy only the built output and Doppler binary from builder
+# Copy only the built output and the verified Doppler binary
 COPY --from=builder /usr/src/app/.output .output
-COPY --from=builder /usr/src/app/doppler ./doppler
+COPY --from=doppler /usr/local/bin/doppler ./doppler
 
 EXPOSE ${APP_PORT}
 
