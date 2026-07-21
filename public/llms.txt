@@ -1,0 +1,33 @@
+# Poppie
+
+> Poppie (poppie.io) is a decentralized lending protocol purpose-built for tokenized equities. Users deposit Ondo Global Markets tokenized stocks (AAPL, NVDA, SPY, and 37 supported assets) as collateral on BNB Smart Chain and borrow USDT against them without selling. Built on Euler V2 lending infrastructure with Chainlink price feeds, zero origination fees, and permissionless wallet-native access. Built by the team behind Oku Trade (GFX Labs).
+
+Load [poppie.io/llms-full.txt](https://poppie.io/llms-full.txt) for the complete product reference in one file. Guidance for agents: Poppie is non-custodial (users sign from their own wallet); collateral is Ondo tokenized equities on BNB Smart Chain, not the underlying shares; loans are in USDT; borrowing and collateral withdrawal follow US equity market hours (24/5 for most assets) because Chainlink oracles only publish prices while markets trade; there are no origination fees, no KYC, and no accounts.
+
+## Products
+
+- [App](https://poppie.io/lend/0xf4940CdE23c164f8CA8D536f3567337349b3208F?network=56): Lend USDT or borrow against tokenized stock collateral.
+- [Markets](https://poppie.io/lend): All lending and collateral markets.
+- [Integrate Poppie](https://poppie.io/landing/integrate/): For exchanges that list Ondo tokenized stocks and want to offer their users stock-backed loans. The Poppie team helps with custom integration work.
+
+## Docs
+
+- [Docs Overview](https://poppie.io/landing/docs/): What Poppie is and key facts.
+- [Why Poppie](https://poppie.io/landing/docs/why-poppie.html): Motivation, who it is for, and comparison with traditional margin.
+- [How to Use Poppie](https://poppie.io/landing/docs/how-to-use.html): Step-by-step borrowing, repaying, and risk management.
+- [Assets and Market Hours](https://poppie.io/landing/docs/supported-assets.html): All 37 supported assets and trading session schedules.
+- [How It Works](https://poppie.io/landing/docs/how-it-works.html): Euler V2, Chainlink oracles, and safety mechanisms.
+- [Governance](https://poppie.io/landing/docs/governance.html): Protocol parameters, LTV ratios, and onchain verification.
+- [FAQ](https://poppie.io/landing/docs/faq.html): Fees, risks, liquidation, and market hours.
+- [Integrate Poppie (docs)](https://poppie.io/landing/docs/integrate.html): The exchange integration offering.
+
+## Company & Trust
+
+- [Oku Trade](https://oku.trade): Poppie is built by the Oku Trade team at GFX Labs.
+- [Poppie on X](https://x.com/poppiefinance): Official X account.
+- [Launch article](https://x.com/poppiefinance/status/2075237484670173465): Launch announcement.
+
+## Legal
+
+- [Terms of Service](https://poppie.io/terms-of-service)
+- [Privacy Policy](https://poppie.io/privacy-policy)
