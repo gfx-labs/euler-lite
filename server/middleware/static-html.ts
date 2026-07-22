@@ -2,11 +2,16 @@ import { readFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
 
 /**
- * Serves static HTML files from public/ with optional Google Analytics injection.
+ * Serves static HTML files from public/ with automatic injection of:
  *
- * Replaces the per-file GA snippet duplication — set GA_MEASUREMENT_ID in the
- * environment and every static HTML page gets the gtag.js snippet injected
- * before </head> at serve time.
+ *   - Google Analytics (GA_MEASUREMENT_ID)
+ *   - og:image / twitter:image (SOCIAL_IMAGE_URL or NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL)
+ *   - twitter:card metadata
+ *
+ * Per-page <title>, <meta description>, og:title, og:description, and
+ * canonical URLs are left as-is — each HTML file defines its own page-level
+ * metadata. Only site-wide tags that would otherwise be duplicated across
+ * every file are injected here.
  *
  * Handles:
  *   /                          → public/landing/index.html
@@ -18,7 +23,20 @@ import { resolve } from 'path'
  * Non-HTML requests (assets, API calls) fall through to Nitro's default handlers.
  */
 
-const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID?.trim() || ''
+function env(...keys: string[]): string {
+  for (const k of keys) {
+    if (process.env[k]) return process.env[k]!
+  }
+  return ''
+}
+
+function escapeAttr(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+// ── Snippet builders (evaluated once at startup) ────────────────────────
+
+const GA_MEASUREMENT_ID = env('GA_MEASUREMENT_ID')
 
 const gaSnippet = GA_MEASUREMENT_ID
   ? `<!-- Google tag (gtag.js) -->\n`
@@ -31,27 +49,41 @@ const gaSnippet = GA_MEASUREMENT_ID
     + `  </script>\n  `
   : ''
 
+const SOCIAL_IMAGE_URL = env('SOCIAL_IMAGE_URL', 'NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL')
+
+// Build the og:image + twitter meta block once. Only injected when the env var
+// is set and starts with https:// (same guard as app-config.ts).
+const socialMetaSnippet = (() => {
+  if (!SOCIAL_IMAGE_URL || !SOCIAL_IMAGE_URL.startsWith('https://')) return ''
+  const url = escapeAttr(SOCIAL_IMAGE_URL)
+  const parts: string[] = []
+  // og:image — only inject if the page doesn't already have one
+  parts.push(`<meta property="og:image" content="${url}">`)
+  parts.push(`<meta name="twitter:image" content="${url}">`)
+  // twitter:card — ensure large image preview
+  parts.push(`<meta name="twitter:card" content="summary_large_image">`)
+  return parts.join('\n  ')
+})()
+
+// ── File resolution ─────────────────────────────────────────────────────
+
 // Paths that map to static HTML files in public/
-// Landing root is handled specially (/ → public/landing/index.html)
 const STATIC_HTML_PREFIXES = ['/landing/', '/privacy-policy', '/terms-of-service']
 
 const htmlCache = new Map<string, string>()
 
 function resolveHtmlFile(urlPath: string): string | null {
-  // Candidate file paths relative to the public dir
   const candidates: string[] = []
 
   if (urlPath === '/') {
     candidates.push('landing/index.html')
   }
   else {
-    // /landing/docs/faq → landing/docs/faq.html or landing/docs/faq/index.html
     const clean = urlPath.replace(/\/+$/, '')
     candidates.push(`${clean.slice(1)}.html`)
     candidates.push(`${clean.slice(1)}/index.html`)
   }
 
-  // Try .output/public/ first (production), then public/ (dev)
   const roots = [
     resolve(process.cwd(), '.output/public'),
     resolve(process.cwd(), 'public'),
@@ -60,7 +92,6 @@ function resolveHtmlFile(urlPath: string): string | null {
   for (const root of roots) {
     for (const candidate of candidates) {
       const fullPath = resolve(root, candidate)
-      // Guard against path traversal
       if (!fullPath.startsWith(root)) continue
       if (existsSync(fullPath)) return fullPath
     }
@@ -68,17 +99,42 @@ function resolveHtmlFile(urlPath: string): string | null {
   return null
 }
 
+// ── Injection ───────────────────────────────────────────────────────────
+
+function injectIntoHead(html: string): string {
+  let result = html
+
+  // Inject GA snippet after <head>
+  if (gaSnippet) {
+    result = result.replace(/<head>/, `<head>\n  ${gaSnippet}`)
+  }
+
+  // Inject social meta before </head>, but only tags the page doesn't already have
+  if (socialMetaSnippet) {
+    const injections: string[] = []
+    if (!/<meta\s+property="og:image"/.test(result)) {
+      injections.push(`<meta property="og:image" content="${escapeAttr(SOCIAL_IMAGE_URL)}">`)
+    }
+    if (!/<meta\s+name="twitter:image"/.test(result)) {
+      injections.push(`<meta name="twitter:image" content="${escapeAttr(SOCIAL_IMAGE_URL)}">`)
+    }
+    if (!/<meta\s+name="twitter:card"/.test(result)) {
+      injections.push(`<meta name="twitter:card" content="summary_large_image">`)
+    }
+    if (injections.length > 0) {
+      result = result.replace(/<\/head>/, `  ${injections.join('\n  ')}\n</head>`)
+    }
+  }
+
+  return result
+}
+
 function readAndInject(filePath: string): string {
   const cached = htmlCache.get(filePath)
   if (cached) return cached
 
-  let html = readFileSync(filePath, 'utf-8')
+  const html = injectIntoHead(readFileSync(filePath, 'utf-8'))
 
-  if (gaSnippet) {
-    html = html.replace(/<head>/, `<head>\n  ${gaSnippet}`)
-  }
-
-  // Cache in production, not in dev (allows live editing)
   if (process.env.NODE_ENV === 'production') {
     htmlCache.set(filePath, html)
   }
@@ -86,18 +142,19 @@ function readAndInject(filePath: string): string {
   return html
 }
 
+// ── Handler ─────────────────────────────────────────────────────────────
+
 export default defineEventHandler((event) => {
   if (event.method !== 'GET') return
 
   const url = getRequestURL(event)
   const path = url.pathname
 
-  // Only handle root or known static HTML prefixes
   const isStaticHtml = path === '/'
     || STATIC_HTML_PREFIXES.some(prefix => path.startsWith(prefix))
   if (!isStaticHtml) return
 
-  // Don't intercept non-HTML requests (assets, etc.)
+  // Don't intercept non-HTML requests (CSS, images, etc.)
   if (path !== '/' && /\.[a-z0-9]+$/i.test(path) && !path.endsWith('.html')) return
 
   // Only serve to browsers requesting HTML
@@ -105,7 +162,7 @@ export default defineEventHandler((event) => {
   if (!accept.includes('text/html')) return
 
   const filePath = resolveHtmlFile(path)
-  if (!filePath) return // fall through to Nitro
+  if (!filePath) return
 
   const html = readAndInject(filePath)
   setResponseHeader(event, 'content-type', 'text/html; charset=utf-8')
