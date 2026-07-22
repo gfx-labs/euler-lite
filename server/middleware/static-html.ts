@@ -40,13 +40,13 @@ const GA_MEASUREMENT_ID = env('GA_MEASUREMENT_ID')
 
 const gaSnippet = GA_MEASUREMENT_ID
   ? `<!-- Google tag (gtag.js) -->\n`
-    + `  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>\n`
-    + `  <script>\n`
-    + `    window.dataLayer = window.dataLayer || [];\n`
-    + `    function gtag(){dataLayer.push(arguments);}\n`
-    + `    gtag('js', new Date());\n`
-    + `    gtag('config', '${GA_MEASUREMENT_ID}');\n`
-    + `  </script>\n  `
+  + `  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>\n`
+  + `  <script>\n`
+  + `    window.dataLayer = window.dataLayer || [];\n`
+  + `    function gtag(){dataLayer.push(arguments);}\n`
+  + `    gtag('js', new Date());\n`
+  + `    gtag('config', '${GA_MEASUREMENT_ID}');\n`
+  + `  </script>\n  `
   : ''
 
 const SOCIAL_IMAGE_URL = env('SOCIAL_IMAGE_URL', 'NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL')
