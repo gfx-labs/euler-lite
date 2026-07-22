@@ -77,7 +77,7 @@ const openSupport = () => {
         />
       </div>
     </div>
-    <Permit2Settings />
+    <SignatureSettings />
     <!-- SlippageSettings hidden: swap features are disabled in this deployment -->
     <button
       class="mt-20 w-full rounded-16 border border-line-default bg-card p-16 text-left hover:bg-card-hover transition-colors cursor-pointer"
