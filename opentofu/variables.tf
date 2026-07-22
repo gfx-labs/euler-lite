@@ -40,6 +40,12 @@ variable "lb_domains" {
   default     = ["poppie.io", "www.poppie.io"]
 }
 
+variable "ga_measurement_id" {
+  description = "Google Analytics measurement ID (e.g. G-XXXXXXXXXX). Empty = no injection."
+  type        = string
+  default     = "G-S1E7DXE8E1"
+}
+
 variable "cloud_run_min_instances" {
   description = "Minimum Cloud Run instances (1 keeps warm cache alive)"
   type        = number

@@ -273,6 +273,12 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "false"
       }
 
+      # Google Analytics
+      env {
+        name  = "GA_MEASUREMENT_ID"
+        value = var.ga_measurement_id
+      }
+
       # App URL (CORS + og:url)
       env {
         name  = "NUXT_PUBLIC_APP_URL"
@@ -384,6 +390,10 @@ resource "google_cloud_run_v2_service" "euler_lite_dev" {
       env {
         name  = "HOST"
         value = "0.0.0.0"
+      }
+      env {
+        name  = "GA_MEASUREMENT_ID"
+        value = var.ga_measurement_id
       }
       env {
         name  = "CORS_ALLOWED_ORIGINS"
