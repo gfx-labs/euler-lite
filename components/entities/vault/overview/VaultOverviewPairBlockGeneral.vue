@@ -39,8 +39,9 @@ const { settings } = useUserSettings()
 const enableIntrinsicApy = computed(() => settings.value.enableIntrinsicApy)
 const { getSupplyRewardApy, getBorrowRewardApy, getLoopingRewardApy, getSupplyRewardCampaigns, getBorrowRewardCampaigns, getLoopingRewardCampaigns, hasSupplyRewards, hasBorrowRewards, hasLoopingRewards } = useRewardsApy()
 
+const { enableMultiply } = useDeployConfig()
 // Gate multiply metrics on this pair's borrow LTV, not vault-level borrowability.
-const showMultiplySection = computed(() => (pairBorrowLTV.value ?? 0) > 0)
+const showMultiplySection = computed(() => enableMultiply && (pairBorrowLTV.value ?? 0) > 0)
 const isRestricted = computed(() => isAnyVaultBlockedByCountry(collateralVault.value.address, borrowVault.value.address))
 const isDeprecated = computed(() => isVaultDeprecated(collateralVault.value.address) || isVaultDeprecated(borrowVault.value.address))
 
@@ -305,7 +306,7 @@ const rampDownModalData = computed(() => ({
 
       <div class="flex items-center gap-12 pt-8">
         <p class="text-p4 uppercase tracking-[0.14em] text-content-muted whitespace-nowrap">
-          Rates & multiply
+          {{ enableMultiply ? 'Rates & multiply' : 'Rates' }}
         </p>
         <div class="h-2 flex-1 bg-[var(--border-subtle)] opacity-70" />
       </div>

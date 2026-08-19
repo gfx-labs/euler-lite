@@ -122,7 +122,7 @@ const { chainId } = useEulerAddresses()
 
 const isPricesReady = ref(false)
 const { entities, isReady: labelsReady } = useEulerLabels()
-const { enableEntityBranding } = useDeployConfig()
+const { enableEntityBranding, enableMultiply } = useDeployConfig()
 const showAllLabelEntries = useShowAllLabelEntries()
 
 const activeBorrowList = computed(() =>
@@ -326,7 +326,7 @@ const {
     { key: 'maxRoe', label: 'Max ROE', shortLabel: 'Max ROE', unit: 'percent' },
     { key: 'utilization', label: 'Utilization', shortLabel: 'Utilization', unit: 'percent' },
     { key: 'maxLtv', label: 'Max LTV', shortLabel: 'Max LTV', unit: 'percent' },
-    { key: 'maxMultiplier', label: 'Max multiplier', shortLabel: 'Max multiplier', unit: 'multiplier' },
+    ...(enableMultiply ? [{ key: 'maxMultiplier', label: 'Max multiplier', shortLabel: 'Max multiplier', unit: 'multiplier' }] : []),
   ],
   (pair, metric) => {
     const key = getPairKey(pair)
@@ -601,7 +601,7 @@ const clearBorrowFilters = () => {
   <section class="flex flex-col min-h-[calc(100dvh-178px)]">
     <div class="mb-16 flex items-start justify-between gap-16 mobile:flex-col">
       <BasePageHeader
-        title="Borrow/Multiply"
+        :title="enableMultiply ? 'Borrow/Multiply' : 'Borrow'"
         description="Borrow against your assets in isolated lending markets."
       />
     </div>

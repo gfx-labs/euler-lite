@@ -261,6 +261,10 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         value = "false"
       }
       env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_MULTIPLY"
+        value = "false"
+      }
+      env {
         name  = "NUXT_PUBLIC_CONFIG_ENABLE_MERKL"
         value = "false"
       }
@@ -457,6 +461,10 @@ resource "google_cloud_run_v2_service" "euler_lite_dev" {
       }
       env {
         name  = "NUXT_PUBLIC_CONFIG_ENABLE_EXPLORE_PAGE"
+        value = "false"
+      }
+      env {
+        name  = "NUXT_PUBLIC_CONFIG_ENABLE_MULTIPLY"
         value = "false"
       }
       env {
