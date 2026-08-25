@@ -932,7 +932,7 @@ watch([isConnected, isSpyMode, address, activeLayerData, () => _route.params.num
               :title="correlatedBadgeTitle"
             />
             <CorrelatedPairBadge
-              v-if="isRoeApplicable && positionMultiplierDisplay !== '-'"
+              v-if="enableMultiply && isRoeApplicable && positionMultiplierDisplay !== '-'"
               compact
               :label="positionMultiplierDisplay"
               title="Effective multiplier at your LTV."
@@ -1277,7 +1277,7 @@ watch([isConnected, isSpyMode, address, activeLayerData, () => _route.params.num
               v-if="isEligibleForLiquidation"
               class="my-12"
               title="Liquidation risk"
-              description="This position is eligible for liquidation. Multiply and borrow are disabled."
+              :description="enableMultiply ? 'This position is eligible for liquidation. Multiply and borrow are disabled.' : 'This position is eligible for liquidation. Borrowing is disabled.'"
               variant="error"
               size="compact"
             />
