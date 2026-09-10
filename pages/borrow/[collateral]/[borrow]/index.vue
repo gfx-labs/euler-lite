@@ -11,6 +11,7 @@ import { useEulerProductOfVault } from '~/composables/useEulerLabels'
 import { isAnyVaultBlockedByCountry, isVaultRestrictedByCountry } from '~/composables/useGeoBlock'
 import { formatNumber, formatSmartAmount, formatHealthScore } from '~/utils/string-utils'
 import { formatLiquidationBuffer as formatLiqBuffer } from '~/utils/repayUtils'
+import { parseBorrowFormTab, type BorrowFormTab } from '~/utils/borrow-form-tab'
 import { usePriceImpactGate } from '~/composables/usePriceImpactGate'
 import { ltvToPercent } from '~/utils/crypto-utils'
 import { useBorrowForm, type BorrowBatchSnapshot } from '~/composables/borrow/useBorrowForm'
@@ -57,16 +58,13 @@ useOperationGuard([collateralAddress, borrowAddress])
 
 const { enableMultiply } = useDeployConfig()
 
-const formTabFromQuery = (value: unknown): 'borrow' | 'multiply' | undefined => {
-  const tabValue = Array.isArray(value) ? value[0] : value
-  return tabValue === 'borrow' || tabValue === 'multiply' ? tabValue : undefined
-}
+const formTabFromQuery = (value: unknown) => parseBorrowFormTab(value, enableMultiply)
 
 // --- Shared state ---
 // Collateral wallet balance from the central (layer-aware) wallet entity.
 const balance = computed(() => collateralVault.value?.asset.address ? getBalance(collateralVault.value.asset.address as Address) : 0n)
 const tab = ref()
-const formTab = ref<'borrow' | 'multiply'>(formTabFromQuery(route.query.tab) ?? 'borrow')
+const formTab = ref<BorrowFormTab>(formTabFromQuery(route.query.tab) ?? 'borrow')
 const pendingSubAccount = ref<string | null>(null)
 const isPendingSubAccountLoading = ref(false)
 let pendingSubAccountPromise: Promise<string> | null = null
