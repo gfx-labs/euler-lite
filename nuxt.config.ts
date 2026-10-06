@@ -163,6 +163,8 @@ export default defineNuxtConfig({
       configEnableLendPage: '',
       configEnableExplorePage: '',
       configEnableMultiply: '',
+      // Collateral and savings repay tabs. Opt-in: hidden unless set to 'true'.
+      configEnableCollateralRepay: '',
       configEnablePoweredByEuler: '',
       configEnableAppTitle: '',
       // Migration legacy app URL (optional)

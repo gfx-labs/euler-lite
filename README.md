@@ -116,6 +116,8 @@ These use Nuxt's `runtimeConfig` and are set via `NUXT_PUBLIC_CONFIG_*` env vars
 | `NUXT_PUBLIC_CONFIG_ENABLE_ENTITY_BRANDING` | `true`                                     | Show entity branding                                  |
 | `NUXT_PUBLIC_CONFIG_ENABLE_VAULT_TYPE`      | `true`                                     | Show vault type labels                                |
 | `NUXT_PUBLIC_CONFIG_ENABLE_APP_TITLE`       | `true`                                     | Show app title in the navbar                          |
+| `NUXT_PUBLIC_CONFIG_ENABLE_COLLATERAL_REPAY` | `false`                                   | Show "From collateral" / "From savings" repay tabs (opt-in) |
+| `NUXT_PUBLIC_CONFIG_DISABLE_GOVERNOR_VERIFICATION` | —                                    | Skip on-chain governor checks. Leave unset in production (anti-phishing) |
 | `NUXT_PUBLIC_CONFIG_ENABLE_MERKL`           | `true`                                     | Enable Merkl rewards integration                      |
 | `NUXT_PUBLIC_CONFIG_ENABLE_INCENTRA`        | `true`                                     | Enable Incentra rewards integration                   |
 | `NUXT_PUBLIC_CONFIG_ENABLE_FUUL`            | `true`                                     | Enable Fuul rewards integration                       |
