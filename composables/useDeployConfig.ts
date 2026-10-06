@@ -41,6 +41,8 @@ export const useDeployConfig = () => {
     enableLendPage: isEnabled(rc.configEnableLendPage),
     enableExplorePage: isEnabled(rc.configEnableExplorePage),
     enableMultiply: isEnabled(rc.configEnableMultiply),
+    // Opt-in (defaults off): a missing env var must not expose collateral repay.
+    enableCollateralRepay: String(rc.configEnableCollateralRepay) === 'true',
     enablePoweredByEuler: isEnabled(rc.configEnablePoweredByEuler),
     enableAppTitle: isEnabled(rc.configEnableAppTitle),
     enableMerkl: isEnabled(rc.configEnableMerkl),

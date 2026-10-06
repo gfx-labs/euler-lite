@@ -446,9 +446,10 @@ const { guardWithPriceImpact: guardWithSavingsPriceImpact } = usePriceImpactGate
 
 // --- Form tabs ---
 const formTabs = computed(() => {
-  // Single-curator deployments only support wallet repay. The collateral and
-  // savings composables are kept intact so upstream merges stay clean.
-  if (useRuntimeConfig().public.configDisableGovernorVerification) {
+  // Wallet-only repay unless NUXT_PUBLIC_CONFIG_ENABLE_COLLATERAL_REPAY=true.
+  // The collateral and savings composables are kept intact so upstream
+  // merges stay clean.
+  if (!useDeployConfig().enableCollateralRepay) {
     return [{ label: 'From wallet', value: 'wallet' }]
   }
   const tabs = [
