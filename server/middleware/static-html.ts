@@ -1,8 +1,6 @@
-import { readFileSync, existsSync } from 'fs'
-import { resolve } from 'path'
-
 /**
- * Serves static HTML files from public/ with automatic injection of:
+ * Serves the static HTML pages from server/assets/html with automatic
+ * injection of:
  *
  *   - Google Analytics (GA_MEASUREMENT_ID)
  *   - og:image / twitter:image (SOCIAL_IMAGE_URL or NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL)
@@ -13,14 +11,24 @@ import { resolve } from 'path'
  * metadata. Only site-wide tags that would otherwise be duplicated across
  * every file are injected here.
  *
- * Handles:
- *   /                          → public/landing/index.html
- *   /landing/docs/faq          → public/landing/docs/faq.html
- *   /landing/integrate/        → public/landing/integrate/index.html
- *   /privacy-policy            → public/privacy-policy/index.html
- *   /terms-of-service          → public/terms-of-service/index.html
+ * The HTML lives in server/assets/html rather than public/ on purpose:
+ * Nitro registers its public-asset handler ahead of every server middleware,
+ * so anything under public/ (including `dir/index.html` for a directory
+ * URL) is served directly and never reaches this file. Keeping the pages out
+ * of public/ is what makes this middleware the one that serves them. Their
+ * CSS and images stay in public/ and are still served as plain assets.
  *
- * Non-HTML requests (assets, API calls) fall through to Nitro's default handlers.
+ * Handles:
+ *   /                          → landing/index.html
+ *   /landing/docs/             → landing/docs/index.html
+ *   /landing/docs/faq.html     → landing/docs/faq.html
+ *   /landing/docs/faq          → landing/docs/faq.html
+ *   /landing/integrate/        → landing/integrate/index.html
+ *   /privacy-policy            → privacy-policy/index.html
+ *   /terms-of-service          → terms-of-service/index.html
+ *
+ * Anything that does not resolve to one of these files falls through to
+ * Nitro's default handlers.
  */
 
 function env(...keys: string[]): string {
@@ -34,74 +42,45 @@ function escapeAttr(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-// ── Snippet builders (evaluated once at startup) ────────────────────────
+// ── Snippet builders ────────────────────────────────────────────────────
 
-const GA_MEASUREMENT_ID = env('GA_MEASUREMENT_ID')
+export function buildGaSnippet(measurementId: string): string {
+  if (!measurementId) return ''
+  return `<!-- Google tag (gtag.js) -->\n`
+    + `  <script async src="https://www.googletagmanager.com/gtag/js?id=${measurementId}"></script>\n`
+    + `  <script>\n`
+    + `    window.dataLayer = window.dataLayer || [];\n`
+    + `    function gtag(){dataLayer.push(arguments);}\n`
+    + `    gtag('js', new Date());\n`
+    + `    gtag('config', '${measurementId}');\n`
+    + `  </script>\n  `
+}
 
-const gaSnippet = GA_MEASUREMENT_ID
-  ? `<!-- Google tag (gtag.js) -->\n`
-  + `  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>\n`
-  + `  <script>\n`
-  + `    window.dataLayer = window.dataLayer || [];\n`
-  + `    function gtag(){dataLayer.push(arguments);}\n`
-  + `    gtag('js', new Date());\n`
-  + `    gtag('config', '${GA_MEASUREMENT_ID}');\n`
-  + `  </script>\n  `
-  : ''
+// ── Path resolution ─────────────────────────────────────────────────────
 
-const SOCIAL_IMAGE_URL = env('SOCIAL_IMAGE_URL', 'NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL')
-
-// Build the og:image + twitter meta block once. Only injected when the env var
-// is set and starts with https:// (same guard as app-config.ts).
-const socialMetaSnippet = (() => {
-  if (!SOCIAL_IMAGE_URL || !SOCIAL_IMAGE_URL.startsWith('https://')) return ''
-  const url = escapeAttr(SOCIAL_IMAGE_URL)
-  const parts: string[] = []
-  // og:image — only inject if the page doesn't already have one
-  parts.push(`<meta property="og:image" content="${url}">`)
-  parts.push(`<meta name="twitter:image" content="${url}">`)
-  // twitter:card — ensure large image preview
-  parts.push(`<meta name="twitter:card" content="summary_large_image">`)
-  return parts.join('\n  ')
-})()
-
-// ── File resolution ─────────────────────────────────────────────────────
-
-// Paths that map to static HTML files in public/
 const STATIC_HTML_PREFIXES = ['/landing/', '/privacy-policy', '/terms-of-service']
 
-const htmlCache = new Map<string, string>()
+/**
+ * Map a request path to the candidate keys under server/assets/html, in
+ * lookup order. Returns an empty list for paths this middleware does not own.
+ */
+export function resolveHtmlAssetKeys(urlPath: string): string[] {
+  if (urlPath === '/') return ['landing/index.html']
 
-function resolveHtmlFile(urlPath: string): string | null {
-  const candidates: string[] = []
+  const isStaticHtml = STATIC_HTML_PREFIXES.some(prefix => urlPath.startsWith(prefix))
+  if (!isStaticHtml) return []
 
-  if (urlPath === '/') {
-    candidates.push('landing/index.html')
-  }
-  else {
-    const clean = urlPath.replace(/\/+$/, '')
-    candidates.push(`${clean.slice(1)}.html`)
-    candidates.push(`${clean.slice(1)}/index.html`)
-  }
+  // Non-HTML assets (CSS, images) under the same prefixes stay in public/.
+  if (/\.[a-z0-9]+$/i.test(urlPath) && !urlPath.endsWith('.html')) return []
 
-  const roots = [
-    resolve(process.cwd(), '.output/public'),
-    resolve(process.cwd(), 'public'),
-  ]
-
-  for (const root of roots) {
-    for (const candidate of candidates) {
-      const fullPath = resolve(root, candidate)
-      if (!fullPath.startsWith(root)) continue
-      if (existsSync(fullPath)) return fullPath
-    }
-  }
-  return null
+  const clean = urlPath.replace(/\/+$/, '').slice(1)
+  if (clean.endsWith('.html')) return [clean]
+  return [`${clean}.html`, `${clean}/index.html`]
 }
 
 // ── Injection ───────────────────────────────────────────────────────────
 
-function injectIntoHead(html: string): string {
+export function injectIntoHead(html: string, gaSnippet: string, socialImageUrl: string): string {
   let result = html
 
   // Inject GA snippet after <head>
@@ -109,14 +88,16 @@ function injectIntoHead(html: string): string {
     result = result.replace(/<head>/, `<head>\n  ${gaSnippet}`)
   }
 
-  // Inject social meta before </head>, but only tags the page doesn't already have
-  if (socialMetaSnippet) {
+  // Inject social meta before </head>, but only tags the page doesn't already have.
+  // Same https:// guard as app-config.ts.
+  if (socialImageUrl && socialImageUrl.startsWith('https://')) {
+    const url = escapeAttr(socialImageUrl)
     const injections: string[] = []
     if (!/<meta\s+property="og:image"/.test(result)) {
-      injections.push(`<meta property="og:image" content="${escapeAttr(SOCIAL_IMAGE_URL)}">`)
+      injections.push(`<meta property="og:image" content="${url}">`)
     }
     if (!/<meta\s+name="twitter:image"/.test(result)) {
-      injections.push(`<meta name="twitter:image" content="${escapeAttr(SOCIAL_IMAGE_URL)}">`)
+      injections.push(`<meta name="twitter:image" content="${url}">`)
     }
     if (!/<meta\s+name="twitter:card"/.test(result)) {
       injections.push(`<meta name="twitter:card" content="summary_large_image">`)
@@ -129,43 +110,51 @@ function injectIntoHead(html: string): string {
   return result
 }
 
-function readAndInject(filePath: string): string {
-  const cached = htmlCache.get(filePath)
+// ── Handler ─────────────────────────────────────────────────────────────
+
+// Evaluated once at startup.
+const GA_SNIPPET = buildGaSnippet(env('GA_MEASUREMENT_ID'))
+const SOCIAL_IMAGE_URL = env('SOCIAL_IMAGE_URL', 'NUXT_PUBLIC_CONFIG_SOCIAL_IMAGE_URL')
+
+const htmlCache = new Map<string, string>()
+
+async function readAndInject(key: string): Promise<string> {
+  const cached = htmlCache.get(key)
   if (cached) return cached
 
-  const html = injectIntoHead(readFileSync(filePath, 'utf-8'))
+  const raw = await useStorage('assets:server').getItem(`html/${key}`)
+  const html = injectIntoHead(
+    typeof raw === 'string' ? raw : Buffer.from(raw as Uint8Array).toString('utf-8'),
+    GA_SNIPPET,
+    SOCIAL_IMAGE_URL,
+  )
 
   if (process.env.NODE_ENV === 'production') {
-    htmlCache.set(filePath, html)
+    htmlCache.set(key, html)
   }
 
   return html
 }
 
-// ── Handler ─────────────────────────────────────────────────────────────
+export default defineEventHandler(async (event) => {
+  if (event.method !== 'GET' && event.method !== 'HEAD') return
 
-export default defineEventHandler((event) => {
-  if (event.method !== 'GET') return
+  const path = getRequestURL(event).pathname
+  const candidates = resolveHtmlAssetKeys(path)
+  if (candidates.length === 0) return
 
-  const url = getRequestURL(event)
-  const path = url.pathname
+  const storage = useStorage('assets:server')
+  let key: string | undefined
+  for (const candidate of candidates) {
+    if (await storage.hasItem(`html/${candidate}`)) {
+      key = candidate
+      break
+    }
+  }
+  if (!key) return
 
-  const isStaticHtml = path === '/'
-    || STATIC_HTML_PREFIXES.some(prefix => path.startsWith(prefix))
-  if (!isStaticHtml) return
-
-  // Don't intercept non-HTML requests (CSS, images, etc.)
-  if (path !== '/' && /\.[a-z0-9]+$/i.test(path) && !path.endsWith('.html')) return
-
-  // Only serve to browsers requesting HTML
-  const accept = getRequestHeader(event, 'accept') || ''
-  if (!accept.includes('text/html')) return
-
-  const filePath = resolveHtmlFile(path)
-  if (!filePath) return
-
-  const html = readAndInject(filePath)
   setResponseHeader(event, 'content-type', 'text/html; charset=utf-8')
   setResponseHeader(event, 'cache-control', 'no-store, no-cache, must-revalidate')
-  return html
+  if (event.method === 'HEAD') return ''
+  return await readAndInject(key)
 })
