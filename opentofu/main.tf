@@ -183,11 +183,6 @@ resource "google_cloud_run_v2_service" "euler_lite" {
         name  = "HOST"
         value = "0.0.0.0"
       }
-      # Skip governor verification (single-curator deployment)
-      env {
-        name  = "NUXT_PUBLIC_CONFIG_DISABLE_GOVERNOR_VERIFICATION"
-        value = "true"
-      }
       # OFAC sanctions screening
       env {
         name  = "OFAC_LIST_URL"
@@ -402,10 +397,6 @@ resource "google_cloud_run_v2_service" "euler_lite_dev" {
       env {
         name  = "CORS_ALLOWED_ORIGINS"
         value = "https://euler-lite-dev-3uesx2brwq-uc.a.run.app"
-      }
-      env {
-        name  = "NUXT_PUBLIC_CONFIG_DISABLE_GOVERNOR_VERIFICATION"
-        value = "true"
       }
       env {
         name  = "DISABLE_GEO_GATE"
