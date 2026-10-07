@@ -9,6 +9,7 @@ resource "google_project_service" "apis" {
     "secretmanager.googleapis.com",
     "sts.googleapis.com",
     "compute.googleapis.com",
+    "certificatemanager.googleapis.com",
   ])
 
   project            = var.project_id
@@ -157,7 +158,7 @@ resource "google_cloud_run_v2_service" "euler_lite" {
     containers {
       # Placeholder image — GHA will deploy the real one.
       # Using a valid public image so the initial create succeeds.
-      image   = "us-docker.pkg.dev/cloudrun/container/hello"
+      image       = "us-docker.pkg.dev/cloudrun/container/hello"
       command     = ["/nodejs/bin/node", ".output/server/index.mjs"]
       working_dir = "/app"
 
@@ -166,7 +167,7 @@ resource "google_cloud_run_v2_service" "euler_lite" {
           cpu    = var.cloud_run_cpu
           memory = var.cloud_run_memory
         }
-        cpu_idle          = false  # CPU always allocated — needed for warm cache background tasks
+        cpu_idle          = false # CPU always allocated — needed for warm cache background tasks
         startup_cpu_boost = true
       }
 
@@ -566,7 +567,11 @@ resource "google_compute_url_map" "default" {
   default_service = google_compute_backend_service.default.id
 }
 
-# Google-managed SSL certificate
+# Legacy Google-managed SSL certificate (load balancer authorization).
+# This can't renew: poppie.io is proxied through Cloudflare, so Google's
+# HTTP check never reaches the LB (FAILED_NOT_VISIBLE). The proxy serves the
+# Certificate Manager map below instead, and the map takes precedence over
+# ssl_certificates. Kept only so the proxy config matches the live state.
 resource "google_compute_managed_ssl_certificate" "default" {
   name    = "euler-lite-cert"
   project = var.project_id
@@ -576,12 +581,106 @@ resource "google_compute_managed_ssl_certificate" "default" {
   }
 }
 
+# ── Certificate Manager (DNS-authorized cert) ────────────────────────
+#
+# DNS authorization works behind the Cloudflare proxy. It needs these
+# Cloudflare CNAMEs (DNS only, not proxied); see the cert_dns_authorization_records output:
+#   _acme-challenge.poppie.io     -> <uuid>.16.authorize.certificatemanager.goog.
+#   _acme-challenge.www.poppie.io -> <uuid>.9.authorize.certificatemanager.goog.
+# Created by hand on 2026-09-23 and imported below.
+
+resource "google_certificate_manager_dns_authorization" "poppie" {
+  for_each = toset(var.lb_domains)
+
+  name    = "dns-authz-${replace(each.value, ".", "-")}"
+  project = var.project_id
+  domain  = each.value
+  type    = "FIXED_RECORD"
+
+  depends_on = [google_project_service.apis]
+}
+
+resource "google_certificate_manager_certificate" "poppie" {
+  name    = "euler-lite-dns-cert"
+  project = var.project_id
+
+  managed {
+    domains            = var.lb_domains
+    dns_authorizations = [for d in var.lb_domains : google_certificate_manager_dns_authorization.poppie[d].id]
+  }
+
+  lifecycle {
+    prevent_destroy = true
+    # The API returns these as projects/<number>/... in its own order. Any
+    # diff here forces a replacement that would take poppie.io down.
+    ignore_changes = [managed[0].dns_authorizations]
+  }
+}
+
+resource "google_certificate_manager_certificate_map" "poppie" {
+  name    = "euler-lite-cert-map"
+  project = var.project_id
+
+  depends_on = [google_project_service.apis]
+}
+
+resource "google_certificate_manager_certificate_map_entry" "poppie" {
+  for_each = {
+    "poppie-root" = "poppie.io"
+    "poppie-www"  = "www.poppie.io"
+  }
+
+  name         = each.key
+  project      = var.project_id
+  map          = google_certificate_manager_certificate_map.poppie.name
+  hostname     = each.value
+  certificates = [google_certificate_manager_certificate.poppie.id]
+}
+
+import {
+  to = google_project_service.apis["certificatemanager.googleapis.com"]
+  id = "ondo-poppie-prod/certificatemanager.googleapis.com"
+}
+
+import {
+  for_each = toset(["poppie.io", "www.poppie.io"])
+  to       = google_certificate_manager_dns_authorization.poppie[each.value]
+  id       = "projects/ondo-poppie-prod/locations/global/dnsAuthorizations/dns-authz-${replace(each.value, ".", "-")}"
+}
+
+import {
+  to = google_certificate_manager_certificate.poppie
+  id = "projects/ondo-poppie-prod/locations/global/certificates/euler-lite-dns-cert"
+}
+
+import {
+  to = google_certificate_manager_certificate_map.poppie
+  id = "projects/ondo-poppie-prod/locations/global/certificateMaps/euler-lite-cert-map"
+}
+
+import {
+  for_each = toset(["poppie-root", "poppie-www"])
+  to       = google_certificate_manager_certificate_map_entry.poppie[each.value]
+  id       = "projects/ondo-poppie-prod/locations/global/certificateMaps/euler-lite-cert-map/certificateMapEntries/${each.value}"
+}
+
+output "cert_dns_authorization_records" {
+  description = "CNAMEs that must exist in Cloudflare (DNS only) for the cert to renew"
+  value = {
+    for d, a in google_certificate_manager_dns_authorization.poppie :
+    a.dns_resource_record[0].name => a.dns_resource_record[0].data
+  }
+}
+
 # HTTPS proxy
 resource "google_compute_target_https_proxy" "default" {
   name             = "euler-lite-https-proxy"
   project          = var.project_id
   url_map          = google_compute_url_map.default.id
   ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
+  # Serves the cert. Without this line, apply detaches the map and poppie.io
+  # falls back to the expired legacy cert (Cloudflare 526).
+  certificate_map = "https://certificatemanager.googleapis.com/v1/${google_certificate_manager_certificate_map.poppie.id}"
 }
 
 # HTTPS forwarding rule
@@ -646,9 +745,9 @@ resource "github_repository_environment_deployment_policy" "poppie_branch" {
 }
 
 resource "github_repository_environment_deployment_policy" "release_tags" {
-  repository     = var.github_repo
-  environment    = github_repository_environment.production.environment
-  tag_pattern    = "v*"
+  repository  = var.github_repo
+  environment = github_repository_environment.production.environment
+  tag_pattern = "v*"
 }
 
 # ── Outputs ──────────────────────────────────────────────────────────
